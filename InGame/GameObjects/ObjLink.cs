@@ -273,6 +273,7 @@ namespace ProjectZ.InGame.GameObjects
         // shield
         public bool CarryShield;
         private bool _wasBlocking;
+        private bool _isBlockingWhileCharging = false;
 
         // hookshot
         public ObjHookshot Hookshot = new ObjHookshot();
@@ -528,6 +529,65 @@ namespace ProjectZ.InGame.GameObjects
                 //Map.Objects.Hit(this, damageOrigin, damageBox, HitType.SwordShot, 2, false);
                 //Map.Objects.Hit(this, damageOrigin, damageBox, HitType.SwordHold, 2, false);
                 //Map.Objects.Hit(this, damageOrigin, damageBox, HitType.SwordSpin, 2, false);
+            }
+
+            // Max Hearts
+            if (InputHandler.KeyDown(Microsoft.Xna.Framework.Input.Keys.F8))
+            {
+                Game1.GameManager.MaxHearths = 14;
+                Game1.GameManager.HealPlayer(99);
+            }
+
+            // Full Heal
+            if (InputHandler.KeyDown(Microsoft.Xna.Framework.Input.Keys.F9))
+            {
+                Game1.GameManager.HealPlayer(99);
+            }
+
+            // Money
+            if (InputHandler.KeyDown(Microsoft.Xna.Framework.Input.Keys.F10))
+            {
+                PickUpItem(new GameItemCollected("ruby") { Count = 999 }, false, false, false);
+            }
+
+            // Dungeon Utils
+            if (InputHandler.KeyDown(Microsoft.Xna.Framework.Input.Keys.F11))
+            {
+                PickUpItem(new GameItemCollected("smallkey") { Count = 9 }, false, false, false);
+                PickUpItem(new GameItemCollected("compass"), false, false, false);
+                PickUpItem(new GameItemCollected("stonebeak"), false, false, false);
+                PickUpItem(new GameItemCollected("dmap"), false, false, false);
+                PickUpItem(new GameItemCollected("nightmarekey"), false, false, false);
+            }
+
+            // All items
+            if (InputHandler.KeyDown(Microsoft.Xna.Framework.Input.Keys.F12))
+            {
+                PickUpItem(new GameItemCollected("sword2"), false, false, false);
+                PickUpItem(new GameItemCollected("mirrorShield"), false, false, false);
+                PickUpItem(new GameItemCollected("feather"), false, false, false);
+                PickUpItem(new GameItemCollected("stonelifter2"), false, false, false);
+                PickUpItem(new GameItemCollected("pegasusBoots"), false, false, false);
+                PickUpItem(new GameItemCollected("shovel"), false, false, false);
+                PickUpItem(new GameItemCollected("flippers"), false, false, false);
+                PickUpItem(new GameItemCollected("magicRod"), false, false, false);
+                PickUpItem(new GameItemCollected("hookshot"), false, false, false);
+                PickUpItem(new GameItemCollected("boomerang"), false, false, false);
+                PickUpItem(new GameItemCollected("powder") { Count = 999 }, false, false, false);
+                PickUpItem(new GameItemCollected("bomb") { Count = 999 }, false, false, false);
+                PickUpItem(new GameItemCollected("bow") { Count = 999 }, false, false, false);
+                PickUpItem(new GameItemCollected("ocarina"), false, false, false);
+                PickUpItem(new GameItemCollected("trade13"), false, false, false);
+
+                for (int i = 0; i < 8; ++i)
+                {
+                    Game1.GameManager.CollectItem(new GameItemCollected("instrument" + i));
+                }
+
+                for (int i = 1; i <= 5; ++i)
+                {
+                    Game1.GameManager.CollectItem(new GameItemCollected("dkey" + i));
+                }
             }
 #endif
 
@@ -1568,7 +1628,7 @@ namespace ProjectZ.InGame.GameObjects
                     Game1.GameManager.PlaySoundEffect("D360-43-2B", false);
                 }
 
-                if (Game1.GbsPlayer.SoundGenerator.WasStopped && Game1.GbsPlayer.SoundGenerator.FinishedPlaying())
+                if (Game1.GbsPlayer.SoundGenerator.WasStopped) // Gatordile - instrument softlock glitch fix
                 {
                     Game1.GameManager.SetMusic(-1, 0);
                     Game1.GameManager.SetMusic(-1, 2);
@@ -2065,7 +2125,9 @@ namespace ProjectZ.InGame.GameObjects
 
             Animation.SpeedMultiplier = 1.0f;
 
-            if (CurrentState == State.Idle && !_isWalking ||
+            if (CurrentState == State.Charging && _isBlockingWhileCharging)
+                Animation.Play((!_isWalking ? "standb" : "walkb") + shieldString + Direction);
+            else if (CurrentState == State.Idle && !_isWalking ||
                 CurrentState == State.Charging && !_isWalking ||
                 CurrentState == State.Rafting && !_isWalking ||
                 CurrentState == State.Teleporting ||
@@ -2261,6 +2323,8 @@ namespace ProjectZ.InGame.GameObjects
                 CurrentState = State.Rafting;
             else
                 CurrentState = State.Idle;
+
+            _isBlockingWhileCharging = false;
         }
 
         private void UpdateGhostSpawn()
@@ -2326,6 +2390,11 @@ namespace ProjectZ.InGame.GameObjects
                         if (Game1.GameManager.Equipment[i] != null &&
                             ControlHandler.ButtonDown((CButtons)((int)CButtons.A * Math.Pow(2, i))))
                             HoldItem(Game1.GameManager.Equipment[i],
+                                ControlHandler.LastButtonDown((CButtons)((int)CButtons.A * Math.Pow(2, i))));
+
+                        if (Game1.GameManager.Equipment[i] != null &&
+                            ControlHandler.ButtonReleased((CButtons)((int)CButtons.A * Math.Pow(2, i))))
+                            ReleasedItemButton(Game1.GameManager.Equipment[i],
                                 ControlHandler.LastButtonDown((CButtons)((int)CButtons.A * Math.Pow(2, i))));
                     }
                 }
@@ -2457,15 +2526,27 @@ namespace ProjectZ.InGame.GameObjects
             }
         }
 
+        private void ReleasedItemButton(GameItemCollected item, bool lastKeyDown)
+        {
+            if (item.Name == "shield" || 
+                item.Name == "mirrorShield")
+            {
+                _isBlockingWhileCharging = false;
+            }
+        }
+
         private void UseSword()
         {
             if (CurrentState != State.Idle && CurrentState != State.Pushing && CurrentState != State.Rafting &&
-                (CurrentState != State.Jumping || _railJump) && (CurrentState != State.Swimming || !Map.Is2dMap))
+                (CurrentState != State.Jumping || _railJump) && (CurrentState != State.Swimming || !Map.Is2dMap)
+                && CurrentState != State.Attacking && CurrentState != State.Blocking)
                 return;
 
             var slashSounds = new[] { "D378-02-02", "D378-20-14", "D378-21-15", "D378-24-18" };
             Game1.GameManager.PlaySoundEffect(slashSounds[Game1.RandomNumber.Next(0, 4)]);
 
+            Animation.Stop();
+            AnimatorWeapons.Stop();
             Animation.Play("attack_" + Direction);
             AnimatorWeapons.Play("attack_" + Direction);
             _swordChargeCounter = SwordChargeTime;
@@ -2890,7 +2971,7 @@ namespace ProjectZ.InGame.GameObjects
 
             CurrentState = State.Idle;
 
-            var recInteraction = new RectangleF(EntityPosition.X - 64, EntityPosition.Y - 64 - 8, 128, 128);
+            var recInteraction = new RectangleF(EntityPosition.X - 128, EntityPosition.Y - 128 - 8, 256, 256);
 
             _ocarinaList.Clear();
             Map.Objects.GetComponentList(_ocarinaList,
@@ -2909,6 +2990,15 @@ namespace ProjectZ.InGame.GameObjects
 
         private void HoldShield(bool lastKeyDown)
         {
+            if (CurrentState == State.Charging)
+            {
+                if (!_isBlockingWhileCharging)
+                {
+                    Game1.GameManager.PlaySoundEffect("D378-22-16");
+                    _isBlockingWhileCharging = true;
+                }
+            }
+
             if (CurrentState != State.Idle && CurrentState != State.Pushing)
                 return;
 
@@ -3213,7 +3303,7 @@ namespace ProjectZ.InGame.GameObjects
                     _itemShowCounter = 250;
 
                     if (ShowItem.Name == "sword1")
-                        _itemShowCounter = 5850;
+                        _itemShowCounter = 5650;
                     else if (ShowItem.Name.StartsWith("instrument"))
                         _itemShowCounter = 1000;
                 }
@@ -3545,7 +3635,7 @@ namespace ProjectZ.InGame.GameObjects
             // used in ObjStoreItem to not return the item to the shelf
             Game1.GameManager.SaveManager.SetString("result", "0");
 
-            Game1.GameManager.SaveName = "Thief";
+            Game1.GameManager.SaveName = "Жулик";
 
             // add the item to the inventory
             var strItem = Game1.GameManager.SaveManager.GetString("itemShopItem");

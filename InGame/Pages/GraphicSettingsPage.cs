@@ -8,7 +8,7 @@ namespace ProjectZ.InGame.Pages
 {
     class GraphicSettingsPage : InterfacePage
     {
-		private readonly InterfaceSlider _gameScaleSlider;
+        private readonly InterfaceSlider _gameScaleSlider;
         private readonly InterfaceListLayout _bottomBar;
         private readonly InterfaceListLayout _toggleFullscreen;
 
@@ -33,7 +33,7 @@ namespace ProjectZ.InGame.Pages
                     GameSettings.GameScale = number;
                     Game1.ScaleSettingChanged = true;
                 })
-             { SetString = number => GameSettings.GameScale == 11 ? "auto" : " x" + (number < 1 ? "1/" + (2 - number) : number.ToString()) };
+            { SetString = number => GameSettings.GameScale == 11 ? "Авто" : " x" + (number < 1 ? "1/" + (2 - number) : number.ToString()) };
             contentLayout.AddElement(_gameScaleSlider);
 
             //contentLayout.AddElement(_uiScaleSlider = new InterfaceSlider(Resources.GameFont, "settings_graphics_ui_scale",
@@ -93,7 +93,7 @@ namespace ProjectZ.InGame.Pages
             UpdateFullscreenState();
 
             //UpdateScaleSlider();
-			
+
             UpdateGameScaleSlider();
 
             // close the page
@@ -118,8 +118,8 @@ namespace ProjectZ.InGame.Pages
             if (toggle.ToggleState != GameSettings.IsFullscreen)
                 toggle.SetToggle(GameSettings.IsFullscreen);
         }
-		
-		private void UpdateGameScaleSlider()
+
+        private void UpdateGameScaleSlider()
         {
             var currentScale = GameSettings.GameScale;
             _gameScaleSlider.CurrentStep = currentScale + 1;

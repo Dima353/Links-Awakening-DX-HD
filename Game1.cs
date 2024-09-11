@@ -212,6 +212,11 @@ namespace ProjectZ
             Content.RootDirectory += "/bin/MacOSX";
 #endif
 
+            OnUpdateScale();
+
+            // game control stuff
+            ControlHandler.Initialize();
+
             // load game settings
             SettingsSaveLoad.LoadSettings();
 
@@ -227,9 +232,6 @@ namespace ProjectZ
 
             // Input Handler
             Components.Add(new InputHandler(this));
-
-            // game control stuff
-            ControlHandler.Initialize();
 
             // load the intro screen + the resources needed for it
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
@@ -846,13 +848,13 @@ namespace ProjectZ
             Graphics.ApplyChanges();
         }
 
-        private void OnResizeBegin(object? sender, EventArgs e)
+        private void OnResizeBegin(object sender, EventArgs e)
         {
             _isResizing = true;
             gameScaleStart = gameScale;
         }
 
-        private void OnResize(object? sender, EventArgs e)
+        private void OnResize(object sender, EventArgs e)
         {
 #if WINDOWS
             // save the restore bounds when going into borderless fullscreen mode from an maximized state
@@ -876,7 +878,7 @@ namespace ProjectZ
 #endif
         }
 
-        private void OnResizeEnd(object? sender, EventArgs e)
+        private void OnResizeEnd(object sender, EventArgs e)
         {
             _isResizing = false;
             gameScaleStart = gameScale;

@@ -1,0 +1,83 @@
+main_menu_select_header Выбор игрока
+main_menu_bottom_header 
+main_menu_new_game Новая игра
+main_menu_settings Настройки
+main_menu_copy Копия
+main_menu_erase Удал.
+main_menu_quit Выход
+
+main_menu_delete_confirmation_header Удалить данные?
+main_menu_delete_confirmation_header_yes Да
+main_menu_delete_confirmation_header_no Нет
+
+main_menu_copy_confirmation_header Копировать данные?
+main_menu_copy_confirmation_header_yes Да
+main_menu_copy_confirmation_header_no Нет
+
+main_menu_copy_header Копировать
+main_menu_copy_from ИЗ
+main_menu_copy_to В
+main_menu_copy_empty -Пусто-
+main_menu_copy_arrow ±
+main_menu_copy_back Назад
+
+new_game_menu_save_name Ваше имя? 
+new_game_menu_back Назад
+new_game_menu_start_game Начать игру
+
+game_menu_header Меню
+game_menu_back_to_game Вернуться к игре
+game_menu_settings Настройки
+game_menu_exit_to_the_menu Вернуться в меню
+
+game_menu_exit_header Уверен?
+game_menu_exit_no Нет
+game_menu_exit_yes Да
+
+gameover_header Игра окончена
+gameover_continue Продолжить
+gameover_quit Выйти
+
+settings_menu_header Настройки
+settings_menu_game Игра
+settings_menu_audio Звук
+settings_menu_controls Управление
+settings_menu_video Видео
+settings_menu_back Назад
+
+settings_audio_header Звук
+settings_audio_music_volume Громкость музыки:
+settings_audio_effect_volume Громкость эффектов:
+
+settings_game_header Язык
+settings_game_language Язык: Русский 
+settings_game_change_language Change Language
+settings_game_autosave Автосохранение
+settings_game_change_smooth_camera Плавность камеры
+settings_game_fullscreen_windowed Оконный режим
+settings_game_fullscreen_mode На весь экран
+
+settings_controls_header Управление
+settings_controls_keyboad Клавиатура
+settings_controls_gamepad Геймпад
+settings_controls_Left Влево
+settings_controls_Right Вправо
+settings_controls_Up Вверх
+settings_controls_Down Вниз
+settings_controls_A A
+settings_controls_B B
+settings_controls_X X
+settings_controls_Y Y
+settings_controls_Select Select
+settings_controls_Start Start
+settings_controls_reset Сброс
+
+settings_graphics_header Графика
+settings_graphics_game_scale Масштаб:
+settings_graphics_ui_scale UI Scale:
+settings_graphics_shadow Shadows
+settings_graphics_fps_lock Ограничение FPS
+
+map_overlay_close Закрыть
+overlay_map Карта
+overlay_inventory Инвентарь

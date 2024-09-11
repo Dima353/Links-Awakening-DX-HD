@@ -28,16 +28,18 @@ namespace ProjectZ.InGame.Pages
 
         private char[,] _charactersUpper = new char[,]
         {
-            { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P' },
-            { 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '-' },
-            { CapsLockCharacter, 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', BackCharacter }
+            { 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', '-' },
+            { 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', '-' },
+            { 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', '-' },
+            { CapsLockCharacter, 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', '-', '-', BackCharacter }
         };
 
         private char[,] _charactersLower = new char[,]
         {
-            { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
-            { 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '-' },
-            { CapsLockCharacter, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ' ', BackCharacter }
+            { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', '-' },
+            { 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', '-' },
+            { 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', '-' },
+            { CapsLockCharacter, 'ъ', 'ы', 'ь', 'э', 'ю', 'я', '-', '-', BackCharacter }
         };
 
         public NewGamePage(int width, int height)
@@ -94,7 +96,7 @@ namespace ProjectZ.InGame.Pages
 
             var nglBottomLayout = new InterfaceListLayout { Size = new Point(200, 20), HorizontalMode = true, Selectable = true };
             nglBottomLayout.AddElement(new InterfaceButton(new Point(99, 20), new Point(1, 0), "new_game_menu_back", OnClickBackButton));
-            nglBottomLayout.AddElement(new InterfaceButton(new Point(99, 20), new Point(1, 0), "new_game_menu_start_game", OnClickNewGameButton));
+            nglBottomLayout.AddElement(new InterfaceButton(new Point(112, 20), new Point(1, 0), "new_game_menu_start_game", OnClickNewGameButton));
             nglBottomLayout.Select(InterfaceElement.Directions.Right, false);
             nglBottomLayout.Deselect(false);
 
@@ -110,7 +112,7 @@ namespace ProjectZ.InGame.Pages
             _selectedSaveSlot = (int)intent["SelectedSaveSlot"];
 
             // reset the name of the save slot
-            _strNameInput = "Link";
+            _strNameInput = "Линк";
             _labelNameInput.SetText(_strNameInput + " ");
 
             _upperMode = true;
