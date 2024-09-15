@@ -1064,94 +1064,94 @@ final_instruments ИГРАЙ НА ИНСТРУМЕНТАХ СИРЕН! ИГРА�
 
 // credits
 // 1998
-credits_0 1998 STAFF
+credits_0 РАЗРАБОТЧИКИ(1998)
 
-credits_1 SUPERVISOR
+credits_1 РУКОВОДИТЕЛЬ
 credits_1_0 TAKASHI TEZUKA
 
-credits_2 DIRECTOR
+credits_2 РЕЖИССЕР
 credits_2_0 YOSINORI TUTIYAMA
 
-credits_3 SCRIPT WRITER
+credits_3 СЦЕНАРИЙ
 credits_3_0 NOBUO MATSUMIYA
 
-credits_4 PROGRAMMER
+credits_4 ПРОГРАММИРОВАНИЕ
 credits_4_0 EIJI NOTO
 credits_4_1 KIYOSHI KODA
 credits_4_2 SIGEHIRO KASAMATU
 
-credits_5 CHARACTER DESIGNER
+credits_5 ДИЗАЙН ПЕРСОНАЖЕЙ
 credits_5_0 MIKIO MISHIMA
 credits_5_1 KYOKO KIMURA
 
-credits_6 SOUND COMPOSER
+credits_6 КОМПОЗИТОР
 credits_6_0 YUICHI OZAKI
 
-credits_7 ART WORK
+credits_7 ХУДОЖНИК
 credits_7_0 KEIKO IZAWA
 
-credits_8 TECHNICAL SUPPORT
+credits_8 ТЕХПОДДЕРЖКА
 credits_8_0 N KOGANEZAWA
 
-credits_9 ENGLISH SCRIPT
-credits_9_0 JIM WORNELL
-credits_9_1 KEIKO TAMURA
-credits_9_2 TAMAYO ITO
+credits_9 РУССКАЯ ВЕРСИЯ
+credits_9_0 SERGEYK
+credits_9_1 AHTOH
+credits_9_2 FOX
 
-credits_10 SPECIAL THANKS TO
+credits_10 БЛАГОДАРНОСТИ
 credits_10_0 AKIYA SAKAMOTO
 credits_10_1 R&D2 DEBUG STAFF
 
-credits_11 DEBUG STAFF
+credits_11 ОТЛАДКА
 credits_11_0 SUPER MARIO CLUB
 
 // 1993
-credits_12 1993 STAFF
+credits_12 РАЗРАБОТЧИКИ(1993)
 
-credits_13 DIRECTOR
+credits_13 РУКОВОДИТЕЛЬ
 credits_13_0 TAKASHI TEZUKA
 
-credits_14 DUNGEON DESIGNER
+credits_14 ДИЗАЙН ПОДЗЕМЕЛИЙ
 credits_14_0 YASUHISA YAMAMURA
 
-credits_15 SCRIPT WRITER
+credits_15 ИЛЛЮСТРАТОР
 credits_15_0 KENSUKE TANABE
 credits_15_1 YOSHIAKI KOIZUMI
 
-credits_16 PROGRAMMER
+credits_16 ПРОГРАММИРОВАНИЕ
 credits_16_0 KAZUAKI MORITA
 credits_16_1 TAKAMITSU KUZUHARA
 
-credits_17 CHARACTER DESIGNER
+credits_17 ДИЗАЙН ПЕРСОНАЖЕЙ
 credits_17_0 MASANAO ARIMOTO
 credits_17_1 SHIGEFUMI HINO
 
-credits_18 SOUND COMPOSER
+credits_18 КОМПОЗИТОР
 credits_18_0 KAZUMI TOTAKA
 credits_18_1 MINAKO HAMANO
 credits_18_2 KOZUE ISHIKAWA
 
-credits_19 ILLUSTRATOR
+credits_19 ХУДОЖНИК
 credits_19_0 YOUICHI KOTABE
 
-credits_20 ENGLISH SCRIPT
-credits_20_0 DAN OWSEN
+credits_20 РУССКАЯ ВЕРСИЯ
+credits_20_0 ZELDA64RUS
 
-credits_21 SPECIAL THANKS TO
+credits_21 БЛАГОДАРНОСТИ
 credits_21_0 TOSHIHIKO NAKAGO
 credits_21_1 KOJI KONDO
 credits_21_2 TOMOAKI KUROUME
 credits_21_3 MASAICHI OKUMURA
 credits_21_4 KANAE WADA
 
-credits_22 PRODUCER
+credits_22 ПРОДЮСЕР
 credits_22_0 SHIGERU MIYAMOTO
 
-credits_23 EXECUTIVE PRODUCER
+credits_23 ИСПОЛНИТ. ПРОДЮСЕР
 credits_23_0 HIROSHI YAMAUCHI
 
 credits_24 
 credits_24_0 
 
 credits_25 
-credits_25_0 THE END
+credits_25_0 KOHEX
