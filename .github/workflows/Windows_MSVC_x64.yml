@@ -39,22 +39,21 @@ jobs:
       run: nuget restore ProjectZ.sln
 
     - name: Build Project
-      run: msbuild /p:Configuration=Release /t:Build
+      run: msbuild /p:Configuration=Release /p:Platform=x64 /t:Build
 
     - name: Publish Project (Clean Output)
       run: |
-        # Создаем чистую папку для публикации
         mkdir publish
-        # Копируем только необходимые файлы
-        cp bin/Release/net8.0-windows/*.exe publish/
-        cp bin/Release/net8.0-windows/*.dll publish/
-        # Удаляем ненужные файлы (настройте под ваш проект)
-        rm -rf publish/*.pdb
-        rm -rf publish/*.xml
-        rm -rf publish/runtimes
+        copy "bin\Release\net8.0-windows\*.exe" publish\
+        copy "bin\Release\net8.0-windows\*.dll" publish\
+        Remove-Item -Path "publish\*.pdb" -ErrorAction SilentlyContinue
+        Remove-Item -Path "publish\*.xml" -ErrorAction SilentlyContinue
+        if (Test-Path "publish\runtimes") {
+          Remove-Item -Recurse -Force "publish\runtimes"
+        }
 
     - name: List publish directory contents
-      run: ls -R publish
+      run: dir /s publish
 
     - name: Archive published artifacts
       uses: actions/upload-artifact@v4
