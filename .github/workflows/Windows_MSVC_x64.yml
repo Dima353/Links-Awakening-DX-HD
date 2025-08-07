@@ -21,7 +21,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: windows-latest
     steps:
     - name: Use Node.js 16
@@ -39,23 +39,28 @@ jobs:
       run: nuget restore ProjectZ.sln
 
     - name: Build Project
-      run: msbuild /p:Configuration=Release /p:Platform=x64 /t:Build
+      run: msbuild /p:Configuration=Release /t:Build
 
-    - name: Publish Project (Clean Output)
+    - name: Publish Project (with settings from screenshot)
       run: |
         mkdir publish
-        copy "bin\Release\net8.0-windows\*.exe" publish\
-        copy "bin\Release\net8.0-windows\*.dll" publish\
+        
+        msbuild /t:Publish /p:Configuration=Release `
+                /p:TargetFramework=net8.0-windows `
+                /p:RuntimeIdentifier=win-x64 `
+                /p:SelfContained=false `
+                /p:PublishSingleFile=true `
+                /p:EnableReadyToRun=true `
+                /p:PublishDir=$(System.DefaultWorkingDirectory)\publish `
+                ProjectZ.csproj
+
         Remove-Item -Path "publish\*.pdb" -ErrorAction SilentlyContinue
         Remove-Item -Path "publish\*.xml" -ErrorAction SilentlyContinue
-        if (Test-Path "publish\runtimes") {
-          Remove-Item -Recurse -Force "publish\runtimes"
-        }
 
-    - name: List publish directory contents
+    - name: List published files
       run: dir /s publish
 
-    - name: Archive published artifacts
+    - name: Upload publish artifacts
       uses: actions/upload-artifact@v4
       with:
         name: Links-Awakening-DX-HD-RUS
