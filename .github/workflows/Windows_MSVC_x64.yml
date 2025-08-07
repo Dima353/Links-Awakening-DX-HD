@@ -21,7 +21,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: windows-latest
     steps:
     - name: Use Node.js 16
@@ -41,27 +41,17 @@ jobs:
     - name: Build Project
       run: msbuild /p:Configuration=Release /t:Build
 
-    - name: Publish Project (with settings from screenshot)
-      run: |
-        mkdir publish
-        
-        msbuild /t:Publish /p:Configuration=Release `
-                /p:TargetFramework=net8.0-windows `
-                /p:RuntimeIdentifier=win-x64 `
-                /p:SelfContained=false `
-                /p:PublishSingleFile=true `
-                /p:EnableReadyToRun=true `
-                /p:PublishDir=$(System.DefaultWorkingDirectory)\publish `
-                ProjectZ.csproj
+    - name: Set MSBUILD_ARTIFACT environment variable
+      run: echo "MSBUILD_ARTIFACT=${GITHUB_WORKSPACE}\bin" >> $GITHUB_ENV
 
-        Remove-Item -Path "publish\*.pdb" -ErrorAction SilentlyContinue
-        Remove-Item -Path "publish\*.xml" -ErrorAction SilentlyContinue
+    - name: Remove runtimes folder
+      run: rm -r bin/Release/net8.0-windows/runtimes
 
-    - name: List published files
-      run: dir /s publish
+    - name: List output directory contents
+      run: ls -R ${{ env.MSBUILD_ARTIFACT }}
 
-    - name: Upload publish artifacts
+    - name: Archive artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Links-Awakening-DX-HD-RUS
-        path: publish
+        name: Links-Awakening-DX-HD
+        path: bin
