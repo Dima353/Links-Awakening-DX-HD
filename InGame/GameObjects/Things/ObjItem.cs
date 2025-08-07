@@ -190,8 +190,6 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // item can be collected by hitting it
             if (_item.ShowAnimation == 0 || _item.Name == "guardianAcorn" || _item.Name == "pieceOfPower")
-                _item.Name == "guardianAcorn" ||
-                _item.Name == "pieceOfPower")
             {
                 AddComponent(HittableComponent.Index, new HittableComponent(box, OnHit));
             }
