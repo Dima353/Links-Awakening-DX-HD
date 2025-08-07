@@ -41,17 +41,26 @@ jobs:
     - name: Build Project
       run: msbuild /p:Configuration=Release /t:Build
 
-    - name: Set MSBUILD_ARTIFACT environment variable
-      run: echo "MSBUILD_ARTIFACT=${GITHUB_WORKSPACE}\bin" >> $GITHUB_ENV
+    - name: Build Project
+      run: msbuild /p:Configuration=Release /t:Build
 
-    - name: Remove runtimes folder
-      run: rm -r bin/Release/net8.0-windows/runtimes
+    - name: Publish Project (Clean Output)
+      run: |
+        # Создаем чистую папку для публикации
+        mkdir publish
+        # Копируем только необходимые файлы
+        cp bin/Release/net8.0-windows/*.exe publish/
+        cp bin/Release/net8.0-windows/*.dll publish/
+        # Удаляем ненужные файлы (настройте под ваш проект)
+        rm -rf publish/*.pdb
+        rm -rf publish/*.xml
+        rm -rf publish/runtimes
 
-    - name: List output directory contents
-      run: ls -R ${{ env.MSBUILD_ARTIFACT }}
+    - name: List publish directory contents
+      run: ls -R publish
 
-    - name: Archive artifacts
+    - name: Archive published artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Links-Awakening-DX-HD
-        path: bin
+        name: Links-Awakening-DX-HD-RUS
+        path: publish
