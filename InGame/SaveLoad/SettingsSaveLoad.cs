@@ -6,14 +6,14 @@ namespace ProjectZ.InGame.SaveLoad
 {
     class SettingsSaveLoad
     {
-        private static readonly string SettingsFilePath = Values.AppDataFolder + "settings";
+        private static readonly string SettingsFileName = "settings";
 
         public static void LoadSettings()
         {
             var saveManager = new SaveManager();
 
             // error loading file
-            if (!saveManager.LoadFile(SettingsFilePath))
+            if (!saveManager.LoadFile(SettingsFileName))
                 return;
 
             Values.PathContentFolder = saveManager.GetString("ContentPath", Values.PathContentFolder);
@@ -64,7 +64,7 @@ namespace ProjectZ.InGame.SaveLoad
 
             ControlHandler.SaveButtonMaps(saveManager);
 
-            saveManager.Save(SettingsFilePath, Values.SaveRetries);
+            saveManager.Save(SettingsFileName, Values.SaveRetries);
         }
     }
 }
