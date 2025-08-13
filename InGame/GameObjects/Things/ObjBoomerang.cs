@@ -5,6 +5,7 @@ using ProjectZ.Base;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
+using ProjectZ.InGame.GameObjects.Dungeon;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
@@ -149,11 +150,22 @@ namespace ProjectZ.InGame.GameObjects.Things
                 if ((collisionObject.CollisionType & Values.CollisionTypes.Item) != 0 &&
                      collisionObject.Collision(_damageBox.Box, 0, 0, ref collidingBox))
                 {
-                    var newItem = (ObjItem)collisionObject.Owner;
-                    if (!newItem.Collected)
+                    // Boomerang comes in contact with item.
+                    if (collisionObject.Owner.GetType() == (typeof(ObjItem)))
                     {
-                        _item = newItem;
-                        _item.InitCollection();
+                        ObjItem newItem = (collisionObject.Owner as ObjItem);
+
+                        if (!newItem.Collected)
+                        {
+                            _item = newItem;
+                            _item.InitCollection();
+                        }
+                    }
+                    // Boomerang comes in contact with a fairy.
+                    else if (collisionObject.Owner.GetType() == (typeof(ObjDungeonFairy)))
+                    {
+                        ObjDungeonFairy grabbedFairy = (collisionObject.Owner as ObjDungeonFairy);
+                        grabbedFairy.BoomerangCollect();
                     }
                 }
             }

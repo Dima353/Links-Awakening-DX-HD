@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -72,7 +72,7 @@ namespace ProjectZ
         public static int RenderWidth;
         public static int RenderHeight;
 
-        public static bool ScaleSettingChanged;
+        public static bool ScaleChanged;
 
         private bool _wasMinimized;
         private static DoubleAverage _avgTotalMs = new DoubleAverage(30);
@@ -211,10 +211,21 @@ namespace ProjectZ
             // not sure how to copy the files in the correct directory...
             Content.RootDirectory += "/bin/MacOSX";
 #endif
+            // game control stuff
+            ControlHandler.Initialize();
 
             // load game settings
             SettingsSaveLoad.LoadSettings();
 
+            // We need to set the UI scale now or the game will crash if fullscreen.
+            UpdateScale();
+
+            // toggle fullscreen
+            if (GameSettings.IsFullscreen)
+            {
+                GameSettings.IsFullscreen = false;
+                ToggleFullscreen();
+            }
             // init gbs player; load gbs file
             GbsPlayer.LoadFile(Values.PathContentFolder + "Music/awakening.gbs");
             GbsPlayer.StartThread();
@@ -228,19 +239,9 @@ namespace ProjectZ
             // Input Handler
             Components.Add(new InputHandler(this));
 
-            // game control stuff
-            ControlHandler.Initialize();
-
             // load the intro screen + the resources needed for it
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
             ScreenManager.LoadIntro(Content);
-
-            // toggle fullscreen
-            if (GameSettings.IsFullscreen)
-            {
-                GameSettings.IsFullscreen = false;
-                ToggleFullscreen();
-            }
 
             // set the fps settings of the game
             UpdateFpsSettings();
@@ -356,12 +357,10 @@ namespace ProjectZ
                 FpsSettingChanged = false;
             }
 
-            if (ScaleSettingChanged)
+            if (ScaleChanged)
             {
-                ScaleSettingChanged = false;
-                OnUpdateScale();
+                UpdateScale();
             }
-
             ControlHandler.Update();
 
             if (EditorMode && InputHandler.KeyPressed(Values.DebugToggleDebugText))
@@ -436,7 +435,6 @@ namespace ProjectZ
 
                 DebugText += "\nHistory Enabled: " + GameManager.SaveManager.HistoryEnabled + "\n";
             }
-
             base.Update(gameTime);
         }
 
@@ -890,13 +888,12 @@ namespace ProjectZ
 
             WindowWidth = Window.ClientBounds.Width;
             WindowHeight = Window.ClientBounds.Height;
-
-            OnUpdateScale();
+            UpdateScale();
         }
 
-        private void OnUpdateScale()
+        private void UpdateScale()
         {
-            // scale of the game
+            // Scale of the game field.
             ScreenScale = MathHelper.Clamp(Math.Min(WindowWidth / Values.MinWidth, WindowHeight / Values.MinHeight), 1, 25);
 
             // float scale
@@ -913,13 +910,14 @@ namespace ProjectZ
             {
                 GameManager.SetGameScale(GameSettings.GameScale == 11 ? gameScale : GameSettings.GameScale);
             }
-
+            // Scale of the user interface.
             UiScale = GameSettings.UiScale == 0 ? ScreenScale : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
 
-            // update the ui manager
+            // Update the UI of the editor as well.
             EditorUi.SizeChanged();
 
             ScreenManager.OnResize(WindowWidth, WindowHeight);
+            UiPageManager.OnResize(WindowWidth, WindowHeight);
         }
 
         private void UpdateRenderTargets()
@@ -941,7 +939,6 @@ namespace ProjectZ
         private void UpdateRenderTargetSizes(int width, int height)
         {
             // @TODO: width must be bigger than 0
-
             MainRenderTarget?.Dispose();
             MainRenderTarget = new RenderTarget2D(Graphics.GraphicsDevice, width, height);
             Resources.BlurEffect.Parameters["width"].SetValue(width);

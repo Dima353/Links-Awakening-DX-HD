@@ -40,8 +40,8 @@ namespace ProjectZ.InGame.Controls
             ButtonDictionary.Add(CButtons.Y, new ButtonMapper(new[] { Keys.W }, new[] { Buttons.Y }));
             ButtonDictionary.Add(CButtons.Select, new ButtonMapper(new[] { Keys.Space }, new[] { Buttons.Back }));
             ButtonDictionary.Add(CButtons.Start, new ButtonMapper(new[] { Keys.Enter }, new[] { Buttons.Start }));
-            //buttonDictionary.Add(CButtons.L, new ButtonMapper(new[] { Keys.NumPad4 }, new[] { Buttons.LeftShoulder }));
-            //buttonDictionary.Add(CButtons.R, new ButtonMapper(new[] { Keys.NumPad6 }, new[] { Buttons.RightShoulder }));
+            ButtonDictionary.Add(CButtons.L, new ButtonMapper(new[] { Keys.OemMinus }, new[] { Buttons.LeftShoulder }));
+            ButtonDictionary.Add(CButtons.R, new ButtonMapper(new[] { Keys.OemPlus }, new[] { Buttons.RightShoulder }));
         }
 
         public static void SaveButtonMaps(SaveManager saveManager)
@@ -226,6 +226,30 @@ namespace ProjectZ.InGame.Controls
             // button presses used by tests
             if ((DebugButtons & button) != 0)
                 return true;
+
+            return false;
+        }
+
+        public static bool ButtonReleased(CButtons button)
+        {
+            var direction = GetGamepadDirection();
+            if (direction.Length() >= Values.ControllerDeadzone)
+            {
+                var dir = AnimationHelper.GetDirection(direction);
+                if ((dir == 0 && button == CButtons.Left) || (dir == 1 && button == CButtons.Up) ||
+                    (dir == 2 && button == CButtons.Right) || (dir == 3 && button == CButtons.Down))
+                    return true;
+            }
+
+            // check the keyboard buttons
+            for (var i = 0; i < ButtonDictionary[button].Keys.Length; i++)
+                if (InputHandler.KeyReleased(ButtonDictionary[button].Keys[i]))
+                    return true;
+
+            // check the gamepad buttons
+            for (var i = 0; i < ButtonDictionary[button].Buttons.Length; i++)
+                if (InputHandler.GamePadReleased(ButtonDictionary[button].Buttons[i]))
+                    return true;
 
             return false;
         }

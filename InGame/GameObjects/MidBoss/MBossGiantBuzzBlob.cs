@@ -18,6 +18,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private readonly AiComponent _aiComponent;
         private readonly AiDamageState _aiDamageState;
         private readonly CSprite _sprite;
+        private readonly DamageFieldComponent _damageComponent;
 
         private ObjDungeonFairy _dungeonFairy;
 
@@ -112,7 +113,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             var damageBox = new CBox(EntityPosition, -8, -28, 0, 16, 28, 8, false);
             var hittableBox = new CBox(EntityPosition, -8, -28, 0, 16, 28, 8, false);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 4));
+            AddComponent(DamageFieldComponent.Index, _damageComponent = new DamageFieldComponent(damageBox, HitType.Enemy, 4));
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(AiComponent.Index, _aiComponent);
@@ -199,7 +200,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             {
                 var rotation = MathF.PI / 2 * i + direction * MathF.PI / 4;
                 var offset = new Vector2(-MathF.Cos(rotation), MathF.Sin(rotation));
-                var objBuzz = new MBossBuzz(Map, new Vector2(spawnOrigin.X + offset.X * 20, spawnOrigin.Y + offset.Y * 20), offset, "buzz_" + direction, MathF.PI / 2 * i);
+                var objBuzz = new MBossGiantBuzzBlobBuzz(Map, new Vector2(spawnOrigin.X + offset.X * 20, spawnOrigin.Y + offset.Y * 20), offset, "buzz_" + direction, MathF.PI / 2 * i);
                 Map.Objects.SpawnObject(objBuzz);
             }
         }
@@ -324,6 +325,10 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         public Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType damageType, int damage, bool pieceOfPower)
         {
+            if (_aiDamageState.CurrentLives <= 0)
+            {
+                _damageComponent.IsActive = false;
+            }
             if (_aiDamageState.CurrentLives <= 0 || _aiDamageState.IsInDamageState())
                 return Values.HitCollision.None;
 

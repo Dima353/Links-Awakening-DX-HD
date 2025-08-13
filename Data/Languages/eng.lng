@@ -4,6 +4,7 @@ main_menu_new_game New Game
 main_menu_settings Settings
 main_menu_copy Copy
 main_menu_erase Erase
+main_menu_quit Quit
 
 main_menu_delete_confirmation_header Erase Save?
 main_menu_delete_confirmation_header_yes Yes
@@ -52,6 +53,7 @@ settings_game_header Game Settings
 settings_game_language Language: English
 settings_game_change_language Change Language
 settings_game_autosave Autosave
+settings_game_heartbeep Low Hearts Alarm
 settings_game_change_smooth_camera Smooth Camera
 settings_game_fullscreen_windowed Borderless Windowed
 settings_game_fullscreen_mode Fullscreen
@@ -70,6 +72,8 @@ settings_controls_Y Y
 settings_controls_Select Select
 settings_controls_Start Start
 settings_controls_reset Reset
+settings_controls_L L
+settings_controls_R R
 
 settings_graphics_header Video Settings
 settings_graphics_game_scale Game Scale:

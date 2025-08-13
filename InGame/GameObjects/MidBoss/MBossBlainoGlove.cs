@@ -51,7 +51,9 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         {
             // is the player blocking?
             if (_stunMode &&
-                MapManager.ObjLink.CurrentState == State.Blocking &&
+                (MapManager.ObjLink.CurrentState == State.Blocking || 
+                MapManager.ObjLink.CurrentState == State.AttackBlocking || 
+                MapManager.ObjLink.CurrentState == State.ChargeBlocking) &&
                 ((_hitDirection == -1 && MapManager.ObjLink.Direction != 0) ||
                  (_hitDirection == 1 && MapManager.ObjLink.Direction != 2)))
             {
@@ -97,6 +99,11 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             _blaino.OnPush(direction, type);
             return true;
+        }
+
+        public void OnDeath()
+        {
+            _damageFieldComponent.IsActive = false;
         }
     }
 }

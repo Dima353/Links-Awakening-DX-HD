@@ -10,10 +10,11 @@ using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.GameObjects.MidBoss
 {
-    internal class MBossBone : GameObject
+    internal class MBossRollingBonesBone : GameObject
     {
         private readonly Animator _animator;
         private readonly BodyComponent _body;
+        private readonly DamageFieldComponent _damageComponent;
 
         private const float MoveSpeed = 1f;
 
@@ -22,7 +23,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private float _deathCount;
         private int _deathState;
 
-        public MBossBone(Map.Map map, int posX, int posY, int offset) : base(map)
+        public MBossRollingBonesBone(Map.Map map, int posX, int posY, int offset) : base(map)
         {
             var fieldRectangle = map.GetField(posX, posY, 16);
 
@@ -43,7 +44,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             var hittableCollider = new CBox(EntityPosition, 0, 0, 0, 16, 96, 8);
             var damageCollider = new CBox(EntityPosition, 2, 0, 0, 12, 96, 4);
             AddComponent(HittableComponent.Index, new HittableComponent(hittableCollider, OnHit));
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageComponent = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush) { RepelMultiplier = 1.5f });
             AddComponent(BodyComponent.Index, _body);
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
@@ -55,6 +56,11 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _hasCollided = false;
             _body.Velocity.X = direction == 0 ? -MoveSpeed : MoveSpeed;
             _animator.Play("move");
+        }
+
+        public void bossDeath()
+        {
+            _damageComponent.IsActive = false;
         }
 
         public void Delete()

@@ -355,6 +355,9 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             _damageState.OnHit(gameObject, direction, damageType, damage, pieceOfPower);
 
+            if (_damageState.CurrentLives <= 0)
+                _damageField.IsActive = false;
+
             return Values.HitCollision.Enemy;
         }
 

@@ -61,6 +61,7 @@ namespace ProjectZ.InGame.Pages
             AddPage(new GameMenuPage(_width, _height));
             AddPage(new ExitGamePage(_width, _height));
             AddPage(new GameOverPage(_width, _height));
+            AddPage(new QuitGamePage(_width, _height));
         }
 
         public virtual void Update(GameTime gameTime)
@@ -241,6 +242,15 @@ namespace ProjectZ.InGame.Pages
         public void ClearStack()
         {
             PageStack.Clear();
+        }
+
+        public void OnResize(int newWidth, int newHeight)
+        {
+            InterfacePage page = GetCurrentPage();
+            if (page is not null)
+            {
+                page.OnResize(newWidth, newHeight);
+            }
         }
     }
 }

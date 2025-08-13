@@ -18,6 +18,8 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly bool _delete;
         private readonly bool _soundEffect;
 
+        private readonly string[] _faceShrineDoors = { "d6_door_1_hit", "d6_door_23_hit", "d6_door_7_hit", "d6_door_4_hit" };
+
         public ObjHitTrigger() : base("editor hit trigger") { }
 
         public ObjHitTrigger(Map.Map map, int posX, int posY, int hitType, string strKey, int width, int height, int activationTime, bool delete, bool soundEffect) : base(map)
@@ -51,9 +53,22 @@ namespace ProjectZ.InGame.GameObjects.Things
                 Activate();
         }
 
+        private bool IsFaceShrineDoor(string strKey)
+        {
+            foreach (string key in _faceShrineDoors)
+                if (key == strKey)
+                    return true;
+            return false;
+        }
+
+        private bool IsObjectStatue(GameObject gameObject)
+        {
+            return gameObject.GetType() == typeof(ObjStone) && ((ObjStone)gameObject).IsHeavy();
+        }
+
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType damageType, int damage, bool pieceOfPower)
         {
-            if (_wasActivated)
+            if (_wasActivated || (IsFaceShrineDoor(_strKey) && !IsObjectStatue(gameObject)))
                 return Values.HitCollision.None;
 
             if (damageType == _hitType)

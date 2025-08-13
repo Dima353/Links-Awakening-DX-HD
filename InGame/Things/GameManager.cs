@@ -52,9 +52,24 @@ namespace ProjectZ.InGame.Things
         }
 
         // _activeRenderTarget == null ???
-        public Matrix GetMatrix => Matrix.CreateScale(new Vector3(
-            (float)_activeRenderTarget.Width / (int)(Game1.WindowWidth * _scaleMultiplier),
-            (float)_activeRenderTarget.Height / (int)(Game1.WindowHeight * _scaleMultiplier), 0));
+
+        // TODO:RT: Based on the comment above, it seems the original developer has experienced this issue. Unfortunately, it
+        // was never actually fixed so the game would just outright crash. For now, if the render target is null return a
+        // basic matrix instead of crashing the game with a null exception.
+        // See also: ..\InGame\Map\MapManager.cs
+        public Matrix GetMatrix
+        {
+            get
+            {
+                if (_activeRenderTarget == null)
+                    return Matrix.Identity;
+
+                float scaleX = (float)_activeRenderTarget.Width / (int)(Game1.WindowWidth * _scaleMultiplier);
+                float scaleY = (float)_activeRenderTarget.Height / (int)(Game1.WindowHeight * _scaleMultiplier);
+
+                return Matrix.CreateScale(scaleX, scaleY, 1f);
+            }
+        }
 
         public int CurrentRenderWidth;
         public int CurrentRenderHeight;
@@ -147,6 +162,10 @@ namespace ProjectZ.InGame.Things
         public int PieceOfPowerCount;
         public int PieceOfPowerDamageCount;
 
+        private bool _playPieceOfPowerMusic;
+        private bool _playPieceOfPowerDelay;
+        private float _playPieceOfPowerCounter;
+
         private readonly Dictionary<string, List<DialogPath>> _dialogPaths = new Dictionary<string, List<DialogPath>>();
         private DialogPath _currentDialogPath;
         private readonly Queue<string> _dialogPathQueue = new Queue<string>();
@@ -219,6 +238,27 @@ namespace ProjectZ.InGame.Things
 
             ItemDrawHelper.Update();
 
+            // Check to play the Piece of Power / Guardian Acorn music.
+            if (_playPieceOfPowerMusic)
+            {
+                // When grabbing the item, there is a delay before the music starts.
+                if (_playPieceOfPowerDelay)
+                {
+                    _playPieceOfPowerCounter += Game1.DeltaTime;
+                    if (_playPieceOfPowerCounter > 2500)
+                    {
+                        _playPieceOfPowerDelay = false;
+                        _playPieceOfPowerCounter = 0;
+                    }
+                }
+                // If transitioning maps, don't delay the music.
+                else
+                {
+                    _playPieceOfPowerMusic = false;
+                    PlayPieceOfPowerMusic();
+                }
+            }
+
             // update the dialogs; forced dialog update is used in sequences where the dialog should be updated but not the normal game
             // needs to come after the ingame overlay update because Game1.UpdateGame can be set to false by it
             if (Game1.UpdateGame || Game1.ForceDialogUpdate)
@@ -251,6 +291,11 @@ namespace ProjectZ.InGame.Things
         {
             if (GameSettings.EnableShadows && MapManager.CurrentMap.UseShadows && !UseShockEffect)
             {
+                // TODO:RT: Another place where null render target causes a crash. For now, just don't draw anything
+                // on the screen instead of crashing the game.
+                // See also: ..\InGame\Map\MapManager.cs
+                if (_shadowRenderTarget == null) return;
+
                 // render the shadows
                 RenderShadows(spriteBatch);
 
@@ -348,8 +393,13 @@ namespace ProjectZ.InGame.Things
             Game1.Graphics.GraphicsDevice.SetRenderTarget(Game1.MainRenderTarget);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicWrap);
 
-            spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight), Color.White);
-
+            // TODO:RT: Another place where null render target causes a crash. For now, just don't draw anything
+            // on the screen instead of crashing the game.
+            // See also: ..\InGame\Map\MapManager.cs
+            if (_inactiveRenderTarget1 != null)
+            {
+                spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight), Color.White);
+            }
             // debug stuff
             MapManager.Camera.Draw(spriteBatch);
 
@@ -713,7 +763,7 @@ namespace ProjectZ.InGame.Things
             GuardianAcornIsActive = true;
             GuardianAcornDamageCount = 0;
 
-            StartPieceOfPowerMusic();
+            StartPieceOfPowerMusic(true);
         }
 
         public void StopGuardianAcorn()
@@ -730,12 +780,21 @@ namespace ProjectZ.InGame.Things
             PieceOfPowerIsActive = true;
             PieceOfPowerDamageCount = 0;
 
-            StartPieceOfPowerMusic();
+            StartPieceOfPowerMusic(true);
         }
 
-        public void StartPieceOfPowerMusic()
+        public void StartPieceOfPowerMusic(bool addDelay = false)
         {
-            // start playing music
+            _playPieceOfPowerDelay = addDelay;
+            _playPieceOfPowerMusic = true;
+
+            // If a delay was added the item was picked up.
+            if (addDelay)
+                Game1.GameManager.StopMusic();
+        }
+
+        public void PlayPieceOfPowerMusic()
+        {
             Game1.GameManager.SetMusic(72, 1);
         }
 

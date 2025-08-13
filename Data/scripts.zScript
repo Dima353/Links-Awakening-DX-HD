@@ -9,189 +9,174 @@ test_dialog_3:0 -> [dialog:choice:npc_hippo_0:choice_Nope:choice_Cant:choice_Nop
 test_sign_0:0 -> [music:53:1] -> [stop_music:3000:1]
 test_sign_1:0 -> npc_tracy_8
 
-
-// overworld
+// Init Overworld
 overworld:0 -> [set:dungeon_1:0] -> [set:dungeon_2:0] -> [set:dungeon_3:0] -> [set:dungeon_4:0] -> [set:dungeon_5:0] -> [set:dungeon_6:0] -> [set:dungeon_7:0] -> [set:dungeon_8:0] -> [set:crystal_hard:0] -> [set:pondReset:0] -> [set:rabbit_0Jump:533] -> [set:rabbit_1Jump:533] -> [set:rabbit_3Jump:533] -> [path:overworldMusic]
 
-// before the sword is collected the overworld music is changed
+// Play the intro music before sword is collected
 overworldMusic:introMusic:1 -> [music:28:1]
 overworldMusic:0 ->
 
-// before the sword is collected the house music is changed
+// Play the same music while inside houses
 houseMusic:introMusic:1 -> [music:28:1]
 houseMusic:0 ->
 
-bowWowHouse:villageAttacked:1 -> [set:npc09Jump:1125] -> [set:npc09Range:128] -> [music:13:2]
-bowWowHouse:0 ->
-
-ocarina:0 -> ocarina
-
-// dungeon intro text
+// Dungeon intro text
 dungeon_1:0 -> dungeon_1 -> [set:1]
 dungeon_1:1 ->
-
 dungeon_2:0 -> dungeon_2 -> [set:1]
 dungeon_2:1 ->
-
 dungeon_3:0 -> dungeon_3 -> [set:1]
 dungeon_3:1 ->
-
 dungeon_4:0 -> dungeon_4 -> [set:1]
 dungeon_4:1 ->
-
 dungeon_5:0 -> dungeon_5 -> [set:1]
 dungeon_5:1 ->
-
 dungeon_6:0 -> dungeon_6 -> [set:1]
 dungeon_6:1 ->
-
 dungeon_7:0 -> dungeon_7 -> [set:1]
 dungeon_7:1 ->
-
 dungeon_8:0 -> dungeon_8 -> [set:1]
 dungeon_8:1 ->
 
-// maria in the house
+// Marin in the house
 marin_intro:0 -> maria_0_0 -> [set:maria:1] -> [set:tarin:0] -> [set:introMusic:1]
-
 maria:1 -> maria_0_1
 
-// maria standing outside and singing
-// tarin is missing
+// Marin standing outside and singing
 marin_start_singing:0 -> [wait:dialogOpen:0] -> [set:maria_sing:1]
 marin_start_singing_animals:0 -> [wait:dialogOpen:0] -> [set:maria_sing_animals:1]
 
+// Tarin is in the forest dialog
 maria:2 -> maria_1_0 -> [path:marin_start_singing]
-maria:1_1 -> maria_1_1 -> [path:marin_start_singing]
-// tarin sleeping
-maria:1_2 -> maria_1_2 -> [path:marin_start_singing]
 
+// Marin loves singing dialog
+maria:1_1 -> [check_item:ocarina_maria:1:learned_song] -> [path:marin_learn_song_1]
+
+// Tarin sleeping dialog
+maria:1_2 -> [check_item:ocarina_maria:1:learned_song] -> [path:marin_learn_song_2]
+
+// One-shot dialog after song was learned
 maria:4 -> maria_1_8 -> [set:3]
 
+// End game dialog
 maria:marin_thanks:1 -> marin_5_0 -> [set:marin_thanks:]
 
-// tarin is back -> sing
-maria:maria_state:1 -> [check_item:ocarina_maria:1:learned_song] -> [path:maria_learned_song]
-// in the right village
-maria:maria_state:4 -> [check_item:ocarina_maria:1:learned_song] -> [path:maria_learned_song_2]
+// Marin loves singing dialog fallback
+maria:maria_state:1 -> [check_item:ocarina_maria:1:learned_song] -> [path:marin_learn_song_1]
 
-maria:maria_state:6 -> [check_item:ocarina_maria:1:learned_song] -> [path:maria_learned_song_3]
+// Marin in the animal village
+maria:maria_state:4 -> [check_item:ocarina_maria:1:learned_song] -> [path:marin_learn_song_3]
 
-// coming out of the dungeon
+// Marin was saved from bridge
+maria:maria_state:6 -> [check_item:ocarina_maria:1:learned_song] -> [path:marin_learn_song_4]
+
+// Marin leaving a dungeon
 marin_dungeon_leave:marin_dungeon_hearts:1 -> marin_dungeon_hearts
 marin_dungeon_leave:marin_dungeon_hearts:2 -> marin_dungeon_hearts_alt
 marin_dungeon_leave:marin_dungeon_time:1 -> marin_dungeon_leave_time
 marin_dungeon_leave:0 -> marin_dungeon_leave
 
-// digging while marin is following the player
+// Digging while marin is following the player
 dig_dialog:maria_state:3 -> [countdown:100] -> marin_digging
 dig_dialog:0 ->
 
+// Breaking a pot while marin is following the player
 break_pot:maria_state:3 -> [path:marin_break_pot_dungeon]
 break_pot:0 ->
-// dont show the message in the dungeon when marin is not following the player
+
+// Don't show the message in the dungeon when Marin is not following the player.
 marin_break_pot_dungeon:maria_dungeon:0 -> [path:marin_break_pot]
 marin_break_pot_dungeon:maria_dungeon:1 ->
 marin_break_pot:0 -> [countdown:275] -> marin_pot_0 -> [set:1]
 marin_break_pot:1 -> [countdown:275] -> marin_pot_1
 
-// hitting a bird
+// Hitting a bird while marin is following the player
 bird_hit:maria_state:3 -> [path:bird_hit_marin]
 bird_hit:0 ->
 
+// In the original, it's a very rare chance to see her encourage Link to whack it.
+// Randomization is not possible with this system, so just show it after 10 hits.
 bird_hit_marin:0 -> marin_cucco_0 -> [set:1]
-bird_hit_marin:1 -> marin_cucco_1
+bird_hit_marin:1 -> marin_cucco_0 -> [set:2]
+bird_hit_marin:2 -> marin_cucco_0 -> [set:3]
+bird_hit_marin:3 -> marin_cucco_0 -> [set:4]
+bird_hit_marin:4 -> marin_cucco_0 -> [set:5]
+bird_hit_marin:5 -> marin_cucco_0 -> [set:6]
+bird_hit_marin:6 -> marin_cucco_0 -> [set:7]
+bird_hit_marin:7 -> marin_cucco_0 -> [set:8]
+bird_hit_marin:8 -> marin_cucco_0 -> [set:9]
+bird_hit_marin:9 -> marin_cucco_1 -> [set:0]
 
-// marin in the mountains
+// Marin on the mountain
 marin_help:0 -> [update_objects] -> marin_4_0 -> marin_4_1
 marin_saved:0 -> [save_history:true] -> [set:link_direction:2] -> [freeze:250] -> marin_4_2 -> marin_4_3 -> marin_4_4 -> [set:seq_tarin:1] -> [set:seqTarinFade:-125] -> [set:seqTarinMove:72,0,1] -> [freeze:seqTarinMoving:0] -> [set:seqTarinAnimation:stand_1] -> [set:maria_play_animation:stand_3] -> marin_4_5 -> [freeze:600] -> [set:link_direction:3] -> marin_4_6 -> [freeze:600] -> [set:maria_play_animation:stand_0] -> [set:seqTarinAnimation:-] -> [set:seqTarinMove:-72,0,0.5] -> [set:maria_walk:0,14,0.5] -> [freeze:1] -> [set:maria_walk:-14,0,0.5] -> [freeze:marinMoving:0] -> [set:maria_play_animation:stand_1] -> [freeze:1000] -> [set:seqTarinFade:125] -> [freeze:500] -> [set:maria_walk:-64,0,0.75] -> [freeze:1000] -> [set:maria_fade:125] -> [set:seq_tarin:0] -> [set:marin_thanks:1] -> [set:owl:8_0] -> [save_history:false]
 
+// Madame Meow-Meow when Bow-Wow was taken.
+bowWowHouse:villageAttacked:1 -> [set:npc09Jump:1125] -> [set:npc09Range:128] -> [music:13:2]
+bowWowHouse:0 ->
+
+// Obtained the ocarina.
+ocarina:0 -> ocarina
+
+// Papahl at home
 npc08:0 -> npc08_0
 npc08:1 -> npc08_1
 
-// lost boy on the mountain
+// Papahl on the mountain
 npc_lost_boy:0 -> [check_item:trade6:1:has_item] -> [path:npc_lost_boy_item]
 npc_lost_boy:1 -> npc_lost_boy_4
-
 npc_lost_boy_item:has_item:0 -> [dialog:choice:npc_lost_boy_0:choice_Nope:choice_Cant] -> [path:npc_lost_boy_choice_0]
 npc_lost_boy_item:has_item:1 -> [dialog:choice:npc_lost_boy_0:choice_Yes:choice_Nope] -> [path:npc_lost_boy_choice_1]
-// do not have the item so we cant trade it
+
+// Papahl trade sequence: item missing
 npc_lost_boy_choice_0:choice:0 -> npc_lost_boy_1
 npc_lost_boy_choice_0:choice:1 -> npc_lost_boy_1
 
-// trading sequence
+// Papahl trade sequence: item traded
 npc_lost_boy_choice_1:choice:0 -> [save_history:true] -> [remove_item:trade6:1:result] -> npc_lost_boy_2 -> [wait:dialogOpen:0] -> [music_speed:1.5] -> [set:npc_lost_boy_eat:1] -> [freeze:3300] -> [music_speed:1] -> npc_lost_boy_3 -> [wait:dialogOpen:0] -> [add_item:trade7:1] -> [set:ow_npc_bag:0] -> [set:npc_lost_boy_state:2] -> [set:npc08:1] -> [set:npc07:0] -> [set:npc_lost_boy:1] -> [save_history:false]
 npc_lost_boy_choice_1:choice:1 -> npc_lost_boy_1
 
-// not learned song -> check ocarina || learned song -> just sing
-maria_learned_song:learned_song:0 -> [check_item:ocarina:1:has_ocarina] -> [path:marin_singing]
-maria_learned_song:learned_song:1 -> maria_1_1 -> [path:marin_start_singing]
-// no ocarina -> sing for herself || ocarina -> teach song
-marin_singing:has_ocarina:0 -> maria_1_1 -> [path:marin_start_singing]
-marin_singing:has_ocarina:1 -> maria_1_3 -> [wait:dialogOpen:0] -> [freeze:350] -> [set:maria_start_duo:1]
+// Learn song when dialog is "Marin loves singing"
+marin_learn_song_1:learned_song:0 -> [check_item:ocarina:1:has_ocarina] -> [path:marin_singing_1]
+marin_learn_song_1:learned_song:1 -> maria_1_1 -> [path:marin_start_singing]
+marin_singing_1:has_ocarina:0 -> maria_1_1 -> [path:marin_start_singing]
+marin_singing_1:has_ocarina:1 -> maria_1_3 -> [wait:dialogOpen:0] -> [freeze:350] -> [set:maria_start_duo:1]
 
-maria_learned_song_3:learned_song:0 -> [check_item:ocarina:1:has_ocarina] -> [path:marin_singing]
-maria_learned_song_3:learned_song:1 -> [path:marin_learned_song]
-// learned the song after getting saved
-marin_learned_song:0 -> maria_1_8 -> [set:1]
-marin_learned_song:1 -> marin_5_1
-
-maria_learned_song_2:learned_song:0 -> [check_item:ocarina:1:has_ocarina] -> [path:marin_singing_2]
-maria_learned_song_2:learned_song:1 -> maria_1_9 -> [path:marin_start_singing_animals]
-marin_singing_2:has_ocarina:0 -> maria_1_9 -> [path:marin_start_singing_animals]
+// Learn song when dialog is "Tarin is sleeping"
+marin_learn_song_2:learned_song:0 -> [check_item:ocarina:1:has_ocarina] -> [path:marin_singing_2]
+marin_learn_song_2:learned_song:1 -> maria_1_2 -> [path:marin_start_singing]
+marin_singing_2:has_ocarina:0 -> maria_1_2 -> [path:marin_start_singing]
 marin_singing_2:has_ocarina:1 -> maria_1_3 -> [wait:dialogOpen:0] -> [freeze:350] -> [set:maria_start_duo:1]
 
+// Learn song while Marin is in Animal Village
+marin_learn_song_3:learned_song:0 -> [check_item:ocarina:1:has_ocarina] -> [path:marin_singing_3]
+marin_learn_song_3:learned_song:1 -> maria_1_9 -> [path:marin_start_singing_animals]
+marin_singing_3:has_ocarina:0 -> maria_1_9 -> [path:marin_start_singing_animals]
+marin_singing_3:has_ocarina:1 -> maria_1_3 -> [wait:dialogOpen:0] -> [freeze:350] -> [set:maria_start_duo:1]
+
+// Learn song after Marin is saved
+marin_learn_song_4:learned_song:0 -> [check_item:ocarina:1:has_ocarina] -> [path:marin_singing_4]
+marin_learn_song_4:learned_song:1 -> [path:marin_singing_4]
+marin_singing_4:0 -> maria_1_8 -> [set:1]
+marin_singing_4:1 -> marin_5_1
+
+// Confirmation the song has been learned
 marin_singing_end:0 -> [dialog:choice:maria_1_4:choice_Yes:choice_No] -> [path:maria_song_repeat]
 
-// get the song || replay the song
+// Learn / Repeat song dialog choice
 maria_song_repeat:choice:0 -> [set:maria:4] -> [add_item:ocarina_maria:1]
 maria_song_repeat:choice:1 -> maria_1_6 -> [wait:dialogOpen:0] -> [freeze:350] -> [set:maria_start_duo:1]
 
-// maria at the beach
+// Marin at the beach
 maria:6 -> [dialog:choice:marin_2_0:choice_Yes!:choice_No...] -> [path:maria_beach_choice]
 maria_beach_choice:choice:0 -> [set:maria:7] -> [start_sequence:marinBeach]
 maria_beach_choice:choice:1 -> marin_2_1
 
 maria:7 ->
 
+// Ocarina when no songs are learned
 ocarina_bad:maria_state:3 -> ocarina_bad_marin
 ocarina_bad:0 -> ocarina_bad
-
-// rooster wake up dialog
-rooster:0 -> [save_history:true] -> [set:chicken_dude:1] -> [set:has_rooster:1] -> [set:ulrira_d7:2] -> [freeze:1000] -> rooster_0 -> [save_history:false]
-
-// ghost grave powder dialog
-ghost_grave_powder_dialog:has_ghost:0 -> [set:ghost_grave_powder:0]
-ghost_grave_powder_dialog:0 -> ghost_grave_powder -> [set:ghost_grave_powder:0]
-
-// ghost
-ghost_start_following:0 -> [set:has_ghost:1] -> [set:ghost_blockade:1] -> [set:ulrira_ghost:1]
-
-ghost_return:0 -> [cooldown:60000:result] -> [path:ghost_return_cooldown]
-ghost_return:1 ->
-ghost_return_cooldown:result:0 ->
-ghost_return_cooldown:result:1 -> [sound:D360-45-2D] -> [path:ghost_return_dialog]
-ghost_return_dialog:0 -> ghost_0
-ghost_return_dialog:1 -> ghost_5
-
-// go in dialog
-ghost_house_dialog:0 -> [path:ghost_house_dialog_check]
-ghost_house_dialog:1 -> 
-ghost_house_dialog_check:has_ghost:0 ->
-ghost_house_dialog_check:has_ghost:1 -> [cooldown:60000:result] -> [path:ghost_house_dialog_cooldown]
-ghost_house_dialog_cooldown:result:0 ->
-ghost_house_dialog_cooldown:result:1 -> ghost_2
-
-// house sequence
-ghost_house_sequence:has_ghost:0 ->
-ghost_house_sequence:has_ghost:1 -> [path:ghost_house_seq]
-ghost_house_seq:0 -> [save_history:true] -> [set:1] -> [set:ghost_return_dialog:1] -> [set:ghost_house_dialog:1] -> [set:ghost_move:0,-56,0.5] -> [freeze:2500] -> [set:ghost_move:-21,-10,0.5] -> [freeze:2000] -> [set:ghost_move:-10,-21,0.5] -> [freeze:1700] -> [set:ghost_move:53,13,0.5] -> [freeze:3100] -> ghost_3 -> [set:ghost_move:-20,50,0.5] -> [freeze:1750] -> ghost_4 -> [set:ghost_follow:1] -> [wait:dialogOpen:0] -> [set:link_move:0,1] -> [set:lock_player:1000] -> [save_history:false]
-ghost_house_seq:1 ->
-
-// grave sequence
-ghost_grave_sequence:has_ghost:0 ->
-ghost_grave_sequence:has_ghost:1 -> [update_objects] -> [save_history:true] -> [set:ghost_blockade:0] -> [set:ghost_return:1] -> [set:ghost_shell:1] -> [freeze:2000] -> ghost_6 -> [wait:dialogOpen:0] -> [set:ghost_fade:175] -> [freeze:500] -> [remove_item:ghost:1:result] -> [set:has_ghost:0] -> [set:ulrira_ghost:0] -> [set:owl:5_0] -> [save_history:false]
-
 
 // beach sequence
 seq_beach:0 -> [save_history:true] -> [music:77:2] -> [countdown:2000] -> [set:1] -> [path:seq_beach]
@@ -199,11 +184,6 @@ seq_beach:1 -> marin_2_2 -> [wait:dialogOpen:0] -> [seq_play:marin:ocean_look] -
 maria_beach_listening:choice:0 -> marin_2_6 -> [set:seq_beach:2] -> [wait:dialogOpen:0] -> [seq_play:marin:ocean_sit] -> [countdown:750] -> [path:seq_beach]
 maria_beach_listening:choice:1 -> marin_2_5 -> [set:seq_beach:1] -> [wait:dialogOpen:0] -> [seq_play:marin:ocean_sit] -> [countdown:750] -> [path:seq_beach]
 seq_beach:2 -> [seq_play:marin:ocean_ask] -> marin_2_7 -> [wait:dialogOpen:0] -> [countdown:1000] -> [close_overlay] -> [music:-1:2] -> [set:maria:7] -> [set:maria_state:3] -> [add_item:marin:1] -> [set:has_marin:1] -> [save_history:false]
-
-// block walking into dungeons when the ghost is following the player
-ghost_blockade:0 ->
-ghost_blockade:1 -> ghost_1
-
 
 // waking up the walrus
 walrus:has_marin:0 -> [update_objects] -> walrus_0
@@ -220,6 +200,54 @@ npc_house_chest:0 -> npc_house_chest
 
 bookcase:has_marin:1 -> npc_house_chest_marin
 bookcase:0 -> bookcase
+
+// rooster wake up dialog
+rooster:0 -> [save_history:true] -> [set:chicken_dude:1] -> [set:has_rooster:1] -> [set:ulrira_d7:2] -> [freeze:1000] -> rooster_0 -> [save_history:false]
+
+//-------------------------------------------------------------------------------
+// The Ghost - Follows Link after completing 4th dungeon
+
+// Start following Link.
+ghost_start_following:0 -> [set:has_ghost:1] -> [set:ghost_blockade:1] -> [set:ulrira_ghost:1] -> [set:ghost_returned:0] -> [set:ghost_seenhouse:0]
+
+// Occasionally show reminder of where to go next.
+ghost_return:0 -> [cooldown:60000:result] -> [path:ghost_return_cooldown]
+ghost_return:1 ->
+ghost_return_cooldown:result:0 ->
+ghost_return_cooldown:result:1 -> [sound:D360-45-2D] -> [path:ghost_return_dialog]
+ghost_return_dialog:0 -> ghost_0
+ghost_return_dialog:1 -> ghost_5
+
+// Arrive at the house by the bay.
+ghost_house_dialog:0 -> [path:ghost_house_dialog_check]
+ghost_house_dialog:1 -> 
+ghost_house_dialog_check:has_ghost:0 ->
+ghost_house_dialog_check:has_ghost:1 -> [cooldown:60000:result] -> [path:ghost_house_dialog_cooldown]
+ghost_house_dialog_cooldown:result:0 ->
+ghost_house_dialog_cooldown:result:1 -> ghost_2
+
+// Enter the house by the bay.
+ghost_house_sequence:has_ghost:0 ->
+ghost_house_sequence:has_ghost:1 -> [path:ghost_house_seq]
+ghost_house_seq:0 -> [save_history:true] -> [set:1] -> [set:ghost_return_dialog:1] -> [set:ghost_house_dialog:1] -> [set:ghost_move:0,-56,0.5] -> [freeze:2500] -> [set:ghost_move:-21,-10,0.5] -> [freeze:2000] -> [set:ghost_move:-10,-21,0.5] -> [freeze:1700] -> [set:ghost_move:53,13,0.5] -> [freeze:3100] -> ghost_3 -> [set:ghost_move:-20,50,0.5] -> [freeze:1750] -> ghost_4 -> [set:ghost_follow:1] -> [wait:dialogOpen:0] -> [set:link_move:0,1] -> [set:lock_player:1000] -> [set:ghost_seenhouse:1] -> [save_history:false]
+ghost_house_seq:1 ->
+
+// Approach the ghost's gravestone.
+ghost_grave_sequence:has_ghost:0 ->
+ghost_grave_sequence:has_ghost:1 -> [path:ghost_grave_seq]
+ghost_grave_seq:ghost_seenhouse:0 ->
+ghost_grave_seq:ghost_seenhouse:1 -> [update_objects] -> [save_history:true] -> [set:ghost_blockade:0] -> [set:ghost_return:1] -> [set:ghost_returned:1] -> [set:ghost_shell:1] -> [freeze:2000] -> ghost_6 -> [wait:dialogOpen:0] -> [set:ghost_fade:175] -> [freeze:500] -> [remove_item:ghost:1:result] -> [set:has_ghost:0] -> [set:ulrira_ghost:0] -> [set:owl:5_0] -> [save_history:false]
+
+// Don't allow entering dungeons with the ghost.
+ghost_blockade:0 ->
+ghost_blockade:1 -> ghost_1
+
+// Sprinkling powder on the ghost's grave. The "ghost_returned" var can be "2" after the photo is taken.
+ghost_grave_powder_dialog:ghost_returned:0 -> [set:ghost_grave_powder:0]
+ghost_grave_powder_dialog:ghost_returned:1 -> ghost_grave_powder -> [set:ghost_grave_powder:0]
+ghost_grave_powder_dialog:ghost_returned:2 -> ghost_grave_powder -> [set:ghost_grave_powder:0]
+
+//-------------------------------------------------------------------------------
 
 // tarin house
 // can not look into the chest while tarin is around awake
@@ -467,6 +495,7 @@ trade13:0 -> trade13 -> [set:npc_painter:2]
 
 // woman with the broom
 npc_grandmother:villageAttacked:1 -> npc_broom_bowwow
+
 // init state
 npc_grandmother:missing_broom:0 -> npc_broom_0
 
@@ -592,10 +621,6 @@ shopkeeper_buy:itemShopItem:bomb -> [update_objects] -> [dialog:choice:itemShop_
 shopkeeper_buy:0 -> [update_objects] -> [dialog:choice:itemShop_dialog:itemShop_buy:itemShop_dont] -> [path:itemShop]
 
 shopkeeper_try_steal:0 -> shopkeeper_4
-shopkeeper_steal:0 -> shopkeeper_5 -> [path:stealing_photo]
-// unlock the photo if link already talked to the photo mouse
-stealing_photo:photo_1:0 ->
-stealing_photo:photo_1:1 -> [set:photo_7:1] -> [path:photo_count_increase]
 
 itemShop:choice:0 -> [buy:result] -> [path:itemBuy]
 itemShop:choice:1 -> [set:result:1] -> [set:holdItem:0]
@@ -613,15 +638,15 @@ check_item0:npc_hidden:1 -> [check_item:bow:0:has_bow] -> [path:check_bow]
 check_item0:0 -> [check_item:shovel:1:has_shovel] -> [path:check_shovel]
 
 check_shovel:has_shovel:0 -> [set:shopItem0:0]
-check_shovel:has_shovel:1 -> [check_item:bow:0:has_bow] -> [path:check_bow]
+check_shovel:has_shovel:1 -> [set:shopLevel:1] -> [check_item:bow:0:has_bow] -> [path:check_bow]
 
 check_bow:has_bow:0 -> [set:shopItem0:1]
 check_bow:has_bow:1 -> [set:shopItem0:2]
 
 // -- candy trendy --
 npc_trendy:trendy_closed:1 -> npc_trendy_closed
-
 npc_trendy:0 -> [path:npc_trand_init_0]
+
 // play again dialog
 npc_trendy:1 -> [path:npc_trand_init_1]
 
@@ -879,7 +904,6 @@ rabbit_3:1 -> rabbit_3_1
 
 rabbit_2_script:0 -> [set:rabbit_2Jump:533]
 
-
 desert_bones:0 -> desert_bone_0 -> [set:desert_bones_powder:0]
 
 desertLanmola_enter:ow_desertLanmola:0 -> desertLanmola
@@ -925,69 +949,68 @@ npc_painter:1 -> npc_painter_1
 // player has the lense
 npc_painter:2 -> npc_painter_2
 
-// signpost game
+// Signpost Maze > Ocarina Song 3
 signpost_failed:0 -> [sound:D360-29-1D] -> [freeze:250] -> signpost_TryAgain -> [set:sgame:0]
 
+shieldGame1:mamu_gone:0 -> signpost_Down
 shieldGame1:mamu_gone:1 -> signpost_Gone
-shieldGame1:sgame:0 -> signpost_Down -> [set:sgame:1]
-shieldGame1:sgame:1 -> signpost_Down -> [set:sgame:1]
-shieldGame1:0 -> [path:signpost_failed]
 
 shieldGame2:mamu_gone:1 -> signpost_Gone
-shieldGame2:sgame:1 -> signpost_Right -> [set:sgame:2]
+shieldGame2:sgame:0 -> signpost_Right -> [set:sgame:1]
+shieldGame2:sgame:1 -> signpost_Right -> [set:sgame:1]
 shieldGame2:0 -> [path:signpost_failed]
 
 shieldGame3:mamu_gone:1 -> signpost_Gone
-shieldGame3:sgame:2 -> signpost_Down -> [set:sgame:3]
+shieldGame3:sgame:1 -> signpost_Down -> [set:sgame:2]
 shieldGame3:0 -> [path:signpost_failed]
 
 shieldGame4:mamu_gone:1 -> signpost_Gone
-shieldGame4:sgame:3 -> signpost_Left -> [set:sgame:4]
+shieldGame4:sgame:2 -> signpost_Left -> [set:sgame:3]
 shieldGame4:0 -> [path:signpost_failed]
 
 shieldGame5:mamu_gone:1 -> signpost_Gone
-shieldGame5:sgame:4 -> signpost_Up -> [set:sgame:5]
+shieldGame5:sgame:3 -> signpost_Up -> [set:sgame:4]
 shieldGame5:0 -> [path:signpost_failed]
 
 shieldGame6:mamu_gone:1 -> signpost_Gone
-shieldGame6:sgame:5 -> signpost_Right -> [set:sgame:6]
+shieldGame6:sgame:4 -> signpost_Right -> [set:sgame:5]
 shieldGame6:0 -> [path:signpost_failed]
 
 shieldGame7:mamu_gone:1 -> signpost_Gone
-shieldGame7:sgame:6 -> signpost_Down -> [set:sgame:7]
+shieldGame7:sgame:5 -> signpost_Down -> [set:sgame:6]
 shieldGame7:0 -> [path:signpost_failed]
 
 shieldGame8:mamu_gone:1 -> signpost_Gone
-shieldGame8:sgame:7 -> signpost_Right -> [set:sgame:8]
+shieldGame8:sgame:6 -> signpost_Right -> [set:sgame:7]
 shieldGame8:0 -> [path:signpost_failed]
 
 shieldGame9:mamu_gone:1 -> signpost_Gone
-shieldGame9:sgame:8 -> signpost_Up -> [set:sgame:9]
+shieldGame9:sgame:7 -> signpost_Up -> [set:sgame:8]
 shieldGame9:0 -> [path:signpost_failed]
 
 shieldGame10:mamu_gone:1 -> signpost_Gone
-shieldGame10:sgame:9 -> signpost_Left -> [set:sgame:10]
+shieldGame10:sgame:8 -> signpost_Left -> [set:sgame:9]
 shieldGame10:0 -> [path:signpost_failed]
 
 shieldGame11:mamu_gone:1 -> signpost_Gone
-shieldGame11:sgame:10 -> signpost_Down -> [set:sgame:11]
+shieldGame11:sgame:9 -> signpost_Down -> [set:sgame:10]
 shieldGame11:0 -> [path:signpost_failed]
 
 shieldGame12:mamu_gone:1 -> signpost_Gone
-shieldGame12:sgame:11 -> signpost_Right -> [set:sgame:12]
+shieldGame12:sgame:10 -> signpost_Right -> [set:sgame:11]
 shieldGame12:0 -> [path:signpost_failed]
 
 shieldGame13:mamu_gone:1 -> signpost_Gone
-shieldGame13:sgame:12 -> signpost_Down -> [set:sgame:13]
+shieldGame13:sgame:11 -> signpost_Down -> [set:sgame:12]
 shieldGame13:0 -> [path:signpost_failed]
 
 shieldGame14:mamu_gone:1 -> signpost_Gone
-shieldGame14:sgame:13 -> signpost_Left -> [set:sgame:14]
+shieldGame14:sgame:12 -> signpost_Left -> [set:sgame:13]
 shieldGame14:0 -> [path:signpost_failed]
 
 shieldGame15:mamu_gone:1 -> signpost_Gone
 // spawn the stairs
-shieldGame15:sgame:14 -> signpost_Great -> [wait:dialogOpen:0] -> [set:sgame:15] -> [set:frogStairs:1]
+shieldGame15:sgame:13 -> signpost_Great -> [wait:dialogOpen:0] -> [set:sgame:14] -> [set:frogStairs:1]
 shieldGame15:0 -> [path:signpost_failed]
 
 shieldGameStairs:0 -> [spawn:animatorL:3.Particles/spawn.run.True] -> [sound:D360-02-02] -> [set:1] -> [path:shieldGameStairs]
@@ -1135,7 +1158,6 @@ d1_instrument_music:0 ->
 // trigger the bowWow missing part; update npc dialogs
 instrument0:0 -> [update_objects] -> instrument0 -> [set:npc_boy_0:1] -> [set:npc_boy_1:1] -> [set:ulrira:2_0] -> [set:owl:2_0] -> [set:villageAttacked:1] -> [set:bowWow:1] -> [set:mc_enemies:1] -> [set:tarin:3]
 
-
 // == dungeon two ==
 d2_open_door:0 -> [sound:D360-02-02]
 
@@ -1182,7 +1204,6 @@ d2_instrument_music:0 ->
 
 // set bowwow to a state where it gets returned; make bomb buyable in the shop
 instrument1:0 -> [update_objects] -> instrument1 -> [set:bowWow:3] -> [set:ulrira:3_0] -> [set:tarin:4] -> [set:tarin_state:3] -> [set:maria:1_1] -> [set:npc_boy_1:2] -> [set:shopLevel:1]
-
 
 // == dungeon three ==
 
@@ -1646,7 +1667,9 @@ photo_mouse_house:has_ghost:1 -> photo_mouse_follower
 photo_mouse_house:has_marin:1 -> photo_mouse_follower
 photo_mouse_house:has_rooster:1 -> photo_mouse_follower
 
-// photo sequence 1
+//-------------------------------------------------------------------------------
+// Photo 01: "Here Stands A Brave Man" / "Game Over" - First Photograph at Camera Shop
+
 photo_mouse_house:0 -> [update_objects] -> [save_history:true] -> [set:1] -> [set:photoMouseActive:1] -> [dialog:choice:photo_01_0:choice_YES:choice_NO] -> [path:photo_mouse_choice]
 photo_mouse_house:1 -> photo_01_1
 
@@ -1674,72 +1697,19 @@ photo_mouse_take_photo:0 -> [update_objects] -> [freeze:photo_mouse_houseMoving:
 // the player can not leave the house after triggering the sequence
 photo_house_blockade:0 -> photo_01_9
 
-// photo sequence Ulrich
-photo_sequence_2:photoMouseActive:0 ->
-photo_sequence_2:photoMouseActive:1 -> [path:photo_sequence_ulrich]
+//-------------------------------------------------------------------------------
+Photo 02: "..." - Link & Marin / Toronbo Shores
 
-photo_sequence_ulrich:0 -> [update_objects] -> [save_history:true] -> [set:1] -> [set:spawnMouseSeq2:1] -> [set:mouseSeq2Fade:-75] -> [set:mouseSeq2Move:-56,0,1] -> [freeze:mouseSeq2Moving:0] -> [freeze:500] -> [set:link_direction:2] -> photo_02_0 -> [wait:dialogOpen:0] -> [set:mouseSeq2Move:-10,0,1] -> [set:link_push:-10,0,200] -> [freeze:1] -> [freeze:mouseSeq2Moving:0] -> [set:mouseSeq2Animation:stand_1] -> [set:link_direction:1] -> photo_02_1 -> [wait:dialogOpen:0] -> [set:photo_flash:1] -> [freeze:350] -> [set:photo_5:1] -> [set:photoSequencePhoto:photo_5] -> [start_sequence:photo] -> [set:spawnMouseSeq2:0] -> [set:mouseSeq2Move:56,0,1] -> [freeze:350] -> [set:mouseSeq2Fade:75] -> [save_history:false] -> [path:photo_count_increase]
-photo_sequence_ulrich:1 ->
+check_cliff_sequence:1 ->
+check_cliff_sequence:photoMouseActive:1 -> [path:cliff_sequence_marin]
+check_cliff_sequence:0 ->
+cliff_sequence_marin:has_marin:0 ->
+cliff_sequence_marin:has_marin:1 -> [save_history:true] -> [set:check_cliff_sequence:1] -> [set:photo_2:1] -> [start_sequence:marinCliff]
 
-// photo sequence BowWow
-start_BowWow_Seq:photoMouseActive:0 ->
-start_BowWow_Seq:photoMouseActive:1 -> [path:photo_sequence_BowWow]
-// check if BowWow is at the pool
-photo_sequence_BowWow:bowWow:0 -> [path:photo_sequence_3]
-photo_sequence_BowWow:bowWow:4 -> [path:photo_sequence_3]
-photo_sequence_BowWow:0 ->
+seq_cliff:0 -> [music:77:2] -> [freeze:750] -> marin_cliff_0 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_1 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_2 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_1 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_3 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_1 -> [wait:dialogOpen:0] -> [freeze:1500] -> marin_cliff_4 -> [wait:dialogOpen:0] -> [freeze:750] -> [sound:D378-63-40] -> [seq_color:cliffPhotoFlash:255:255:255:255:0] -> [freeze:125] -> [seq_color:cliffPhotoFlash:0:0:0:0:150] -> [freeze:750] -> marin_cliff_5 -> [wait:dialogOpen:0] -> [freeze:500] -> [music:-1:2] -> [close_overlay] -> [path:photo_count_increase] -> [save_history:false]
 
-photo_sequence_3:0 -> [save_history:true] -> [set:1] -> [set:photo_6:1] -> [start_sequence:bowWow]
-photo_sequence_3:1 -> [set:2] -> photo_03_0
-photo_sequence_3:2 -> [set:3] -> photo_03_1 -> [freeze:1000] -> photo_03_2
-photo_sequence_3:3 -> [set:4] -> photo_03_3
-photo_sequence_3:4 -> [set:5] -> photo_03_4 -> photo_03_5 -> [path:photo_count_increase]
-photo_sequence_3:5 -> [save_history:false]
-
-// photo castle sequence
-photo_sequence_4:photoMouseActive:0 ->
-photo_sequence_4:photoMouseActive:1 -> [path:photo_sequence_castle]
-
-photo_sequence_castle:1 ->
-photo_sequence_castle:npc_frog_boy:1 -> [save_history:true] -> [set:1] -> [set:photo_10:1] -> [start_sequence:castle] -> [path:photo_count_increase]
-photo_sequence_castle:0 ->
-
-castle_sequence:0 -> [music:63:2] -> [freeze:1000] -> [seq_lerp:castleLink:91:-35:0.325] -> [seq_play:castleLink:walk] -> [seq_lerp:castleMouse:22:0:0.255] -> [seq_play:castleMouse:walk_2] -> [freeze:castleMouseMoving:0] -> [seq_finish_animation:castleMouse:0] -> [freeze:1000] -> [seq_lerp:castleMouse:-32:0:0.25] -> [seq_play:castleMouse:walk_0] -> [freeze:castleMouseMoving:0] -> [seq_finish_animation:castleMouse:0] -> [freeze:castleLinkMoving:0] -> [seq_finish_animation:castleLink:0] -> photo_05_0 -> [wait:dialogOpen:0] -> [seq_lerp:castleBoy:-44:-14:0.325] -> [seq_play:castleBoy:walk] -> [freeze:castleBoyMoving:0] -> [seq_finish_animation:castleBoy:0] -> photo_05_1 -> [wait:dialogOpen:0] -> [seq_play:castleLink:forward] -> [seq_lerp:castleMouse:0:64:0.25] -> [seq_play:castleMouse:walk_3] -> [seq_lerp:castleBoy:-39:-11:0.325] -> [seq_play:castleBoy:walk] -> [freeze:castleBoyMoving:0] -> [seq_play:castleBoy:forward] -> photo_05_2 -> [wait:dialogOpen:0] -> [freeze:1000] -> [seq_play:castleLink:piece] -> [seq_play:castleBoy:piece] -> [freeze:750] -> [sound:D378-63-40] -> [seq_color:castleFlash:255:255:255:255:0] -> [freeze:125] -> [seq_color:castleFlash:0:0:0:0:150] -> [freeze:750] -> [seq_play:castleBoy:stand] -> photo_05_3 -> [wait:dialogOpen:0] -> [seq_play:castleLink:forward] -> [seq_lerp:castleBoy:-112:28:0.325] -> [seq_play:castleBoy:walk] -> [freeze:2500] -> [close_overlay] -> [music:-1:2] -> [save_history:false]
-
-
-photo_sequence_grave:photoMouseActive:0 ->
-photo_sequence_grave:photoMouseActive:1 -> [path:photo_sequence_grave_start]
-
-photo_sequence_grave_start:0 -> [save_history:true] -> [set:1] -> [set:photo_11:1] -> [start_sequence:gravestone] -> [path:photo_count_increase]
-photo_sequence_grave_start:1 ->
-
-// photo sequence gravestone
-seq_gravestone:0 -> [music:71:2] -> [seq_lerp:graveMouse:-64:0:0.325] -> [seq_play:graveMouse:walk_0] -> [freeze:graveMouseMoving:0] -> [seq_finish_animation:graveMouse:0] -> photo_06_0 -> [wait:dialogOpen:0] -> [seq_play:graveLink:right] -> photo_06_1 -> [wait:dialogOpen:0] -> [seq_lerp:graveMouse:-28:58:0.325] -> [seq_play:graveMouse:walk_0] -> [seq_lerp:graveLink:25:-5:0.325]] -> [seq_play:graveLink:walk] -> [freeze:graveLinkMoving:0] -> [seq_play:graveLink:forward] -> [freeze:graveMouseMoving:0] -> photo_06_2 -> [wait:dialogOpen:0] -> [seq_play:graveLink:lean] -> [freeze:1000] -> [sound:D378-63-40] -> [seq_color:gravePhotoFlash:255:255:255:255:0] -> [freeze:125] -> [seq_color:gravePhotoFlash:0:0:0:0:150] -> [seq_color:gravePhoto:255:255:255:255:0] -> [freeze:2000] -> [music:-1:2] -> [close_overlay] -> [save_history:false]
-
-// photo sequence zora
-npc_zora_script:0 -> [check_item:trade13:1:result] -> [path:npc_zora_item_check]
-
-npc_zora_item_check:result:0 ->
-npc_zora_item_check:result:1 -> [path:npc_zora_spawn]
-
-npc_zora_spawn:photoMouseActive:0 -> [path:npc_spawn_zora_normal]
-npc_zora_spawn:photoMouseActive:1 -> [path:npc_zora_photo_sequence]
-
-npc_spawn_zora_normal:npc_spawn_zora:0 -> [update_objects] -> [set:npc_spawn_zora:1] -> [set:npc_zoraAnimation:spawn] -> [freeze:750] -> [set:npc_zoraAnimation:idle]
-npc_spawn_zora_normal:0 ->
-
-npc_zora_photo_sequence:photo_9:0 -> [update_objects] -> [save_history:true] -> [set:1] -> [set:photo_9:1] -> [set:npc_spawn_zora:1] -> [set:npc_zoraAnimation:spawn] -> [freeze:750] -> [set:npc_zoraAnimation:idle] -> photo_11_0 -> [wait:dialogOpen:0] -> [set:spawnMouseZora:1] -> [set:mouseSeqZoraFade:-75] -> [set:mouseSeqZoraMove:0,-52,1] -> [freeze:1] -> [set:mouseSeqZoraMove:40,0,1] -> [freeze:mouseSeqZoraMoving:0] -> [set:mouseSeqZoraAnimation:stand_1] -> [freeze:500] -> photo_11_1 -> [wait:dialogOpen:0] -> [set:photo_flash:1] -> [freeze:1000] -> [set:photoSequencePhoto:photo_9] -> [start_sequence:photo] -> [set:spawnMouseZora:0] -> [set:mouseSeqZoraFade:75] -> [save_history:false] -> [path:photo_count_increase]
-npc_zora_photo_sequence:photo_9:1 -> [path:npc_spawn_zora_normal]
-
-npc_zora:0 -> npc_zora
-
-// photo sequence mountain
-mountain_mouse_seq:photoMouseActive:0 ->
-mountain_mouse_seq:photoMouseActive:1 -> [path:start_mountain_seq]
-
-start_mountain_seq:0 -> [update_objects] -> [save_history:true] -> [freeze:500] -> [set:1] -> [set:photo_12:1] -> [set:mountain_beetle_hide:1] -> [set:spawnMouseMountain:1] -> [set:mouseSeqMountainFade:-75]] -> [set:mouseSeqMountainMove:96,0,1] -> [freeze:mouseSeqMountainMoving:0] -> [set:link_direction:0] -> photo_12_0 -> photo_12_1 -> photo_12_2 -> [freeze:dialogOpen:0] -> [set:mouseSeqMountainMove:-10,0,1] -> [set:mouseSeqMountainAnimation:walk_2] -> [freeze:1] -> [freeze:mouseSeqMountainMoving:0] -> photo_12_3 -> [freeze:dialogOpen:0] -> [set:mouseSeqMountainMove:-5,6,1] -> [set:mouseSeqMountainAnimation:duck] -> [freeze:1] -> [freeze:mouseSeqMountainMoving:0] -> photo_12_4 -> [freeze:dialogOpen:0] -> [set:mouseSeqMountainMove:0,48,1.5] -> [set:mouseSeqMountainAnimation:duck] -> [freeze:300] -> [set:photo_flash:1] -> [freeze:350] -> [set:photoSequencePhoto:photo_12] -> [start_sequence:photo] -> [set:spawnMouseMountain:0] -> [set:mouseSeqMountainFade:75] -> [set:mountain_beetle_hide:0] -> [save_history:false] -> [path:photo_count_increase]
-start_mountain_seq:1 ->
-
+//-------------------------------------------------------------------------------
+// Photo 03: "Heads Up!" - Link & Marin / Mabe Village Well
 
 // make sure to spawn the mouse before the real sequence is started when marin hits the ground
 seq_fountain_mouse_spawn:1 ->
@@ -1760,31 +1730,116 @@ sequence_fountain_marin:fallen_on_link:1 -> [update_objects] -> [set:link_animat
 photo_sequence_fountain:0 -> [update_objects] -> [save_history:true] -> [set:1] -> [set:photo_3:1] -> [set:link_animation:stunned] -> [freeze:500] -> photo_08_0 -> [wait:dialogOpen:0] -> [set:photo_flash:1] -> [freeze:250] -> photo_08_1 -> [wait:dialogOpen:0] -> [set:mouseSeqFountainMove:0,-48,1] -> [freeze:350] -> [set:link_idle:1] -> [freeze:mouseSeqFountainMoving:0] -> [set:spawnMouseFountain:0] -> [set:mouseSeqFountainFade:75] -> [save_history:false] -> [path:photo_count_increase]
 photo_sequence_fountain:1 -> [path:sequence_fountain_marin]
 
+//-------------------------------------------------------------------------------
+Photo 04: "Say "Mushroom!" - Link & Marin / Weathervane / Flying Rooster
 
-// photo sequence weather bird
 start_weather_bird_seq:photoMouseActive:0 ->
 start_weather_bird_seq:photoMouseActive:1 -> [path:seq_weather_bird_marin]
+
 seq_weather_bird_marin:has_marin:0 ->
 seq_weather_bird_marin:has_marin:1 -> [path:photo_sequence_weather_bird]
+
 photo_sequence_weather_bird:0 -> [save_history:true] -> [set:1] -> [set:photo_4:1] -> [start_sequence:weatherBird] -> [path:photo_count_increase]
 photo_sequence_weather_bird:1 ->
 
 seq_weather_bird:0 -> [music:1:2] -> [seq_lerp:weatherBirdLink:130:0:0.5] -> [seq_lerp:weatherBirdMarin:133:0:0.5] -> [freeze:weatherBirdLinkMoving:0] -> [seq_play:weatherBirdLink:stand]  -> [freeze:weatherBirdMarinMoving:0] -> [seq_play:weatherBirdMarin:stand] -> [seq_play:weatherBirdUlrich:walk] -> [seq_lerp:weatherBirdUlrich:-48:0:0.5] -> [freeze:weatherBirdUlrichMoving:0] -> [seq_play:weatherBirdUlrich:stopped] -> photo_09_0 -> [wait:dialogOpen:0] -> [seq_lerp:weatherBirdUlrich:-48:0:0.5] -> [seq_play:weatherBirdUlrich:walk] -> [freeze:weatherBirdUlrichMoving:0] -> [seq_play:weatherBirdUlrich:stand] -> [seq_lerp:weatherBirdLink:8:0:0.5] -> [freeze:100] -> [seq_lerp:weatherBirdMarin:-2:0:0.5] -> [freeze:100] -> [set:weatherBirdUlrichFront:1] -> photo_09_1 -> [wait:dialogOpen:0] -> [sound:D378-63-40] -> [seq_color:weatherBirdPhotoFlash:255:255:255:255:0] -> [freeze:125] -> [seq_color:weatherBirdPhotoFlash:0:0:0:0:150] -> [freeze:1000] -> photo_09_2 -> [wait:dialogOpen:0] -> [seq_lerp:weatherBirdUlrich:-128:0:0.5] -> [seq_play:weatherBirdUlrich:walk] -> [freeze:1500] -> [music:-1:2] -> [close_overlay] -> [save_history:false]
 
+//-------------------------------------------------------------------------------
+// Photo 05: "Link Discovers Ulrira's Secret!" - Mabe Village / Ulrira's House
 
-// photo sequence cliff
-check_cliff_sequence:1 ->
-check_cliff_sequence:photoMouseActive:1 -> [path:cliff_sequence_marin]
-check_cliff_sequence:0 ->
-cliff_sequence_marin:has_marin:0 ->
-cliff_sequence_marin:has_marin:1 -> [save_history:true] -> [set:check_cliff_sequence:1] -> [set:photo_2:1] -> [start_sequence:marinCliff]
+photo_sequence_2:photoMouseActive:0 ->
+photo_sequence_2:photoMouseActive:1 -> [path:photo_sequence_ulrich]
 
-seq_cliff:0 -> [music:77:2] -> [freeze:750] -> marin_cliff_0 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_1 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_2 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_1 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_3 -> [wait:dialogOpen:0] -> [freeze:125] -> marin_cliff_1 -> [wait:dialogOpen:0] -> [freeze:1500] -> marin_cliff_4 -> [wait:dialogOpen:0] -> [freeze:750] -> [sound:D378-63-40] -> [seq_color:cliffPhotoFlash:255:255:255:255:0] -> [freeze:125] -> [seq_color:cliffPhotoFlash:0:0:0:0:150] -> [freeze:750] -> marin_cliff_5 -> [wait:dialogOpen:0] -> [freeze:500] -> [music:-1:2] -> [close_overlay] -> [path:photo_count_increase] -> [save_history:false]
+photo_sequence_ulrich:0 -> [update_objects] -> [save_history:true] -> [set:1] -> [set:spawnMouseSeq2:1] -> [set:mouseSeq2Fade:-75] -> [set:mouseSeq2Move:-56,0,1] -> [freeze:mouseSeq2Moving:0] -> [freeze:500] -> [set:link_direction:2] -> photo_02_0 -> [wait:dialogOpen:0] -> [set:mouseSeq2Move:-10,0,1] -> [set:link_push:-10,0,200] -> [freeze:1] -> [freeze:mouseSeq2Moving:0] -> [set:mouseSeq2Animation:stand_1] -> [set:link_direction:1] -> photo_02_1 -> [wait:dialogOpen:0] -> [set:photo_flash:1] -> [freeze:350] -> [set:photo_5:1] -> [set:photoSequencePhoto:photo_5] -> [start_sequence:photo] -> [set:spawnMouseSeq2:0] -> [set:mouseSeq2Move:56,0,1] -> [freeze:350] -> [set:mouseSeq2Fade:75] -> [save_history:false] -> [path:photo_count_increase]
+photo_sequence_ulrich:1 ->
 
+//-------------------------------------------------------------------------------
+// Photo 06: "Link Plays With Bow-Wow!" - Mabe Village / Madam MeowMeow's House
 
-// photo sequence bridge
+start_BowWow_Seq:photoMouseActive:0 ->
+start_BowWow_Seq:photoMouseActive:1 -> [path:photo_sequence_BowWow]
+
+// The photo is available when Bow-Wow is tied to his pole.
+photo_sequence_BowWow:bowWow:0 -> [path:photo_sequence_3]
+photo_sequence_BowWow:bowWow:4 -> [path:photo_sequence_3]
+photo_sequence_BowWow:0 ->
+
+photo_sequence_3:0 -> [save_history:true] -> [set:1] -> [set:photo_6:1] -> [start_sequence:bowWow]
+photo_sequence_3:1 -> [set:2] -> photo_03_0
+photo_sequence_3:2 -> [set:3] -> photo_03_1 -> [freeze:1000] -> photo_03_2
+photo_sequence_3:3 -> [set:4] -> photo_03_3
+photo_sequence_3:4 -> [set:5] -> photo_03_4 -> photo_03_5 -> [path:photo_count_increase]
+photo_sequence_3:5 -> [save_history:false]
+
+//-------------------------------------------------------------------------------
+// Photo 07: "Are you proud of yourself?" - Mabe Village / Stealing From Shop
+
+shopkeeper_steal:0 -> shopkeeper_5 -> [path:stealing_photo]
+
+// unlock the photo if link already talked to the photo mouse
+stealing_photo:photo_1:0 ->
+stealing_photo:photo_1:1 -> [set:photo_7:1] -> [path:photo_count_increase]
+
+//-------------------------------------------------------------------------------
+// Photo 08: "Be more careful next time!" - Martha's Bay / Bridge / Mermaid Statue / Fisherman
+
 photo_sequence_bridge:photoMouseActive:0 -> npc_bridge_5
 photo_sequence_bridge:photoMouseActive:1 -> [save_history:true] -> [set:1] -> [set:bridge_photo:1] -> [set:photo_8:1] -> photo_10_0 -> npc_bridge_3 -> [wait:dialogOpen:0] -> [set:mouse_catch:1] -> [freeze:mouse_pulled:1] -> [music_speed:2] -> [freeze:1000] -> [set:npc_bridgeAnimation:pull] -> [freeze:750] -> npc_bridge_4 -> [wait:dialogOpen:0] -> [set:mousePullUp:1] -> [freeze:mousePulledUp:1] -> [set:npc_bridgeAnimation:pull_look] -> photo_10_1 -> [wait:dialogOpen:0] -> [freeze:1000] -> [set:fisherman_fall:1] -> [freeze:250] -> [set:photo_flash:1] -> [freeze:500] -> [set:photoSequencePhoto:photo_8] -> [start_sequence:photo] -> [freeze:125] -> [set:fisherman_reset:1] -> [path:photo_count_increase] -> [music_speed:1] -> [save_history:false]
+
+//-------------------------------------------------------------------------------
+// Photo 09: "I Found Zora!" - Magnifying Lens / Animal Village / Hidden Zora
+
+npc_zora_script:0 -> [check_item:trade13:1:result] -> [path:npc_zora_item_check]
+
+npc_zora_item_check:result:0 ->
+npc_zora_item_check:result:1 -> [path:npc_zora_spawn]
+
+npc_zora_spawn:photoMouseActive:0 -> [path:npc_spawn_zora_normal]
+npc_zora_spawn:photoMouseActive:1 -> [path:npc_zora_photo_sequence]
+
+npc_spawn_zora_normal:npc_spawn_zora:0 -> [update_objects] -> [set:npc_spawn_zora:1] -> [set:npc_zoraAnimation:spawn] -> [freeze:750] -> [set:npc_zoraAnimation:idle]
+npc_spawn_zora_normal:0 ->
+
+npc_zora_photo_sequence:photo_9:0 -> [update_objects] -> [save_history:true] -> [set:1] -> [set:photo_9:1] -> [set:npc_spawn_zora:1] -> [set:npc_zoraAnimation:spawn] -> [freeze:750] -> [set:npc_zoraAnimation:idle] -> photo_11_0 -> [wait:dialogOpen:0] -> [set:spawnMouseZora:1] -> [set:mouseSeqZoraFade:-75] -> [set:mouseSeqZoraMove:0,-52,1] -> [freeze:1] -> [set:mouseSeqZoraMove:40,0,1] -> [freeze:mouseSeqZoraMoving:0] -> [set:mouseSeqZoraAnimation:stand_1] -> [freeze:500] -> photo_11_1 -> [wait:dialogOpen:0] -> [set:photo_flash:1] -> [freeze:1000] -> [set:photoSequencePhoto:photo_9] -> [start_sequence:photo] -> [set:spawnMouseZora:0] -> [set:mouseSeqZoraFade:75] -> [save_history:false] -> [path:photo_count_increase]
+npc_zora_photo_sequence:photo_9:1 -> [path:npc_spawn_zora_normal]
+
+npc_zora:0 -> npc_zora
+
+//-------------------------------------------------------------------------------
+// Photo 10: "I've Just Decided to Wait at Home" - Richard's Castle Gate / Golden Leaf Quest
+
+photo_sequence_4:photoMouseActive:0 ->
+photo_sequence_4:photoMouseActive:1 -> [path:photo_sequence_castle]
+
+// The photo is only available as long as the door to the castle is still closed.
+photo_sequence_castle:1 ->
+photo_sequence_castle:ow_castle_door:0 -> [save_history:true] -> [set:1] -> [set:photo_10:1] -> [start_sequence:castle] -> [path:photo_count_increase]
+photo_sequence_castle:0 ->
+
+castle_sequence:0 -> [music:63:2] -> [freeze:1000] -> [seq_lerp:castleLink:91:-35:0.325] -> [seq_play:castleLink:walk] -> [seq_lerp:castleMouse:22:0:0.255] -> [seq_play:castleMouse:walk_2] -> [freeze:castleMouseMoving:0] -> [seq_finish_animation:castleMouse:0] -> [freeze:1000] -> [seq_lerp:castleMouse:-32:0:0.25] -> [seq_play:castleMouse:walk_0] -> [freeze:castleMouseMoving:0] -> [seq_finish_animation:castleMouse:0] -> [freeze:castleLinkMoving:0] -> [seq_finish_animation:castleLink:0] -> photo_05_0 -> [wait:dialogOpen:0] -> [seq_lerp:castleBoy:-44:-14:0.325] -> [seq_play:castleBoy:walk] -> [freeze:castleBoyMoving:0] -> [seq_finish_animation:castleBoy:0] -> photo_05_1 -> [wait:dialogOpen:0] -> [seq_play:castleLink:forward] -> [seq_lerp:castleMouse:0:64:0.25] -> [seq_play:castleMouse:walk_3] -> [seq_lerp:castleBoy:-39:-11:0.325] -> [seq_play:castleBoy:walk] -> [freeze:castleBoyMoving:0] -> [seq_play:castleBoy:forward] -> photo_05_2 -> [wait:dialogOpen:0] -> [freeze:1000] -> [seq_play:castleLink:piece] -> [seq_play:castleBoy:piece] -> [freeze:750] -> [sound:D378-63-40] -> [seq_color:castleFlash:255:255:255:255:0] -> [freeze:125] -> [seq_color:castleFlash:0:0:0:0:150] -> [freeze:750] -> [seq_play:castleBoy:stand] -> photo_05_3 -> [wait:dialogOpen:0] -> [seq_play:castleLink:forward] -> [seq_lerp:castleBoy:-112:28:0.325] -> [seq_play:castleBoy:walk] -> [freeze:2500] -> [close_overlay] -> [music:-1:2] -> [save_history:false]
+
+//-------------------------------------------------------------------------------
+// Photo 11: "I Was Very Afraid" - Ghost Quest / House by the Bay / Grave at Koholint Prairie
+
+photo_sequence_grave:photoMouseActive:0 ->
+photo_sequence_grave:photoMouseActive:1 -> [path:photo_sequence_grave_start]
+
+photo_sequence_grave_start:ghost_returned:0 ->
+photo_sequence_grave_start:ghost_returned:1 -> [save_history:true] -> [set:ghost_returned:2] -> [set:photo_11:1] -> [start_sequence:gravestone] -> [path:photo_count_increase]
+photo_sequence_grave_start:ghost_returned:2 ->
+
+seq_gravestone:0 -> [music:71:2] -> [seq_lerp:graveMouse:-64:0:0.325] -> [seq_play:graveMouse:walk_0] -> [freeze:graveMouseMoving:0] -> [seq_finish_animation:graveMouse:0] -> photo_06_0 -> [wait:dialogOpen:0] -> [seq_play:graveLink:right] -> photo_06_1 -> [wait:dialogOpen:0] -> [seq_lerp:graveMouse:-28:58:0.325] -> [seq_play:graveMouse:walk_0] -> [seq_lerp:graveLink:25:-5:0.325]] -> [seq_play:graveLink:walk] -> [freeze:graveLinkMoving:0] -> [seq_play:graveLink:forward] -> [freeze:graveMouseMoving:0] -> photo_06_2 -> [wait:dialogOpen:0] -> [seq_play:graveLink:lean] -> [freeze:1000] -> [sound:D378-63-40] -> [seq_color:gravePhotoFlash:255:255:255:255:0] -> [freeze:125] -> [seq_color:gravePhotoFlash:0:0:0:0:150] -> [seq_color:gravePhoto:255:255:255:255:0] -> [freeze:2000] -> [music:-1:2] -> [close_overlay] -> [save_history:false]
+
+//-------------------------------------------------------------------------------
+// Photo 12: "Close Call"
+
+mountain_mouse_seq:photoMouseActive:0 ->
+mountain_mouse_seq:photoMouseActive:1 -> [path:start_mountain_seq]
+
+start_mountain_seq:0 -> [update_objects] -> [save_history:true] -> [freeze:500] -> [set:1] -> [set:photo_12:1] -> [set:mountain_beetle_hide:1] -> [set:spawnMouseMountain:1] -> [set:mouseSeqMountainFade:-75]] -> [set:mouseSeqMountainMove:96,0,1] -> [freeze:mouseSeqMountainMoving:0] -> [set:link_direction:0] -> photo_12_0 -> photo_12_1 -> photo_12_2 -> [freeze:dialogOpen:0] -> [set:mouseSeqMountainMove:-10,0,1] -> [set:mouseSeqMountainAnimation:walk_2] -> [freeze:1] -> [freeze:mouseSeqMountainMoving:0] -> photo_12_3 -> [freeze:dialogOpen:0] -> [set:mouseSeqMountainMove:-5,6,1] -> [set:mouseSeqMountainAnimation:duck] -> [freeze:1] -> [freeze:mouseSeqMountainMoving:0] -> photo_12_4 -> [freeze:dialogOpen:0] -> [set:mouseSeqMountainMove:0,48,1.5] -> [set:mouseSeqMountainAnimation:duck] -> [freeze:300] -> [set:photo_flash:1] -> [freeze:350] -> [set:photoSequencePhoto:photo_12] -> [start_sequence:photo] -> [set:spawnMouseMountain:0] -> [set:mouseSeqMountainFade:75] -> [set:mountain_beetle_hide:0] -> [save_history:false] -> [path:photo_count_increase]
+start_mountain_seq:1 ->
+
+//-------------------------------------------------------------------------------
 
 
 // player enters the egg

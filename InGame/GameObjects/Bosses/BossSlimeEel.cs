@@ -531,8 +531,13 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             {
                 Game1.GameManager.StartDialogPath("slime_eel_1");
                 _eelSpawner.ToDespawn();
-            }
 
+                _damageField.IsActive = false;;
+
+                foreach (var part in _tailParts)
+                    if (part != null)
+                        part.SetActive(false);
+            }
             return hitReturn;
         }
 

@@ -13,13 +13,14 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 {
     internal class MBossRollingBones : GameObject
     {
-        private readonly MBossBone _bone;
+        private readonly MBossRollingBonesBone _bone;
 
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
         private readonly AiDamageState _damageState;
         private readonly CSprite _sprite;
         private readonly Animator _animator;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly string _triggerKey;
         private readonly string _saveKey;
@@ -91,7 +92,11 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             _aiComponent.States.Add("pushed", statePushed);
             _aiComponent.States.Add("blink", stateBlink);
             _aiComponent.States.Add("death", stateDeath);
-            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, Lives, false, false) { OnDeath = OnDeath };
+            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, Lives, false, false) 
+            {
+                OnDeath = OnDeath,
+                BossHitSound = true
+            };
             _aiComponent.ChangeState("waiting");
 
             var damageCollider = new CBox(EntityPosition, -7, -11, 0, 14, 11, 8, true);
@@ -99,7 +104,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             if (!string.IsNullOrEmpty(_triggerKey))
                 AddComponent(KeyChangeListenerComponent.Index, new KeyChangeListenerComponent(KeyChanged));
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageCollider, HitType.Enemy, 4));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 4));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush));
             AddComponent(BodyComponent.Index, _body);
@@ -123,7 +128,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 boneOffset = 32;
             }
 
-            _bone = new MBossBone(map, posX, posY, boneOffset);
+            _bone = new MBossRollingBonesBone(map, posX, posY, boneOffset);
             map.Objects.SpawnObject(_bone);
         }
 
@@ -154,7 +159,6 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
                 _body.Velocity.X += direction.X * 0.35f;
                 _body.Velocity.Y += direction.Y * 0.35f;
             }
-
             return true;
         }
 
@@ -295,10 +299,13 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private void OnDeath(bool pieceOfPower)
         {
+            _bone.bossDeath();
+
             Game1.GameManager.PlaySoundEffect("D370-16-10");
 
             _aiComponent.ChangeState("blink");
             _damageState.IsActive = false;
+            _damageField.IsActive = false;
         }
     }
 }

@@ -37,6 +37,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
         private bool _jumpLandSound;
         private bool _playerLeft = true;
+        private bool _defeated;
 
         private const int CooldownTime = 350;
         private const int DespawnTime = 5500;
@@ -113,7 +114,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             Game1.GameManager.SaveManager.SetString(_triggerKey, "0");
 
             // was triggered?
-            if (_playerLeft && triggerState == "1")
+            if (_playerLeft && triggerState == "1" && !_defeated)
             {
                 _playerLeft = false;
 
@@ -322,6 +323,9 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
 
             // spawn the fish dungeon key
             Map.Objects.SpawnObject(new ObjItem(Map, (int)_head.EntityPosition.X - 8, (int)_head.EntityPosition.Y - 16, "j", "dkey3Collected", "dkey3", null));
+
+            // prevent recurrent spawns after defeat
+            _defeated = true;
         }
 
         private void SetEffect(SpriteShader effect)
@@ -346,6 +350,13 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             }
             else
             {
+                // Remove damage component from head and body parts.
+                _head.Death();
+
+                foreach (var part in _bodyParts)
+                    if (part != null)
+                        part.Death();
+
                 _aiComponent.ChangeState("despawning");
                 Game1.GameManager.PlaySoundEffect("D370-16-10");
             }

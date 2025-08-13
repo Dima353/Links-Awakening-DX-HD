@@ -18,6 +18,9 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
         private readonly CBox _collectionBox;
         private Vector2 _direction;
 
+        public bool _boomerangCollect;
+        public bool _boomerangHealed;
+
         private float _currentRotation;
         private float _directionChange;
 
@@ -92,6 +95,7 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
             _collectionBox = new CBox(EntityPosition, -4, -10, _itemMode ? -16 : 0, 8, 10, 8, !_itemMode);
 
             AddComponent(BodyComponent.Index, body);
+            AddComponent(CollisionComponent.Index, new BoxCollisionComponent(_collectionBox, Values.CollisionTypes.Item));
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerPlayer, EntityPosition));
             AddComponent(DrawShadowComponent.Index, new BodyDrawShadowComponent(body, _sprite));
@@ -103,6 +107,19 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                 UpdateFlying();
             else
                 UpdateCollected();
+
+            // Bool "_boomerangHealed" prevents fairy from healing more than once.
+            if (_boomerangCollect & !_boomerangHealed)
+            {
+                _boomerangHealed = true;
+                _boomerangCollect = false;
+                CollectFairy();
+            }
+        }
+
+        public void BoomerangCollect()
+        {
+            _boomerangCollect = true;
         }
 
         private void UpdateFlying()

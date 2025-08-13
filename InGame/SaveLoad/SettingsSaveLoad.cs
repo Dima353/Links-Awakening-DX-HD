@@ -1,29 +1,33 @@
-﻿using ProjectZ.InGame.Controls;
+﻿﻿using Microsoft.Xna.Framework;
+using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.SaveLoad
 {
     class SettingsSaveLoad
     {
-        private static readonly string SettingsFileName = "settings";
+        private static readonly string SettingsFilePath = Values.AppDataFolder + "settings";
 
         public static void LoadSettings()
         {
             var saveManager = new SaveManager();
 
             // error loading file
-            if (!saveManager.LoadFile(SettingsFileName))
+            if (!saveManager.LoadFile(SettingsFilePath))
                 return;
 
             Values.PathContentFolder = saveManager.GetString("ContentPath", Values.PathContentFolder);
             Values.PathSaveFolder = saveManager.GetString("SavePath", Values.PathSaveFolder);
 
             GameSettings.GameScale = saveManager.GetInt("GameScale", GameSettings.GameScale);
+            GameSettings.GameScale = MathHelper.Clamp(GameSettings.GameScale, -1, 11);
             GameSettings.UiScale = saveManager.GetInt("UIScale", GameSettings.UiScale);
+            GameSettings.UiScale = MathHelper.Clamp(GameSettings.UiScale, 0, 12);
             GameSettings.MusicVolume = saveManager.GetInt("MusicVolume", GameSettings.MusicVolume);
             GameSettings.EffectVolume = saveManager.GetInt("EffectVolume", GameSettings.EffectVolume);
             GameSettings.EnableShadows = saveManager.GetBool("EnableShadows", GameSettings.EnableShadows);
             GameSettings.Autosave = saveManager.GetBool("Autosave", GameSettings.Autosave);
+            GameSettings.HeartBeep = saveManager.GetBool("HeartBeep", GameSettings.HeartBeep);
             GameSettings.SmoothCamera = saveManager.GetBool("SmoothCamera", GameSettings.SmoothCamera);
             GameSettings.BorderlessWindowed = saveManager.GetBool("BorderlessWindowed", GameSettings.BorderlessWindowed);
             GameSettings.IsFullscreen = saveManager.GetBool("IsFullscreen", GameSettings.IsFullscreen);
@@ -49,6 +53,7 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetInt("EffectVolume", GameSettings.EffectVolume);
             saveManager.SetBool("EnableShadows", GameSettings.EnableShadows);
             saveManager.SetBool("Autosave", GameSettings.Autosave);
+            saveManager.SetBool("HeartBeep", GameSettings.HeartBeep);
             saveManager.SetBool("SmoothCamera", GameSettings.SmoothCamera);
             saveManager.SetBool("BorderlessWindowed", GameSettings.BorderlessWindowed);
             saveManager.SetBool("IsFullscreen", GameSettings.IsFullscreen);
@@ -59,7 +64,7 @@ namespace ProjectZ.InGame.SaveLoad
 
             ControlHandler.SaveButtonMaps(saveManager);
 
-            saveManager.Save(SettingsFileName, Values.SaveRetries);
+            saveManager.Save(SettingsFilePath, Values.SaveRetries);
         }
     }
 }
