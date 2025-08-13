@@ -29,6 +29,7 @@ game_menu_header Меню
 game_menu_back_to_game Вернуться к игре
 game_menu_settings Настройки
 game_menu_exit_to_the_menu Вернуться в меню
+game_menu_exit_the_game Сохранить и выйти
 
 game_menu_exit_header Уверен?
 game_menu_exit_no Нет
