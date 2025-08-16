@@ -47,14 +47,15 @@ settings_menu_video Видео
 settings_menu_back Назад
 
 settings_audio_header Звук
-settings_audio_music_volume Громкость музыки:
-settings_audio_effect_volume Громкость эффектов:
+settings_audio_music_volume Громкость музыки;
+settings_audio_effect_volume Громкость эффектов;
 
-settings_game_header Язык
-settings_game_language Язык: Русский 
+settings_game_header Игра
+settings_game_language Язык; Русский 
 settings_game_change_language Change Language
 settings_game_autosave Автосохранение
 settings_game_heartbeep Сигнал низкого здоровья
+settings_game_screenshake Тряска экрана при уроне
 settings_game_change_smooth_camera Плавность камеры
 settings_game_fullscreen_windowed Оконный режим
 settings_game_fullscreen_mode На весь экран
@@ -70,13 +71,17 @@ settings_controls_A A
 settings_controls_B B
 settings_controls_X X
 settings_controls_Y Y
+settings_controls_LB LB
+settings_controls_RB RB
+settings_controls_LT LT
+settings_controls_RT RT
 settings_controls_Select Select
 settings_controls_Start Start
 settings_controls_reset Сброс
 
 settings_graphics_header Графика
-settings_graphics_game_scale Масштаб камеры:
-settings_graphics_ui_scale Масштаб UI:
+settings_graphics_game_scale Масштаб камеры;
+settings_graphics_ui_scale Масштаб UI;
 settings_graphics_shadow Shadows
 settings_graphics_fps_lock Ограничение FPS
 
