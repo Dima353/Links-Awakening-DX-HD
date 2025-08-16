@@ -19,8 +19,6 @@ namespace ProjectZ.InGame.GameObjects.Things
         private float _transitionCounter = TransitionTime;
         private int _lightState;
 
-        private string[] InvalidStates;
-
         public ObjBed() : base("editor bed") { }
 
         public ObjBed(Map.Map map, int posX, int posY, string nextMap, string lampKey) : base(map)
