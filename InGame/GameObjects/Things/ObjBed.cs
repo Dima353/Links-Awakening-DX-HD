@@ -19,6 +19,8 @@ namespace ProjectZ.InGame.GameObjects.Things
         private float _transitionCounter = TransitionTime;
         private int _lightState;
 
+        private string[] InvalidStates;
+
         public ObjBed() : base("editor bed") { }
 
         public ObjBed(Map.Map map, int posX, int posY, string nextMap, string lampKey) : base(map)
@@ -35,17 +37,31 @@ namespace ProjectZ.InGame.GameObjects.Things
             AddComponent(UpdateComponent.Index, new UpdateComponent(Update));
         }
 
+        private bool IsStateValid(ObjLink.State currentState)
+        {
+            // Certain states can cause the transition to bug out.
+            string[] invalid = new string[]{ "Attacking", "Blocking", "Charging", "AttackBlocking", "ChargeBlocking" };
+
+            string strState = currentState.ToString();
+
+            foreach (string loopState in invalid)
+                if (strState == loopState)
+                    return false;
+
+            return true;
+        }
+
         private bool OnPush(Vector2 direction, PushableComponent.PushType pushType)
         {
-            _startBed = true;
-
-            Game1.GameManager.SetMusic(29, 2);
-
-            // jump into the bed
-            MapManager.ObjLink.StartRailJump(new Vector2(EntityPosition.X + 8, EntityPosition.Y + 21), 1, 1);
-
-            MapManager.ObjLink.StartBedTransition();
-
+            // Check if the state is valid and the transition hasn't already started.
+            if (IsStateValid(MapManager.ObjLink.CurrentState) & !_startBed)
+            {
+                // Jump into the bed and start the transition.
+                _startBed = true;
+                Game1.GameManager.SetMusic(29, 2);
+                MapManager.ObjLink.StartRailJump(new Vector2(EntityPosition.X + 8, EntityPosition.Y + 21), 1, 1);
+                MapManager.ObjLink.StartBedTransition();
+            }
             return false;
         }
 
@@ -56,13 +72,14 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             _transitionCounter -= Game1.DeltaTime;
 
-            // turn of the lights
+            // Shut off the lights one by one in a sequence.
             if (_lightState < 4 && _transitionCounter < TransitionTime - 1000 - _lightState * 250)
             {
                 _lightState++;
                 Game1.GameManager.SaveManager.SetString(_lampKey + _lightState, "0");
             }
 
+            // When the transition counter ends fade into the dream map.
             if (_transitionCounter < 0)
             {
                 _startTransition = true;

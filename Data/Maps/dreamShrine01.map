@@ -29,7 +29,7 @@ dreamShrineTileset.png
 ,,,,,,,,,,
 ,,,,,,,,,,
 ,,,,,,,,,,
-523
+524
 c1
 c2
 c5
@@ -321,6 +321,7 @@ music
 musicTiles
 compassSound
 shoreSound
+waterfallSound
 dungeonFairy
 dungeonBall
 dungeonPillar
@@ -553,7 +554,7 @@ nightmare_HardhitBeetle
 nightmare_EvilEagle
 nightmare_HotHead
 nightmare
-72
+74
 242;80;48;dreamShrine02.map;ds_lamp_
 0;0;16;;;
 0;0;32;;;
@@ -570,6 +571,8 @@ nightmare
 0;64;0;;;
 0;72;128;;;
 0;80;0;;;
+0;92;48;;;
+0;92;64;;;
 0;96;0;;;
 0;96;112;;;
 0;112;0;;;
@@ -590,16 +593,16 @@ nightmare
 18;48;48;;;
 153;64;64;;;bed;dreamShrine02.map;;3;4;False
 153;72;120;;;dreamShrine01;overworld.map;dreamShrine01;1;;
-299;72;112;;;;;;
+300;72;112;;;;;;
 285;0;144;;;;
 167;-16;16;ds_lamp_1;1
 167;-16;96;ds_lamp_4;1
 167;160;16;ds_lamp_2;1
 167;160;96;ds_lamp_3;1
-302;16;16;;;;;ds_lamp_1
-302;16;96;;;;;ds_lamp_4
-302;128;16;;;;;ds_lamp_2
-302;128;96;;;;;ds_lamp_3
+303;16;16;;;;;ds_lamp_1
+303;16;96;;;;;ds_lamp_4
+303;128;16;;;;;ds_lamp_2
+303;128;96;;;;;ds_lamp_3
 11;64;48;;;
 9;80;48;;;
 9;80;64;;;
@@ -618,7 +621,7 @@ nightmare
 25;112;48;;;;
 25;112;64;;;;
 25;112;80;;;;
-361;0;176
+362;0;176
 287;32;144;35
 160;64;80;
 246;48;48;
