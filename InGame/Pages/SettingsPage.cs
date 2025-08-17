@@ -13,7 +13,7 @@ namespace ProjectZ.InGame.Pages
 
         public SettingsPage(int width, int height)
         {
-            // settings layout
+            // Button: Settings Page Layout
             var settingsLayout = new InterfaceListLayout { Size = new Point(width, height), Selectable = true };
 
             var headerLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuHeaderSize)), ContentAlignment = InterfaceElement.Gravities.Left, HorizontalMode = true };
@@ -29,25 +29,20 @@ namespace ProjectZ.InGame.Pages
 
             var contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize)), Selectable = true };
 
-            // game settings button
+            // Button: Game Settings
             contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_game", element =>
             {
                 Game1.UiPageManager.ChangePage(typeof(GameSettingsPage));
             }));
 
-            //// audio settings button
+
+            // Button: Audio Settings
             contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_audio", element =>
             {
                Game1.UiPageManager.ChangePage(typeof(AudioSettingsPage));
             }));
 
-            // controll settings button
-            contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_controls", element =>
-            {
-                Game1.UiPageManager.ChangePage(typeof(ControlSettingsPage));
-            }));
-
-            // graphic settings button
+            // Button: Video Settings
             contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_video", element =>
             {
                 Game1.UiPageManager.ChangePage(typeof(GraphicSettingsPage));
@@ -55,8 +50,15 @@ namespace ProjectZ.InGame.Pages
 
             settingsLayout.AddElement(contentLayout);
 
+            // Button: Control Settings
+            contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_controls", element =>
+            {
+                Game1.UiPageManager.ChangePage(typeof(ControlSettingsPage));
+            }));
+
             var bottomLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true };
-            // back button
+
+            // Button: Back to Menu
             bottomLayout.AddElement(new InterfaceButton(new Point(60, 20), new Point(2, 4), "settings_menu_back", element =>
             {
                 ExitPage();
