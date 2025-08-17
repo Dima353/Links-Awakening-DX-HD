@@ -55,17 +55,18 @@ namespace ProjectZ.InGame.Pages
 
             // Borderless fullscreen window toggler.
             var toggleFullscreenWindowed = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
-                "settings_game_fullscreen_windowed", GameSettings.BorderlessWindowed, newState => { Game1.SwitchFullscreenWindowedSetting(); });
+                "settings_game_fullscreen_windowed", GameSettings.BorderlessWindowed, newState => { GameSettings.BorderlessWindowed = newState; Game1.SwitchFullscreenWindowedSetting(); });
             contentLayout.AddElement(toggleFullscreenWindowed);
 
-
-            // FPS Setting: Currently unused, original developer note below:
+            // Shadow Setting: Currently unused, original developer note below:
             //
             // not sure why this should be an option; but if this should be settable then we need to still enable circular shadows  (e.g. under the player)
             // var shadowToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
             //    "settings_graphics_shadow", GameSettings.EnableShadows, newState => GameSettings.EnableShadows = newState);
             // contentLayout.AddElement(shadowToggle);
             //
+
+            // FPS lock toggler.
             var toggleFpsLock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_graphics_fps_lock", GameSettings.LockFps, newState =>
                 {
@@ -73,7 +74,6 @@ namespace ProjectZ.InGame.Pages
                     Game1.FpsSettingChanged = true;
                 });
             contentLayout.AddElement(toggleFpsLock);
-
 
             // Smooth camera toggler.
             var smoothCameraToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
@@ -117,9 +117,10 @@ namespace ProjectZ.InGame.Pages
             PageLayout.Deselect(false);
             PageLayout.Select(InterfaceElement.Directions.Top, false);
         }
+
         public override void OnResize(int newWidth, int newHeight)
         {
-          //  UpdateUIScaleSlider();
+            UpdateUIScaleSlider();
         }
 
         private void UpdateFullscreenState()

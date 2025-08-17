@@ -125,6 +125,19 @@ namespace ProjectZ.InGame.Overlay
 
         public void OnLoad()
         {
+            /// RT:NOTE: FULLSCREEN FIX PART 2/2: Forcing validation of the render targets here fixes crashes related to drawing the inventory
+            /// screen when pressing "Start". UpdateRenderTargets() should be called when the screen changes. Like the previous issue, it does
+            /// not happen when "Borderless Window" is set alongside "Fullscreen". Borderless Fullscreen does not suffer any of these issues.
+            /// when the screen scaling changes in 
+            // FIX PART 1/2: ..\Game1.cs                              >> LoadContent()
+            // FIX PART 2/2: ..\InGame\Overlay\OverlayManager.cs      >> <YOU ARE HERE>
+            // CRASH BYPASS: ..\InGame\Map\MapManager.cs              >> DrawBlur()
+            // CRASH BYPASS: ..\InGame\Overlay\InventoryOverlay.cs    >> Draw()
+            // CRASH BYPASS: ..\InGame\Overlay\MapOverlay.cs          >> Draw()
+            // CRASH BYPASS: ..\InGame\Things\GameManager.cs          >> GetMatrix() // DrawGame() - 2 places
+            if (!GameSettings.BorderlessWindowed)
+                UpdateRenderTarget();
+
             CloseOverlay();
             _hideHud = false;
             _fadeCount = 0;

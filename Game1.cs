@@ -105,6 +105,7 @@ namespace ProjectZ
         private static int _lastWindowHeight;
         private static bool _isFullscreen;
         private bool _isResizing;
+        static private bool _userBorderlessSetting;
 
         private static RenderTarget2D _renderTarget1;
         private static RenderTarget2D _renderTarget2;
@@ -233,12 +234,26 @@ namespace ProjectZ
             // Input Handler
             Components.Add(new InputHandler(this));
 
+            /// RT:NOTE: FULLSCREEN FIX PART 1/2: Force the "ScaleChanged" flag. When starting the game in Fullscreen mode with Borderless Window disabled, drawing the game
+            /// world and inventory screen will crash, but this has currently been worked around (see the noted methods below). The problem is that render targets are being
+            /// invalidated but are never being updated, or they just aren't being created to begin with. Borderless Window + Fullscreen is immune from this issue. Many of
+            /// the places this would cause a crash now check for "null" render targets and just refuse to draw. Wherever null render targets can cause an issue will be a
+            /// comment starting with "RT:NOTE:". Simply reverse the null check to replicate the crashes. This is just half the fix, as it only fixes the game world. Part 2
+            /// fixes drawing the inventory screen ( see "OverlayManager >> OnLoad()" ) where it's almost certain render targets were never created to begin with.
+            // FIX PART 1/2: ..\Game1.cs                              >> <YOU ARE HERE>
+            // FIX PART 2/2: ..\InGame\Overlay\OverlayManager.cs      >> OnLoad()
+            // CRASH BYPASS: ..\InGame\Map\MapManager.cs              >> DrawBlur()
+            // CRASH BYPASS: ..\InGame\Overlay\InventoryOverlay.cs    >> Draw()
+            // CRASH BYPASS: ..\InGame\Overlay\MapOverlay.cs          >> Draw()
+            // CRASH BYPASS: ..\InGame\Things\GameManager.cs          >> GetMatrix() // DrawGame() - 2 places
+            ScaleChanged = true;
+
             // load the intro screen + the resources needed for it
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
             ScreenManager.LoadIntro(Content);
 
             // We need to set the UI scale now or the game will crash if fullscreen.
-            UpdateScale();
+            UpdateScale(true);
 
             // toggle fullscreen
             if (GameSettings.IsFullscreen)
@@ -723,18 +738,23 @@ namespace ProjectZ
 
         public static void SwitchFullscreenWindowedSetting()
         {
+            // The user setting get's overwritten so store it now.
+            _userBorderlessSetting = GameSettings.BorderlessWindowed;
+
             // switch from hardware fullscreen to borderless windows
             if (!GameSettings.BorderlessWindowed && Graphics.IsFullScreen ||
                 GameSettings.BorderlessWindowed && _isFullscreen)
             {
                 ToggleFullscreen();
-                GameSettings.BorderlessWindowed = GameSettings.BorderlessWindowed;
+                GameSettings.BorderlessWindowed = !GameSettings.BorderlessWindowed;
                 ToggleFullscreen();
             }
             else
             {
                 GameSettings.BorderlessWindowed = !GameSettings.BorderlessWindowed;
             }
+            // Retrieve the user value and store it in the respective variable.
+            GameSettings.BorderlessWindowed = _userBorderlessSetting;
         }
 
         public static void ToggleFullscreen()
@@ -890,7 +910,7 @@ namespace ProjectZ
             UpdateScale();
         }
 
-        private void UpdateScale()
+        private void UpdateScale(bool SkipEditor = false)
         {
             // Scale of the game field.
             ScreenScale = MathHelper.Clamp(Math.Min(WindowWidth / Values.MinWidth, WindowHeight / Values.MinHeight), 1, 25);
@@ -912,8 +932,10 @@ namespace ProjectZ
             // Scale of the user interface.
             UiScale = GameSettings.UiScale == 0 ? ScreenScale : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
 
-            // Update the UI of the editor as well.
-            EditorUi.SizeChanged();
+            // Update the UI of the editor as well. This will cause issues on initialization where scale
+            // needs to be called to avoid render target issues, so avoid updating if SkipEditor is true.
+            if (SkipEditor)
+                EditorUi.SizeChanged();
 
             ScreenManager.OnResize(WindowWidth, WindowHeight);
             UiPageManager.OnResize(WindowWidth, WindowHeight);
