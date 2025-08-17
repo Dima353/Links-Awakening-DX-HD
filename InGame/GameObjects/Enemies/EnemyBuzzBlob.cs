@@ -58,7 +58,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("walking", stateWalking);
             _aiComponent.States.Add("shocking", stateShocking);
             _aiComponent.States.Add("postShock", statePostShock);
-            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 4, false) { OnDeath = OnDeath, OnBurn = () => _animator.Pause() };
+            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 4, false) { OnDeath = OnDeath, OnBurn = OnBurn };
             _stunnedState = new AiStunnedState(_aiComponent, animationComponent, 3300, 900) { ShakeOffset = 1, SilentStateChange = false, ReturnState = "walking" };
             new AiFallState(_aiComponent, _body, OnHolePull, OnHoleDeath, 400);
 
@@ -138,6 +138,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _body.Velocity = new Vector3(direction.X, direction.Y, _body.Velocity.Z) * 2f;
 
             return true;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType damageType, int damage, bool pieceOfPower)

@@ -97,6 +97,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void OnBurn()
         {
             _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void OnEnterSpawnArea(GameObject gameObject)

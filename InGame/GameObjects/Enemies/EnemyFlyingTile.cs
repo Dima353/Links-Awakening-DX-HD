@@ -31,7 +31,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         // we use the key and the index to indicate when the tile should start moving
         private readonly string _strKey;
         private readonly int _index;
-        
 
         private float _soundCounter;
 
@@ -132,6 +131,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _animator.Pause();
             _body.IgnoresZ = false;
+            _damageField.IsActive = false;
         }
 
         private void OnDamagePlayer()

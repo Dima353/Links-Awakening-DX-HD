@@ -15,6 +15,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Animator _animator;
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
+        private readonly DamageFieldComponent _damageField;
         private readonly Rectangle _fieldRectangle;
 
         private readonly Vector2[] _shotOffset =
@@ -63,7 +64,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("walking", walkingState);
             _aiComponent.States.Add("idle", idleState);
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
-            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = () => _animator.Pause() };
+            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = OnBurn };
 
             // start randomly idle or walking facing a random direction
             _direction = Game1.RandomNumber.Next(0, 4);
@@ -73,7 +74,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var hittabelBox = new CBox(EntityPosition, -7, -15, 14, 15, 8);
             var pushableBox = new CBox(EntityPosition, -7, -11, 0, 14, 11, 4);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittabelBox, damageState.OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -142,6 +143,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _body.Velocity = new Vector3(direction.X, direction.Y, _body.Velocity.Z);
 
             return true;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void OnCollision(Values.BodyCollision direction)

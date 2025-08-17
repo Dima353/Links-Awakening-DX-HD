@@ -16,6 +16,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Animator _animator;
         private readonly AiTriggerCountdown _flyCounter;
         private readonly AiDamageState _damageState;
+        private readonly DamageFieldComponent _damageField;
 
         private const int StartTime = 2500;
         private const int FlyTime = 7500;
@@ -74,14 +75,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("land", stateLand);
             _aiComponent.States.Add("idle", stateIdle);
             _aiComponent.States.Add("stunned", stateStunned);
-            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1, false);
+            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1, false) { OnBurn = OnBurn };
 
             _aiComponent.ChangeState("start");
 
             var hittableBox = new CBox(EntityPosition, -6, -14, 0, 12, 14, 8, true);
             var damageBox = new CBox(EntityPosition, -6, -14, 0, 12, 14, 4, true);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(PushableComponent.Index, new PushableComponent(damageBox, OnPush));
             AddComponent(AiComponent.Index, _aiComponent);
@@ -120,6 +121,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _body.Velocity = new Vector3(direction.X * 1.5f, direction.Y * 1.5f, _body.Velocity.Z);
 
             return true;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
+            IsActive = false;
         }
 
         private void EndStunned()

@@ -22,6 +22,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly DictAtlasEntry _spriteHead1;
         private readonly DictAtlasEntry _spritePart0;
         private readonly DictAtlasEntry _spritePart1;
+        private readonly DamageFieldComponent _damageField;
 
         private Vector2 _tailOnePosition;
         private Vector2 _tailTwoPosition;
@@ -78,7 +79,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(BodyComponent.Index, _bodyComp);
             AddComponent(PushableComponent.Index, new PushableComponent(_bodyComp.BodyBox, OnPush));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, damageState.OnHit));
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             _bodyDrawComp = new BodyDrawComponent(_bodyComp, _sprite, Values.LayerPlayer);
             AddComponent(DrawComponent.Index, new DrawComponent(Draw, Values.LayerPlayer, EntityPosition));
         }
@@ -116,8 +117,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _bodyComp.VelocityTarget = vecDirection * 0.75f;
 
             if (_aiComp.CurrentStateId == "burning")
+            {
+                _damageField.IsActive = false;
                 _bodyComp.VelocityTarget = Vector2.Zero;
-
+            }
             _directionChangeMultiplier = AnimationHelper.MoveToTarget(_directionChangeMultiplier, 1, 0.025f * Game1.TimeMultiplier);
 
             UpdateHeadSprite(vecDirection);

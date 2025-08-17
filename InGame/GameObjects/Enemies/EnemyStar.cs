@@ -11,6 +11,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
     internal class EnemyStar : GameObject
     {
         private readonly BodyComponent _body;
+        private readonly Animator _animator;
+        private readonly DamageFieldComponent _damageField;
 
         public EnemyStar() : base("star") { }
 
@@ -21,11 +23,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             EntityPosition = new CPosition(posX + 8, posY + 16, 0);
             EntitySize = new Rectangle(-8, -16, 16, 16);
 
-            var animator = AnimatorSaveLoad.LoadAnimator("Enemies/star");
-            animator.Play("idle");
+            _animator = AnimatorSaveLoad.LoadAnimator("Enemies/star");
+            _animator.Play("idle");
 
             var sprite = new CSprite(EntityPosition);
-            var animationComponent = new AnimationComponent(animator, sprite, Vector2.Zero);
+            var animationComponent = new AnimationComponent(_animator, sprite, Vector2.Zero);
 
             _body = new BodyComponent(EntityPosition, -6, -11, 12, 10, 8)
             {
@@ -40,7 +42,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             var aiComponent = new AiComponent();
             aiComponent.States.Add("idle", new AiState());
-            var damageState = new AiDamageState(this, _body, aiComponent, sprite, 1, false) { OnBurn = () => animator.Pause() };
+            var damageState = new AiDamageState(this, _body, aiComponent, sprite, 1, false) { OnBurn = OnBurn };
 
             aiComponent.ChangeState("idle");
 
@@ -51,7 +53,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(PushableComponent.Index, new PushableComponent(pushableBox, OnPush));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, damageState.OnHit));
             AddComponent(AiComponent.Index, aiComponent);
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, sprite, Values.LayerPlayer));
@@ -72,6 +74,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             }
 
             return true;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void OnCollision(Values.BodyCollision collider)

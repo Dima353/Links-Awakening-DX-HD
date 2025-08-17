@@ -80,7 +80,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("shaking", stateShaking);
             _aiComponent.States.Add("despawning", stateDespawning);
             _aiComponent.States.Add("spawnDelay", stateSpawnDelay);
-            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, 1);
+            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, 1) { OnBurn = OnBurn };
             new AiFallState(_aiComponent, _body, null, null, 250);
             new AiDeepWaterState(_body);
 
@@ -138,6 +138,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.Play("jump");
             _aiComponent.ChangeState("jumping");
             _sprite.Color = Color.Transparent;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
+            IsActive = false;
         }
 
         private void UpdateNotSpawned()

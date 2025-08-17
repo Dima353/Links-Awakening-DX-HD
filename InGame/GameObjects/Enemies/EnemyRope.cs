@@ -15,6 +15,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
         private readonly Animator _animator;
+        private readonly DamageFieldComponent _damageField;
 
         private const float WalkSpeed = 0.5f;
         private const float RunSpeed = 1.0f;
@@ -64,7 +65,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("run", stateRun);
             new AiFallState(_aiComponent, _body, OnHoleAbsorb, null);
             new AiDeepWaterState(_body);
-            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = () => _animator.Pause() };
+            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = OnBurn };
 
             _aiComponent.ChangeState("walk");
 
@@ -72,7 +73,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var hittableBox = new CBox(EntityPosition, -8, -15, 0, 16, 15, 8);
             var pushableBox = new CBox(EntityPosition, -7, -14, 0, 14, 14, 8);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, damageState.OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -131,6 +132,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             SetAnimation(_direction);
             _animator.SpeedMultiplier = 2;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private bool OnPush(Vector2 direction, PushableComponent.PushType type)

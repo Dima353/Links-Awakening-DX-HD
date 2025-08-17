@@ -16,6 +16,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly AiComponent _aiComponent;
         private readonly Animator _animator;
         private readonly AnimationComponent _animatorComponent;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly Rectangle _fieldRectangle;
 
@@ -66,14 +67,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("moveDown", stateMoveDown);
             _aiComponent.States.Add("waitFloor", stateWaitFloor);
             new AiFallState(_aiComponent, _body, null, null, 300);
-            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = () => _animator.Pause() };
+            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = OnBurn };
             _aiComponent.ChangeState("walking");
 
             var damageBox = new CBox(EntityPosition, -7, -15, 2, 13, 15, 4);
             var hittableBox = new CBox(EntityPosition, -7, -15, 2, 13, 15, 8);
             var pushableBox = new CBox(EntityPosition, -6, -14, 2, 12, 14, 4);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, damageState.OnHit));
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BodyComponent.Index, _body);
@@ -105,6 +106,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private void ToWalk()
         {
             _aiComponent.ChangeState("walking");
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void UpdateWalking()

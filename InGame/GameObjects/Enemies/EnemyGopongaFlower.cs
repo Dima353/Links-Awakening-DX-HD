@@ -12,8 +12,9 @@ namespace ProjectZ.InGame.GameObjects.Enemies
     {
         private readonly AiDamageState _aiDamageState;
         private readonly Animator _animator;
-
+        private readonly DamageFieldComponent _damageField;
         private readonly int _animationLength;
+        private bool _dealsDamage = true;
 
         public EnemyGopongaFlower() : base("goponga flower") { }
 
@@ -43,12 +44,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiDamageState = new AiDamageState(this, body, aiComponent, sprite, 4)
             {
                 HitMultiplierX = 0,
-                HitMultiplierY = 0
+                HitMultiplierY = 0,
+                OnBurn = OnBurn
             };
             aiComponent.ChangeState("idle");
 
             AddComponent(AiComponent.Index, aiComponent);
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(hittableBox, HitType.Enemy, 4));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(hittableBox, HitType.Enemy, 4));
             AddComponent(CollisionComponent.Index, new BoxCollisionComponent(collisionBox, Values.CollisionTypes.Enemy));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, body);
@@ -65,7 +67,15 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _animator.SetTime(Game1.TotalGameTime % _animationLength);
             _animator.Update();
         }
-         
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _dealsDamage = false;
+            _damageField.IsActive = false;
+            RemoveComponent(CollisionComponent.Index);
+        }
+
         private Values.HitCollision OnHit(GameObject originObject, Vector2 direction, HitType type, int damage, bool pieceOfPower)
         {
             // What can kill these:
@@ -79,8 +89,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _aiDamageState.HitMultiplierX = 4;
                 _aiDamageState.HitMultiplierY = 4;
             }
-
-            return _aiDamageState.OnHit(originObject, direction, type, damage, pieceOfPower);
+            if (_dealsDamage)
+            {
+                return _aiDamageState.OnHit(originObject, direction, type, damage, pieceOfPower);
+            }
+            return Values.HitCollision.None;
         }
     }
 }

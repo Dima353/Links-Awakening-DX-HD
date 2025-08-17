@@ -19,6 +19,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly AiDamageState _aiDamageState;
         private readonly BodyDrawComponent _bodyDrawComponent;
         private readonly AiTriggerSwitch _damageSwitch;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly Rectangle _wingRectangle = new Rectangle(160, 67, 8, 18);
 
@@ -74,7 +75,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("idle", stateIdle);
             _aiComponent.States.Add("walking", stateWalking);
             _aiComponent.States.Add("flying", stateFlying);
-            _aiDamageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = () => _animator.Pause() };
+            _aiDamageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = OnBurn };
             _aiComponent.Trigger.Add(_damageSwitch = new AiTriggerSwitch(350));
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
 
@@ -89,7 +90,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _bodyDrawComponent = new BodyDrawComponent(_body, sprite, Values.LayerPlayer);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -132,13 +133,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.VelocityTarget = AnimationHelper.DirectionOffset[_direction] * _walkSpeed;
         }
 
-        //private void UpdateWalking()
-        //{
-        //    _aiComponent.ChangeState("flying");
-
-        //    _body.VelocityTarget = Vector2.Zero;
-        //}
-
         private void InitFlying()
         {
             // fly towards the player
@@ -149,6 +143,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.Velocity.Z = 1.25f;
             _body.AvoidTypes = Values.CollisionTypes.NPCWall;
             _body.FieldRectangle = RectangleF.Empty;
+        }
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void UpdateFlying()

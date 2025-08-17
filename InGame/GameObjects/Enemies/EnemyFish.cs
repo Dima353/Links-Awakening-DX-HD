@@ -18,6 +18,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private BodyComponent _body;
         private Animator _animator;
         private CSprite _sprite;
+        private readonly DamageFieldComponent _damageField;
 
         private float _speed = 0.5f;
         private int _direction;
@@ -63,7 +64,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("swim", stateSwim);
             _aiComponent.States.Add("jump", stateJump);
             _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, 1)
-            { HitMultiplierX = 0, HitMultiplierY = 0, FlameOffset = new Point(0, 2), IsActive = false };
+            { HitMultiplierX = 0, HitMultiplierY = 0, FlameOffset = new Point(0, 2), IsActive = false, OnBurn = OnBurn };
 
             _aiComponent.ChangeState("swim");
 
@@ -71,7 +72,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var hittableBox = new CBox(EntityPosition, -8, -11, 0, 16, 14, 8, true);
             var pushableBox = new CBox(EntityPosition, -7, -11, 0, 14, 14, 8, true);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, _damageState.OnHit));
             AddComponent(PushableComponent.Index, new PushableComponent(pushableBox, OnPush));
             AddComponent(AiComponent.Index, _aiComponent);
@@ -112,6 +113,14 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.DragAir = 1.0f;
 
             Splash();
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
+            _body.IgnoresZ = true;
+            IsActive = false;
         }
 
         private void UpdateJump()

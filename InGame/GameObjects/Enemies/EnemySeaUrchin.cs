@@ -19,6 +19,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private Vector2 _lastPosition;
 
         private float _soundCounter;
+        private bool _dealsDamage = true;
 
         public EnemySeaUrchin() : base("sea urchin") { }
 
@@ -49,7 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             var aiComponent = new AiComponent();
             aiComponent.States.Add("idle", new AiState());
-            var damageState = new AiDamageState(this, _body, aiComponent, sprite, 1) { OnBurn = () => animator.Pause() };
+            var damageState = new AiDamageState(this, _body, aiComponent, sprite, 1) { OnBurn = OnBurn };
             aiComponent.ChangeState("idle");
 
             var hittableBox = new CBox(EntityPosition, -8, -16, 0, 16, 16, 8, true);
@@ -62,6 +63,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush) { CooldownTime = 0 });
             AddComponent(DrawComponent.Index, new BodyDrawComponent(_body, sprite, Values.LayerPlayer));
             AddComponent(DrawShadowComponent.Index, new DrawShadowCSpriteComponent(sprite) { Height = 1.0f, Rotation = 0.1f });
+        }
+
+        private void OnBurn()
+        {
+            _dealsDamage = false;
+            RemoveComponent(CollisionComponent.Index);
         }
 
         private bool OnPush(Vector2 direction, PushableComponent.PushType type)
@@ -91,8 +98,10 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
                 return true;
             }
-
-            MapManager.ObjLink.HitPlayer(-direction, HitType.Enemy, _collisionDamage, true);
+            if (_dealsDamage)
+            {
+                MapManager.ObjLink.HitPlayer(-direction, HitType.Enemy, _collisionDamage, true);
+            }
             return false;
         }
     }

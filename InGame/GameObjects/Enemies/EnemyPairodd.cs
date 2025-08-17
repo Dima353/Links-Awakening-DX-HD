@@ -63,7 +63,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("despawn", stateDespawn);
             _aiComponent.States.Add("hidden", stateHidden);
 
-            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, 2, true, false) { OnBurn = () => _animator.Pause() };
+            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, 2, true, false) { OnBurn = OnBurn };
             _aiStunnedState = new AiStunnedState(_aiComponent, animationComponent, 3300, 900) { ShakeOffset = 1, SilentStateChange = false, ReturnState = "idle" };
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
 
@@ -133,6 +133,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (playerDistance.Length() < 46)
                 _aiComponent.ChangeState("preDespawn");
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void Shoot()

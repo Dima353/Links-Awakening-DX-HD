@@ -53,7 +53,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiDamageState = new AiDamageState(this, _body, _aiComponent, _sprite, 1)
             {
                 MoveBody = false,
-                OnBurn = () => _animator.Pause()
+                OnBurn = OnBurn
             };
 
             AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(_headBox, HitType.Enemy, 2));
@@ -93,6 +93,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _aiComponent.ChangeState("hidden");
                 Deactivate();
             }
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void Activate()

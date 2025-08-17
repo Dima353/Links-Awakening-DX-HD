@@ -14,6 +14,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
         private readonly Animator _animator;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly Vector2[] _shotOffset =
         {
@@ -70,7 +71,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var hittableBox = new CBox(EntityPosition, -7, -15, 0, 14, 15, 8);
             var pushableBox = new CBox(EntityPosition, -7, -13, 0, 14, 13, 4);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, damageState.OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -128,6 +129,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private void OnBurn()
         {
+            _damageField.IsActive = false;
             _animator.Pause();
         }
 

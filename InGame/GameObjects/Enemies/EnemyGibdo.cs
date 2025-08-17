@@ -57,7 +57,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 HitMultiplierX = 1.0f,
                 HitMultiplierY = 1.0f,
                 OnDeath = OnDeath,
-                OnBurn = () => _animator.Pause()
+                OnBurn = OnBurn
             };
             _aiStunnedState = new AiStunnedState(_aiComponent, animationComponent, 3300, 900) { ShakeOffset = 1, SilentStateChange = false, ReturnState = "walk" };
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
@@ -100,6 +100,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             }
 
             return _damageState.OnHit(gameObject, direction, damageType, damage, pieceOfPower);
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void OnDeath(bool pieceOfPower)

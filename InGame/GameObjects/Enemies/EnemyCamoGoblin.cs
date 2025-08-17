@@ -81,7 +81,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("wobble", stateWobble);
             _aiComponent.States.Add("despawn", stateDespawn);
             _aiComponent.States.Add("holePull", stateHolePull);
-            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = () => _animator.Pause() };
+            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = OnBurn };
             new AiFallState(_aiComponent, _body, null, null, 0);
 
             var damageBox = new CBox(EntityPosition, -6, -20, 0, 12, 20, 4);
@@ -189,6 +189,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 return Values.HitCollision.None;
 
             return _damageState.OnHit(originObject, direction, type, damage, pieceOfPower);
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private bool OnPush(Vector2 direction, PushableComponent.PushType type)

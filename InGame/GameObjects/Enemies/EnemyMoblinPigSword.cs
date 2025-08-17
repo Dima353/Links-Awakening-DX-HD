@@ -21,6 +21,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly AiComponent _aiComponent;
         private readonly AiDamageState _damageState;
         private readonly BodyDrawComponent _drawComponent;
+        private readonly DamageFieldComponent _damageField;
 
         private Rectangle _fieldRectangle;
 
@@ -94,7 +95,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             _drawComponent = new BodyDrawComponent(Body, _sprite, Values.LayerPlayer);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, _damageState.OnHit));
             AddComponent(BodyComponent.Index, Body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -111,25 +112,16 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             // add the sword to the map
             Map.Objects.SpawnObject(_sword);
 
-            //var playerDirection = MapManager.ObjLink.NextMapPositionEnd.Value - EntityPosition.Position;
-            //if (playerDirection.Length() < AttackRange)
-            //{
-            //    _aiComponent.ChangeState("attack");
-            //    // make sure to update the animation to look at the player when he enters the goblin cave
-            //    UpdateDirection(playerDirection);
-            //}
-            //else
-            {
-                // start randomly idle or walking facing a random direction
-                _direction = Game1.RandomNumber.Next(0, 4);
-                _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
-            }
+            // start randomly idle or walking facing a random direction
+            _direction = Game1.RandomNumber.Next(0, 4);
+            _aiComponent.ChangeState(Game1.RandomNumber.Next(0, 2) == 0 ? "walking" : "idle");
         }
 
         private void OnBurn()
         {
             _animator.Pause();
             _sword.Animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void UpdateDamageTick()

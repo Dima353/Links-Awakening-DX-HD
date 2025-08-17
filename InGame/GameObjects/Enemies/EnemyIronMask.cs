@@ -14,6 +14,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
         private readonly AiDamageState _damageState;
+        private readonly DamageFieldComponent _damageField;
 
         private float _moveSpeed = 0.5f;
         private float _moveSpeedUnprotected = 0.75f;
@@ -56,7 +57,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("idle", stateIdle);
             _aiComponent.States.Add("walking", stateWalking);
             _aiComponent.States.Add("stunned", stateStunned);
-            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = () => _animator.Pause() };
+            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = OnBurn };
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
             new AiDeepWaterState(_body);
 
@@ -71,7 +72,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var hittableBox = new CBox(EntityPosition, -7, -14, 14, 14, 8);
             var pushableBox = new CBox(EntityPosition, -7, -12, 14, 12, 8);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -162,6 +163,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             // stop walking
             _aiComponent.ChangeState("idle");
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void OnHoleAbsorb()

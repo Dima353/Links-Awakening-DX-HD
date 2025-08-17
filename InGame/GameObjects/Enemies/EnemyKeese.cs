@@ -15,6 +15,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
         private readonly Animator _animator;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly float _turnSpeed;
 
@@ -69,7 +70,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             var damageCollider = new CBox(EntityPosition, -5, -20, 0, 10, 8, 4);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(_body.BodyBox, damageState.OnHit));
             AddComponent(AiComponent.Index, _aiComponent);
             AddComponent(BodyComponent.Index, _body);
@@ -82,6 +83,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _body.IgnoresZ = false;
             _body.IgnoreHoles = false;
+            _damageField.IsActive = false;
         }
 
         private void StartIdle()

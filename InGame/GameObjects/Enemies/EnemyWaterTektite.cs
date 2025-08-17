@@ -13,6 +13,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
         private readonly AiTriggerRandomTime _movementTimer;
+        private readonly DamageFieldComponent _damageField;
+        private readonly Animator _animator;
 
         private float _currentSpeed;
         private int _currentDir;
@@ -31,11 +33,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             EntityPosition = new CPosition(posX + 8, posY + 16, 0);
             EntitySize = new Rectangle(-8, -16, 16, 16);
 
-            var animator = AnimatorSaveLoad.LoadAnimator("Enemies/water tektite");
-            animator.Play("idle");
+            _animator = AnimatorSaveLoad.LoadAnimator("Enemies/water tektite");
+            _animator.Play("idle");
 
             var sprite = new CSprite(EntityPosition);
-            var animationComponent = new AnimationComponent(animator, sprite, new Vector2(-8, -16));
+            var animationComponent = new AnimationComponent(_animator, sprite, new Vector2(-8, -16));
 
             var fieldRectangle = map.GetField(posX, posY);
 
@@ -65,11 +67,11 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent = new AiComponent();
             _aiComponent.States.Add("moving", stateMoving);
             _aiComponent.States.Add("waiting", stateWaiting);
-            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = () => animator.Pause() };//, false);
+            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = OnBurn };
 
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush));
             AddComponent(AiComponent.Index, _aiComponent);
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, damageState.OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(BaseAnimationComponent.Index, animationComponent);
@@ -109,6 +111,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             }
 
             _body.VelocityTarget = Directions[_currentDir] * _currentSpeed;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void ToStop()

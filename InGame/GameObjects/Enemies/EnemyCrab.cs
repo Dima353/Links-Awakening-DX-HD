@@ -13,6 +13,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Animator _animator;
         private readonly BodyComponent _body;
         private readonly AiComponent _aiComponent;
+        private readonly DamageFieldComponent _damageField;
 
         private int _currentDirection;
 
@@ -55,7 +56,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent = new AiComponent();
             _aiComponent.States.Add("walkingV", stateWalkingV);
             _aiComponent.States.Add("walkingH", stateWalkingH);
-            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = () => _animator.Pause() };
+            var damageState = new AiDamageState(this, _body, _aiComponent, sprite, 2) { OnBurn = OnBurn };
             ToWalking();
 
             var hittableRectangle = new CBox(EntityPosition, -8, -15, 16, 15, 8);
@@ -63,7 +64,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             AddComponent(PushableComponent.Index, new PushableComponent(_body.BodyBox, OnPush));
             AddComponent(AiComponent.Index, _aiComponent);
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageCollider, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableRectangle, damageState.OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(BaseAnimationComponent.Index, animationComponent);
@@ -87,6 +88,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _body.Velocity = new Vector3(direction.X, direction.Y, _body.Velocity.Z);
 
             return true;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void OnCollision(Values.BodyCollision direction)

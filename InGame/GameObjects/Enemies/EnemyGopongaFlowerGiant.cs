@@ -13,6 +13,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
     {
         private readonly Animator _animator;
         private readonly AiDamageState _aiDamageState;
+        private readonly DamageFieldComponent _damageField;
+        private bool _dealsDamage = true;
 
         public EnemyGopongaFlowerGiant() : base("giant goponga flower") { }
 
@@ -42,14 +44,15 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             {
                 HitMultiplierX = 0,
                 HitMultiplierY = 0,
-                FlameOffset = new Point(0, -8)
+                FlameOffset = new Point(0, -8),
+                OnBurn = OnBurn
             };
             aiComponent.ChangeState("idle");
 
             AddComponent(AiComponent.Index, aiComponent);
             AddComponent(CollisionComponent.Index, new BoxCollisionComponent(collisionBox, Values.CollisionTypes.Enemy));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 4));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 4));
             AddComponent(BodyComponent.Index, body);
             AddComponent(BaseAnimationComponent.Index, animationComponent);
             AddComponent(DrawComponent.Index, new BodyDrawComponent(body, sprite, Values.LayerPlayer) { WaterOutline = false });
@@ -68,8 +71,19 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _aiDamageState.HitMultiplierX = 4;
                 _aiDamageState.HitMultiplierY = 4;
             }
+            if (_dealsDamage)
+            {
+                return _aiDamageState.OnHit(originObject, direction, type, damage, pieceOfPower);
+            }
+            return Values.HitCollision.None;
+        }
 
-            return _aiDamageState.OnHit(originObject, direction, type, damage, pieceOfPower);
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _dealsDamage = false;
+            _damageField.IsActive = false;
+            RemoveComponent(CollisionComponent.Index);
         }
 
         private void AnimationFinished()
@@ -87,7 +101,6 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
                     return;
                 }
-
                 // continue with the idle animation and don't start an attack
                 _animator.Play("idle");
             }

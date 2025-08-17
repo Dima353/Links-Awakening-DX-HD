@@ -20,6 +20,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly AiComponent _aiComponent;
         private readonly Animator _animator;
         private readonly AiDamageState _damageState;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly Rectangle _roomRectangle;
         private readonly Vector2 _roomCenter;
@@ -98,7 +99,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var damageBox = new CBox(EntityPosition, -8, -15, 0, 16, 15, 8, true);
             var hittableBox = new CBox(EntityPosition, -10, -15, 0, 20, 15, 8, true);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(PushableComponent.Index, new PushableComponent(damageBox, OnPush));
             AddComponent(AiComponent.Index, _aiComponent);
@@ -171,6 +172,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _body.IgnoresZ = false;
             _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void UpdateRepelled()

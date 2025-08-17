@@ -17,6 +17,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Animator _animator;
         private readonly AiDamageState _damageState;
         private readonly AnimationComponent _animationComponent;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly EnemyGel _gel0;
         private readonly EnemyGel _gel1;
@@ -67,7 +68,8 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("jumping", stateJumping);
             _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1)
             {
-                OnDeath = OnDeath
+                OnDeath = OnDeath,
+                OnBurn = OnBurn
             };
             new AiFallState(_aiComponent, _body, null, null, 100);
             new AiDeepWaterState(_body);
@@ -77,7 +79,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var damageBox = new CBox(EntityPosition, -6, -11, 0, 12, 11, 4);
             var hittableBox = new CBox(EntityPosition, -6, -11, 12, 11, 8);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -115,6 +117,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             _body.VelocityTarget = Vector2.Zero;
             _animator.Play("idle");
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
+            IsActive = false;
         }
 
         private void EndWaiting()

@@ -50,7 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("spawn", stateSpawn);
             _aiComponent.States.Add("walking", walkingState);
             _aiComponent.States.Add("despawn", stateDespawn);
-            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = () => _animator.Pause(), IsActive = false };
+            _damageState = new AiDamageState(this, _body, _aiComponent, sprite, 1) { OnBurn = OnBurn };
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
             _aiComponent.ChangeState("spawn");
 
@@ -77,6 +77,13 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         {
             if (!_animator.IsPlaying)
                 _aiComponent.ChangeState("walking");
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
+            IsActive = false;
         }
 
         private void InitWalking()

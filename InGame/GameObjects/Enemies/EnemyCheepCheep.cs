@@ -17,6 +17,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly AiComponent _aiComponent;
         private readonly AiDamageState _damageState;
         private readonly Animator _animator;
+        private readonly DamageFieldComponent _damageField;
 
         private readonly CBox _damageBox;
         private readonly CBox _headJumpBox;
@@ -81,7 +82,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 HitMultiplierX = 3.0f,
                 HitMultiplierY = 2.0f,
                 FlameOffset = new Point(0, 2),
-                OnBurn = () => _animator.Pause()
+                OnBurn = OnBurn
             };
 
             ToMoving();
@@ -90,7 +91,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _damageBox = new CBox(EntityPosition, -6, -14, 0, 12, 12, 4);
             _headJumpBox = new CBox(EntityPosition, -6, -16, 0, 12, 6, 8);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(_damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(_damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -171,6 +172,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _body.Gravity2DWater = 0.05f;
                 _body.CollisionTypes = Values.CollisionTypes.None;
             }
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void EndJump()

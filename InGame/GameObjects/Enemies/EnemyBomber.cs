@@ -17,6 +17,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly AiComponent _aiComponent;
         private readonly Animator _animator;
         private readonly AiDamageState _damageState;
+        private readonly DamageFieldComponent _damageField;
 
         private Vector2 _startPosition;
 
@@ -63,7 +64,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             var hittableBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 8, true);
             var damageBox = new CBox(EntityPosition, -7, -12, 0, 14, 12, 4, true);
 
-            AddComponent(DamageFieldComponent.Index, new DamageFieldComponent(damageBox, HitType.Enemy, 2));
+            AddComponent(DamageFieldComponent.Index, _damageField = new DamageFieldComponent(damageBox, HitType.Enemy, 2));
             AddComponent(HittableComponent.Index, new HittableComponent(hittableBox, OnHit));
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -78,6 +79,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _body.IgnoresZ = false;
             _body.DragAir = 0.9f;
             _body.Bounciness = 0.5f;
+            _damageField.IsActive = false;
         }
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType damageType, int damage, bool pieceOfPower)

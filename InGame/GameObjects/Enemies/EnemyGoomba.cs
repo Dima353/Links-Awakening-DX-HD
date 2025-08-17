@@ -68,7 +68,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.States.Add("dead", stateDead);
             _aiComponent.States.Add("fade", stateFade);
             new AiFallState(_aiComponent, _body, OnHoleAbsorb);
-            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, 1) { OnBurn = () => _animator.Pause() };
+            _damageState = new AiDamageState(this, _body, _aiComponent, _sprite, 1) { OnBurn = OnBurn };
 
             _aiComponent.ChangeState("walking");
 
@@ -163,6 +163,12 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _body.Velocity = new Vector3(direction.X * 1.75f, direction.Y * 1.75f, _body.Velocity.Z);
 
             return true;
+        }
+
+        private void OnBurn()
+        {
+            _animator.Pause();
+            _damageField.IsActive = false;
         }
 
         private void JumpDeath()
