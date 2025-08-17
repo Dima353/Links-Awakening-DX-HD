@@ -30,6 +30,10 @@ namespace ProjectZ.InGame.Pages
                 buttonWidth, new Point(1, 2), 0, 100, 5, GameSettings.EffectVolume, number => { GameSettings.EffectVolume = number; })
             { SetString = number => " " + number + "%" });
 
+            var toggleScreenShake = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
+                "settings_audio_mute_inactive", GameSettings.MuteInactive, newState => { GameSettings.MuteInactive = newState; });
+            contentLayout.AddElement(toggleScreenShake);
+
             graphicSettingsLayout.AddElement(contentLayout);
 
             _bottomBar = new InterfaceListLayout() { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true, HorizontalMode = true };

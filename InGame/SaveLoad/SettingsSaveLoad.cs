@@ -25,9 +25,11 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.UiScale = MathHelper.Clamp(GameSettings.UiScale, 0, 12);
             GameSettings.MusicVolume = saveManager.GetInt("MusicVolume", GameSettings.MusicVolume);
             GameSettings.EffectVolume = saveManager.GetInt("EffectVolume", GameSettings.EffectVolume);
+            GameSettings.MuteInactive = saveManager.GetBool("MuteInactive", GameSettings.MuteInactive);
             GameSettings.EnableShadows = saveManager.GetBool("EnableShadows", GameSettings.EnableShadows);
             GameSettings.Autosave = saveManager.GetBool("Autosave", GameSettings.Autosave);
             GameSettings.HeartBeep = saveManager.GetBool("HeartBeep", GameSettings.HeartBeep);
+            GameSettings.ScreenShake = saveManager.GetBool("ScreenShake", GameSettings.ScreenShake);
             GameSettings.SmoothCamera = saveManager.GetBool("SmoothCamera", GameSettings.SmoothCamera);
             GameSettings.BorderlessWindowed = saveManager.GetBool("BorderlessWindowed", GameSettings.BorderlessWindowed);
             GameSettings.IsFullscreen = saveManager.GetBool("IsFullscreen", GameSettings.IsFullscreen);
@@ -51,9 +53,11 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetInt("UIScale", GameSettings.UiScale);
             saveManager.SetInt("MusicVolume", GameSettings.MusicVolume);
             saveManager.SetInt("EffectVolume", GameSettings.EffectVolume);
+            saveManager.SetBool("MuteInactive", GameSettings.MuteInactive);
             saveManager.SetBool("EnableShadows", GameSettings.EnableShadows);
             saveManager.SetBool("Autosave", GameSettings.Autosave);
             saveManager.SetBool("HeartBeep", GameSettings.HeartBeep);
+            saveManager.SetBool("ScreenShake", GameSettings.ScreenShake);
             saveManager.SetBool("SmoothCamera", GameSettings.SmoothCamera);
             saveManager.SetBool("BorderlessWindowed", GameSettings.BorderlessWindowed);
             saveManager.SetBool("IsFullscreen", GameSettings.IsFullscreen);

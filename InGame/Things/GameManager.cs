@@ -187,6 +187,9 @@ namespace ProjectZ.InGame.Things
         // counters used to stop music
         private float[] _musicCounter = new float[MusicChannels];
 
+        // Muting the sound requires overwriting effect volume so store user setting.
+        public int _curEffectVolume;
+
         public GameManager()
         {
             ResetMusic();
@@ -873,6 +876,15 @@ namespace ProjectZ.InGame.Things
             return -1;
         }
 
+        public void HandleInactiveWindow(bool IsActive)
+        {
+            if (!IsActive & GameSettings.MuteInactive)
+                _curEffectVolume = 0;
+            else
+                _curEffectVolume = GameSettings.EffectVolume;
+            Game1.GbsPlayer.SetVolumeMultiplier(Convert.ToInt32(IsActive));
+        }
+
         public void UpdateSoundEffects()
         {
             var lowerVolume = false;
@@ -884,7 +896,7 @@ namespace ProjectZ.InGame.Things
                     lowerVolume = true;
 
                 // update the volume of the sound effects to match the current settings
-                soundEffect.Value.Instance.Volume = CurrentSoundEffects[soundEffect.Key].Volume * GameSettings.EffectVolume / 100 * Values.SoundEffectVolumeMult;
+                soundEffect.Value.Instance.Volume = CurrentSoundEffects[soundEffect.Key].Volume * _curEffectVolume / 100 * Values.SoundEffectVolumeMult;
 
                 soundEffect.Value.Instance.IsLooped = false;
 
@@ -940,7 +952,7 @@ namespace ProjectZ.InGame.Things
                 if (playtime != 0)
                     entry.EndTime = Game1.TotalGameTime + playtime;
 
-                entry.Instance.Volume = volume * GameSettings.EffectVolume / 100f * Values.SoundEffectVolumeMult;
+                entry.Instance.Volume = volume * _curEffectVolume / 100f * Values.SoundEffectVolumeMult;
                 entry.Instance.Pitch = pitch;
                 
                 return;
@@ -949,7 +961,7 @@ namespace ProjectZ.InGame.Things
             entry = new PlayingSoundEffect() { Volume = volume, LowerMusicVolume = lowerMusicVolume };
             entry.Instance = Resources.SoundEffects[name].CreateInstance();
             // the volume of the sound effects is higher than the music; so scale effect volume a little down
-            entry.Instance.Volume = volume * GameSettings.EffectVolume / 100f * Values.SoundEffectVolumeMult;
+            entry.Instance.Volume = volume * _curEffectVolume / 100f * Values.SoundEffectVolumeMult;
             entry.Instance.Pitch = pitch;
 
             if (playtime != 0)

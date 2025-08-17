@@ -220,15 +220,6 @@ namespace ProjectZ
             // load game settings
             SettingsSaveLoad.LoadSettings();
 
-            // We need to set the UI scale now or the game will crash if fullscreen.
-            UpdateScale();
-
-            // toggle fullscreen
-            if (GameSettings.IsFullscreen)
-            {
-                GameSettings.IsFullscreen = false;
-                ToggleFullscreen();
-            }
             // init gbs player; load gbs file
             GbsPlayer.LoadFile(Values.PathContentFolder + "Music/awakening.gbs");
             GbsPlayer.StartThread();
@@ -246,6 +237,15 @@ namespace ProjectZ
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
             ScreenManager.LoadIntro(Content);
 
+            // We need to set the UI scale now or the game will crash if fullscreen.
+            UpdateScale();
+
+            // toggle fullscreen
+            if (GameSettings.IsFullscreen)
+            {
+                GameSettings.IsFullscreen = false;
+                ToggleFullscreen();
+            }
             // set the fps settings of the game
             UpdateFpsSettings();
 
@@ -311,7 +311,6 @@ namespace ProjectZ
                 var spriteAtlasScreen = (SpriteAtlasScreen)ScreenManager.GetScreen(Values.ScreenNameSpriteAtlasEditor);
                 spriteAtlasScreen.LoadSpriteEditor(_consoleLine);
             }
-
             _consoleLine = null;
         }
 
@@ -319,11 +318,8 @@ namespace ProjectZ
         {
             WasActive = IsActive;
 
-            // mute the music if the window is not focused
-            //if (!IsActive)
-            //    GbsPlayer.SetVolumeMultiplier(0);
-            //else
-            //    GbsPlayer.SetVolumeMultiplier(1);
+            // Mute music and sound effects if user disabled on inactive window.
+            GameManager.HandleInactiveWindow(IsActive);
 
             UpdateConsoleInput();
 
@@ -732,7 +728,7 @@ namespace ProjectZ
                 GameSettings.BorderlessWindowed && _isFullscreen)
             {
                 ToggleFullscreen();
-                GameSettings.BorderlessWindowed = !GameSettings.BorderlessWindowed;
+                GameSettings.BorderlessWindowed = GameSettings.BorderlessWindowed;
                 ToggleFullscreen();
             }
             else

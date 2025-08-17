@@ -49,6 +49,7 @@ settings_menu_back Back
 settings_audio_header Audio Settings
 settings_audio_music_volume Music Volume:
 settings_audio_effect_volume Effect Volume:
+settings_audio_mute_inactive Mute Inactive Window
 
 settings_game_header Game Settings
 settings_game_language Language: English
