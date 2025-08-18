@@ -1262,10 +1262,12 @@ d3_beak_3:0 -> [check_item:stonebeak:1:result] -> [path:d3_beak_3_result]
 d3_beak_3_result:result:0 -> beak_nop
 d3_beak_3_result:result:1 -> beak_d3_3
 
-// only reshow the dialog after 600 seconds is passed
-crystal_hard:0 -> [cooldown:600000:result] -> [path:crystal_hard_cooldown]
+// Show the dialog every 600 seconds. Don't show it if Pegasus Boots have been obtained.
+crystal_hard:0 -> [check_item:pegasusBoots:1:has_boots] -> [cooldown:600000:result] -> [path:crystal_hard_cooldown]
 crystal_hard_cooldown:result:0 ->
-crystal_hard_cooldown:result:1 -> crystal_hard
+crystal_hard_cooldown:result:1 -> [path:crystal_hard_message]
+crystal_hard_message:has_boots:1 ->
+crystal_hard_message:0 -> crystal_hard
 
 cracked_rock:0 -> [cooldown:600000:result] -> [path:cracked_rock_cooldown]
 cracked_rock_cooldown:result:0 ->
