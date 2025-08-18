@@ -198,6 +198,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (Game1.GameManager.GetCurrentMusic() != 88)
                 Game1.GameManager.SetMusic(33, 2);
 
+            // Freeze the game as the owl enters the map.
+            Game1.GameManager.SaveManager.SetString("freezeGame", "1");
+
             MapManager.ObjLink.FreezePlayer();
             _wasTriggered = true;
 
@@ -317,6 +320,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             // stop playing music
             Game1.GameManager.SetMusic(-1, 2);
+
+            // Unfreeze the game as the owl starts leaving.
+            Game1.GameManager.SaveManager.SetString("freezeGame", "0");
         }
 
         private void UpdateLeave()
