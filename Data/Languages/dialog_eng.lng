@@ -1,7 +1,7 @@
 // items
 smallkey You got a Small Key!\nYou can open a locked door.
 compass You've got the Compass!\nNow, you can see where the chests and Nightmares are hidden!\fThis Compass has a new feature-- a tone will tell you if a key is hidden in a room when you enter!
-dmap At last, you got a Map!\nPress the SELECT Button to look at it!
+dmap At last, you got a Map!\nPress the START Button to look at it!
 stonebeak You found a stone beak!\nLet's find the owl statue that belongs to it.
 
 sword1 You found your Sword! It must be yours because it has your name engraved on it!
@@ -69,7 +69,7 @@ ruby200 You got 200 Rupees!\nYou're Ecstatic!
 // trendy game
 ruby30 It's 30 Rupees! You can play the game three more times with this!
 
-heartMeter You've got a Piece of Heart! Press SELECT on the Subscreen to see.
+heartMeter You've got a Piece of Heart! Press START to open the Subscreen to see.
 heartMeterFilled You collected four Pieces of Heart. Now, you have a complete Heart Container!
 
 guardianAcorn You've got a Guardian Acorn!\nIt will reduce the damage you take by half!
@@ -103,7 +103,7 @@ instrument5Collected {...MOUNTAIN...}{Something calls...}{from the mountains...}
 instrument6Collected {...OCARINA...}{The music of the Ocarina}{leads...}
 instrument7Collected {...EGG....}{The Egg on the mountain}{calls!}
 
-goldLeaf You've found a Gold Leaf! Press SELECT to see how many you've collected!
+goldLeaf You've found a Gold Leaf! Press START to see how many you've collected!
 goldLeafLast At last! You've got the final Golden Leaf! Now go and see Richard about that key...
 
 // ° ± ² ³
@@ -324,7 +324,7 @@ npc04_game It seems that old man Ulrira is a shy guy, in person...
 // kid with hints
 //npc05_0 Hey, man! When you want to save just push all the Buttons at once! Uhh... Don't ask me what that means, I'm just a kid!
 npc05_1 Well, it seems that after you save, you will start at the last door you went through... I'm not really sure why that is 'cause I'm just a kid!
-npc05_2 I heard that you can press SELECT to look at the island map... But, I don't understand what they mean by that...
+npc05_2 I heard that you can press START then SELECT to look at the island map... But, I don't understand what they mean by that...
 npc05_3 When you're running out of Hearts, you'd better enter a house or cave... Why? I have no idea, I'm just a kid!
 
 npc_ball_left Where are you from, brother? ...Outside the island? What is 'outside?' I've never thought about it...
@@ -687,7 +687,7 @@ book1_0 'Selecting The Item That's Right For You'
 book1_1 'You can select your favorite item for the A and B Buttons on the Sub-Screen. Using different items, you can fight without a sword! Try many different things to find what's right for you!'
 
 book2_0 'Auto Map And Memo Guide Book'
-book2_1 'You can see an island map by pressing the SELECT Button. The dark parts of the map are the places you have not yet visited. Move the cursor and press the A Button to get more information about an area, or to replay the message you got there...'
+book2_1 'You can see an island map by pressing the START then SELECT Buttons. The dark parts of the map are the places you have not yet visited. Move the cursor and press the A Button to get more information about an area, or to replay the message you got there...'
 
 book3_0 'Secrets Of The Whirling Blade'
 book3_1 'The Whirling Blade technique has been handed down from generation by the family of the hero. To use it, hold down the Sword Button and build up your power. When you have enough, you can released the Button! Can you master this?'
