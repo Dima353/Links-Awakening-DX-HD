@@ -27,6 +27,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         private Rectangle _spriteSourceRectangle;
 
         private float _danceCounter;
+        private float _delayCounter;
 
         private bool _isFalling;
         private bool _splashed;
@@ -159,10 +160,20 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             if (!_animator.IsPlaying)
             {
-                if (_jumpCount > 0)
-                    _aiComponent.ChangeState("jump");
-                else
-                    _aiComponent.ChangeState("roll");
+                _delayCounter += Game1.DeltaTime;
+
+                if (_delayCounter > 575)
+                {
+                    if (_jumpCount > 0)
+                    {
+                        _delayCounter = 0;
+                        _aiComponent.ChangeState("jump");
+                    }
+                    else
+                    {
+                        _aiComponent.ChangeState("roll");
+                    }
+                }
             }
         }
 

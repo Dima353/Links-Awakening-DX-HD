@@ -190,7 +190,7 @@ walrus:has_marin:0 -> [update_objects] -> walrus_0
 walrus:has_marin:1 -> [update_objects] -> [dialog:choice:maria_3_0:choice_Yes:choice_No...] -> [path:walrus_choice]
 walrus_choice:choice:0 -> [path:walrus_sequence]
 walrus_choice:choice:1 -> marin_3_1
-walrus_sequence:0 -> [update_objects] -> [save_history:true] -> [set:maria_sing_walrus:1] -> [set:walrus_despawn:1] -> [set:walrus_dance:1] -> [freeze:16000] -> [set:maria_stop_singing:1] -> [set:maria_play_animation:stand_2] -> [set:link_direction:2] -> [freeze:750] -> [set:maria_play_animation:stand_3] -> [set:link_direction:3] -> maria_3_2 -> [wait:dialogOpen:0] -> [freeze:500] -> [set:seq_rabit:1] -> [set:seqRabitFade:-100] -> [set:seqRabitMove:96,0,0.75] -> [freeze:1000] -> [set:maria_play_animation:stand_0] -> [set:link_direction:0] -> [freeze:1500] -> [set:seqRabitJump:1000] -> [freeze:500] -> maria_3_3 -> [freeze:50] -> [wait:dialogOpen:0] -> [set:maria_play_animation:stand_2] -> [freeze:50] -> maria_3_4 -> [wait:dialogOpen:0] -> [set:seqRabitMove:-128,0,1.25] -> [freeze:250] -> [set:maria_walk:-128,0,0.75] -> [freeze:750] -> [set:seqRabitFade:100] -> [freeze:750] -> [set:maria_fade:100] -> [freeze:100] -> [remove_item:marin:1:result] -> [set:has_marin:0] -> [set:maria_state:4] -> [set:seq_rabit:0] -> [set:hide_rabbit_0:1] -> [set:hide_rabbit_1:1] -> [set:hide_rabbit_2:1] -> [set:hide_rabbit_3:1] -> [set:npc_chef:2] -> [set:npc_boy_0:2] -> [set:npc_boy_1:3] -> [set:npc_boy_2:1] -> [set:npc_boy_ball_left:2] -> [set:npc_boy_ball_right:2] -> [set:tarin:7] -> [set:tarin_state:6] -> [save_history:false]
+walrus_sequence:0 -> [update_objects] -> [save_history:true] -> [set:maria_sing_walrus:1] -> [set:walrus_despawn:1] -> [set:walrus_dance:1] -> [freeze:19500] -> [set:maria_stop_singing:1] -> [set:maria_play_animation:stand_2] -> [set:link_direction:2] -> [freeze:750] -> [set:maria_play_animation:stand_3] -> [set:link_direction:3] -> maria_3_2 -> [wait:dialogOpen:0] -> [freeze:500] -> [set:seq_rabit:1] -> [set:seqRabitFade:-100] -> [set:seqRabitMove:96,0,0.75] -> [freeze:1000] -> [set:maria_play_animation:stand_0] -> [set:link_direction:0] -> [freeze:1500] -> [set:seqRabitJump:1000] -> [freeze:500] -> maria_3_3 -> [freeze:50] -> [wait:dialogOpen:0] -> [set:maria_play_animation:stand_2] -> [freeze:50] -> maria_3_4 -> [wait:dialogOpen:0] -> [set:seqRabitMove:-128,0,1.25] -> [freeze:250] -> [set:maria_walk:-128,0,0.75] -> [freeze:750] -> [set:seqRabitFade:100] -> [freeze:750] -> [set:maria_fade:100] -> [freeze:100] -> [remove_item:marin:1:result] -> [set:has_marin:0] -> [set:maria_state:4] -> [set:seq_rabit:0] -> [set:hide_rabbit_0:1] -> [set:hide_rabbit_1:1] -> [set:hide_rabbit_2:1] -> [set:hide_rabbit_3:1] -> [set:npc_chef:2] -> [set:npc_boy_0:2] -> [set:npc_boy_1:3] -> [set:npc_boy_2:1] -> [set:npc_boy_ball_left:2] -> [set:npc_boy_ball_right:2] -> [set:tarin:7] -> [set:tarin_state:6] -> [save_history:false]
 
 walrus_swim:0 -> [update_objects] -> walrus_1
 
@@ -1274,7 +1274,6 @@ cracked_rock_cooldown:result:0 ->
 cracked_rock_cooldown:result:1 -> rock_cracks_message
 
 // == dungeon four ==
-
 d4_beak_1:0 -> [check_item:stonebeak:1:result] -> [path:d4_beak_1_result]
 d4_beak_1_result:result:0 -> beak_nop
 d4_beak_1_result:result:1 -> beak_d4_1
