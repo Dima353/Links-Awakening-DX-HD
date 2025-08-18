@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
@@ -26,6 +27,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
         private Vector2 _targetPosition;
 
         private int _lastWalkFrame;
+        private int _jumpCount = 0;
         private bool _wasHit;
 
         private readonly string _saveKey;
@@ -197,8 +199,12 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             else
             {
                 var newState = Game1.RandomNumber.Next(0, 2);
-                _aiComponent.ChangeState(newState == 0 ? "walk" : "jump");
-                _aiComponent.ChangeState("jump");
+
+                var state = (newState == 0 && _jumpCount < 3) 
+                    ? (_jumpCount++, "jump") 
+                    : (_jumpCount = 0, "walk");
+
+                _aiComponent.ChangeState(state.Item2);
             }
         }
 
