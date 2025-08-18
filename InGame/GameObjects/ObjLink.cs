@@ -2279,8 +2279,7 @@ namespace ProjectZ.InGame.GameObjects
             if (CurrentState == State.Swimming && _diveCounter > 0 ||
                 CurrentState == State.Drowning ||
                 CurrentState == State.Drowned ||
-                CurrentState == State.BedTransition ||
-                _isTrapped)
+                CurrentState == State.BedTransition || _isTrapped)
                 _shadowComponent.IsActive = false;
             else
                 _shadowComponent.IsActive = true;
@@ -4131,6 +4130,7 @@ namespace ProjectZ.InGame.GameObjects
 
             _isWalking = false;
             _bootsRunning = false;
+            _bootsHolding = false;
 
             // stop movement
             // on the boat the player should still move up/down while playing the sequence
