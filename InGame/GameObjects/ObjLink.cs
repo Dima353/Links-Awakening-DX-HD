@@ -10,6 +10,7 @@ using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.GameObjects.Base.Systems;
 using ProjectZ.InGame.GameObjects.Dungeon;
+using ProjectZ.InGame.GameObjects.MidBoss;
 using ProjectZ.InGame.GameObjects.NPCs;
 using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.GameSystems;
@@ -2815,7 +2816,12 @@ namespace ProjectZ.InGame.GameObjects
 
             if (CurrentState == State.Grabbing)
             {
+                // Get object as carriable and get the type to see if it's instant pickup.
                 var carriableComponent = grabbedObject.Components[CarriableComponent.Index] as CarriableComponent;
+                Type grabbedObjectType = grabbedObject.GetType();
+
+                // Check if the object is Flying Rooster or Smasher Ball.
+                bool InstantPickup = grabbedObject.GetType() == typeof(ObjCock) || grabbedObjectType == typeof(MBossSmasherBall);
 
                 // is the player pulling in the opposite direction?
                 var moveVec = ControlHandler.GetMoveVector2();
@@ -2827,13 +2833,14 @@ namespace ProjectZ.InGame.GameObjects
                         _pullCounter = PullResetTime;
                 }
 
-                if (moveVec.Length() > 0.5)
+                // Check if the player is pulling away from the object or it's an instant pickup object.
+                if (moveVec.Length() > 0.5 || InstantPickup)
                 {
-                    // pulling into the oposite direction
+                    // Player is pulling in the correct direction or it's an instant pickup object.
                     var moveDir = AnimationHelper.GetDirection(moveVec);
-                    if ((moveDir + 2) % 4 == Direction)
+                    if ((moveDir + 2) % 4 == Direction || InstantPickup)
                     {
-                        // do not show the pull animation while resetting
+                        // Do not show the pull animation while resetting.
                         if (_pullCounter >= 0)
                             CurrentState = State.Pulling;
 
