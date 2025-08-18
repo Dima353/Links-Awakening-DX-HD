@@ -198,8 +198,13 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (Game1.GameManager.GetCurrentMusic() != 88)
                 Game1.GameManager.SetMusic(33, 2);
 
+            // If the final instrument has been obtained don't freeze the game anymore or the
+            // game will softlock when attempting to crack open the egg as the owl never leaves.
+            var noFreeze = Game1.GameManager.SaveManager.GetString("d8_instrument");
+
             // Freeze the game as the owl enters the map.
-            Game1.GameManager.SaveManager.SetString("freezeGame", "1");
+            if (noFreeze == "1")
+                Game1.GameManager.SaveManager.SetString("freezeGame", "1");
 
             MapManager.ObjLink.FreezePlayer();
             _wasTriggered = true;
