@@ -203,7 +203,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             var noFreeze = Game1.GameManager.SaveManager.GetString("d8_instrument");
 
             // Freeze the game as the owl enters the map.
-            if (noFreeze == "1")
+            if (noFreeze != "1")
                 Game1.GameManager.SaveManager.SetString("freezeGame", "1");
 
             MapManager.ObjLink.FreezePlayer();
