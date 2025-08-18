@@ -18,7 +18,6 @@ namespace ProjectZ
                 else if (arg == "loadSave")
                     loadFirstSave = true;
             }
-
             try
             {
                 using (var game = new Game1(editorMode, loadFirstSave))

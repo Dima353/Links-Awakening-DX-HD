@@ -31,7 +31,6 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.HeartBeep = saveManager.GetBool("HeartBeep", GameSettings.HeartBeep);
             GameSettings.ScreenShake = saveManager.GetBool("ScreenShake", GameSettings.ScreenShake);
             GameSettings.SmoothCamera = saveManager.GetBool("SmoothCamera", GameSettings.SmoothCamera);
-            GameSettings.BorderlessWindowed = saveManager.GetBool("BorderlessWindowed", GameSettings.BorderlessWindowed);
             GameSettings.IsFullscreen = saveManager.GetBool("IsFullscreen", GameSettings.IsFullscreen);
             GameSettings.LockFps = saveManager.GetBool("LockFPS", GameSettings.LockFps);
 
@@ -59,7 +58,6 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetBool("HeartBeep", GameSettings.HeartBeep);
             saveManager.SetBool("ScreenShake", GameSettings.ScreenShake);
             saveManager.SetBool("SmoothCamera", GameSettings.SmoothCamera);
-            saveManager.SetBool("BorderlessWindowed", GameSettings.BorderlessWindowed);
             saveManager.SetBool("IsFullscreen", GameSettings.IsFullscreen);
             saveManager.SetBool("LockFPS", GameSettings.LockFps);
 

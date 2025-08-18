@@ -53,11 +53,6 @@ namespace ProjectZ.InGame.Pages
                 });
             contentLayout.AddElement(_toggleFullscreen);
 
-            // Borderless fullscreen window toggler.
-            var toggleFullscreenWindowed = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
-                "settings_game_fullscreen_windowed", GameSettings.BorderlessWindowed, newState => { GameSettings.BorderlessWindowed = newState; Game1.SwitchFullscreenWindowedSetting(); });
-            contentLayout.AddElement(toggleFullscreenWindowed);
-
             // Shadow Setting: Currently unused, original developer note below:
             //
             // not sure why this should be an option; but if this should be settable then we need to still enable circular shadows  (e.g. under the player)

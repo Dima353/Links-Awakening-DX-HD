@@ -204,16 +204,7 @@ namespace ProjectZ.InGame.Overlay
 
         public void Draw(SpriteBatch spriteBatch, Rectangle drawPosition, Color color)
         {
-            /// RT:NOTE:CRASH BYPASS: Another place where null render target can cause a crash. To replicate the 
-            /// crash, simply remove the line below these comments and delete "ScaleChanged = true" in FIX PART 1".
-            // FIX PART 1/2: ..\Game1.cs                              >> LoadContent()
-            // FIX PART 2/2: ..\InGame\Overlay\OverlayManager.cs      >> OnLoad()
-            // CRASH BYPASS: ..\InGame\Map\MapManager.cs              >> DrawBlur()
-            // CRASH BYPASS: ..\InGame\Overlay\InventoryOverlay.cs    >> <YOU ARE HERE>
-            // CRASH BYPASS: ..\InGame\Overlay\MapOverlay.cs          >> Draw()
-            // CRASH BYPASS: ..\InGame\Things\GameManager.cs          >> GetMatrix() // DrawGame() - 2 places
-            if (_renderTarget != null)
-                spriteBatch.Draw(_renderTarget, drawPosition, color);
+            spriteBatch.Draw(_renderTarget, drawPosition, color);
         }
 
         public void DrawRT(SpriteBatch spriteBatch)

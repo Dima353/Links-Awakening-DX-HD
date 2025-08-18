@@ -12,8 +12,6 @@ namespace ProjectZ.InGame.Things
         public static bool HeartBeep = true;
         public static bool ScreenShake = true;
         public static bool SmoothCamera = true;
-        
-        public static bool BorderlessWindowed = false;
         public static bool IsFullscreen = false;
 
         private static int _musicVolume = 100;

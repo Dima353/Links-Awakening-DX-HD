@@ -121,16 +121,6 @@ namespace ProjectZ.InGame.Map
 
         private void DrawBlur(SpriteBatch spriteBatch, RenderTarget2D blurRT0, RenderTarget2D blurRT1, RenderTarget2D blurRT2)
         {
-            /// RT:NOTE:CRASH BYPASS: Another place where null render target can cause a crash. To replicate the 
-            /// crash, simply remove the line below these comments and delete "ScaleChanged = true" in FIX PART 1".
-            // FIX PART 1/2: ..\Game1.cs                              >> LoadContent()
-            // FIX PART 2/2: ..\InGame\Overlay\OverlayManager.cs      >> OnLoad()
-            // CRASH BYPASS: ..\InGame\Map\MapManager.cs              >> <YOU ARE HERE>
-            // CRASH BYPASS: ..\InGame\Overlay\InventoryOverlay.cs    >> Draw()
-            // CRASH BYPASS: ..\InGame\Overlay\MapOverlay.cs          >> Draw()
-            // CRASH BYPASS: ..\InGame\Things\GameManager.cs          >> GetMatrix() // DrawGame() - 2 places
-            if (blurRT0 == null) return;
-
             var matrixPosition = Vector2.Zero;
 
             if (!Game1.GameManager.UseShockEffect)

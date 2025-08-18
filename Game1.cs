@@ -234,26 +234,9 @@ namespace ProjectZ
             // Input Handler
             Components.Add(new InputHandler(this));
 
-            /// RT:NOTE: FULLSCREEN FIX PART 1/2: Force the "ScaleChanged" flag. When starting the game in Fullscreen mode with Borderless Window disabled, drawing the game
-            /// world and inventory screen will crash, but this has currently been worked around (see the noted methods below). The problem is that render targets are being
-            /// invalidated but are never being updated, or they just aren't being created to begin with. Borderless Window + Fullscreen is immune from this issue. Many of
-            /// the places this would cause a crash now check for "null" render targets and just refuse to draw. Wherever null render targets can cause an issue will be a
-            /// comment starting with "RT:NOTE:". Simply reverse the null check to replicate the crashes. This is just half the fix, as it only fixes the game world. Part 2
-            /// fixes drawing the inventory screen ( see "OverlayManager >> OnLoad()" ) where it's almost certain render targets were never created to begin with.
-            // FIX PART 1/2: ..\Game1.cs                              >> <YOU ARE HERE>
-            // FIX PART 2/2: ..\InGame\Overlay\OverlayManager.cs      >> OnLoad()
-            // CRASH BYPASS: ..\InGame\Map\MapManager.cs              >> DrawBlur()
-            // CRASH BYPASS: ..\InGame\Overlay\InventoryOverlay.cs    >> Draw()
-            // CRASH BYPASS: ..\InGame\Overlay\MapOverlay.cs          >> Draw()
-            // CRASH BYPASS: ..\InGame\Things\GameManager.cs          >> GetMatrix() // DrawGame() - 2 places
-            ScaleChanged = true;
-
             // load the intro screen + the resources needed for it
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
             ScreenManager.LoadIntro(Content);
-
-            // We need to set the UI scale now or the game will crash if fullscreen.
-            UpdateScale(true);
 
             // toggle fullscreen
             if (GameSettings.IsFullscreen)
@@ -296,7 +279,6 @@ namespace ProjectZ
 
             if (EditorMode)
                 SetUpEditorUi();
-
 #if DEBUG
             _dialogTester = new DialogTester();
 #endif
@@ -349,7 +331,7 @@ namespace ProjectZ
                 SettingsSaveLoad.SaveSettings();
             }
 
-            if(_finishedLoading && !_initRenderTargets)
+            if (_finishedLoading && !_initRenderTargets)
             {
                 _initRenderTargets = true;
 
@@ -372,9 +354,8 @@ namespace ProjectZ
             }
 
             if (ScaleChanged)
-            {
                 UpdateScale();
-            }
+
             ControlHandler.Update();
 
             if (EditorMode && InputHandler.KeyPressed(Values.DebugToggleDebugText))
@@ -408,7 +389,6 @@ namespace ProjectZ
 
             if (_finishedLoading)
             {
-
                 if (EditorMode)
                 {
                     // update the ui
@@ -417,7 +397,6 @@ namespace ProjectZ
 
                     EditorUpdate(gameTime);
                 }
-
                 EditorUi.CurrentScreen = "";
 
                 // update the game ui
@@ -525,7 +504,6 @@ namespace ProjectZ
 
                 SpriteBatch.End();
             }
-
             base.Draw(gameTime);
         }
 
@@ -732,29 +710,7 @@ namespace ProjectZ
                 IsFixedTimeStep = false;
                 Graphics.SynchronizeWithVerticalRetrace = true;
             }
-
             Graphics.ApplyChanges();
-        }
-
-        public static void SwitchFullscreenWindowedSetting()
-        {
-            // The user setting get's overwritten so store it now.
-            _userBorderlessSetting = GameSettings.BorderlessWindowed;
-
-            // switch from hardware fullscreen to borderless windows
-            if (!GameSettings.BorderlessWindowed && Graphics.IsFullScreen ||
-                GameSettings.BorderlessWindowed && _isFullscreen)
-            {
-                ToggleFullscreen();
-                GameSettings.BorderlessWindowed = !GameSettings.BorderlessWindowed;
-                ToggleFullscreen();
-            }
-            else
-            {
-                GameSettings.BorderlessWindowed = !GameSettings.BorderlessWindowed;
-            }
-            // Retrieve the user value and store it in the respective variable.
-            GameSettings.BorderlessWindowed = _userBorderlessSetting;
         }
 
         public static void ToggleFullscreen()
@@ -764,71 +720,36 @@ namespace ProjectZ
 
             var screenBounds = System.Windows.Forms.Screen.GetBounds(_windowForm);
 
-            if (!GameSettings.BorderlessWindowed)
+            _isFullscreen = !_isFullscreen;
+
+            // change to fullscreen
+            if (_isFullscreen)
             {
-                if (!Graphics.IsFullScreen)
-                {
-                    _lastWindowWidth = Graphics.PreferredBackBufferWidth;
-                    _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+                _lastWindowState = _windowForm.WindowState;
+                _lastWindowBounds = _windowForm.Bounds;
 
-                    _lastWindowRestoreBounds = _windowForm.RestoreBounds;
-
-                    Graphics.PreferredBackBufferWidth = screenBounds.Width;
-                    Graphics.PreferredBackBufferHeight = screenBounds.Height;
-
-                    _lastWindowState = _windowForm.WindowState;
-                }
-                else
-                {
-                    if (_lastWindowState != Forms.FormWindowState.Maximized)
-                    {
-                        Graphics.PreferredBackBufferWidth = _lastWindowWidth;
-                        Graphics.PreferredBackBufferHeight = _lastWindowHeight;
-                    }
-                }
-
-                Graphics.ToggleFullScreen();
+                _windowForm.FormBorderStyle = Forms.FormBorderStyle.None;
+                _windowForm.WindowState = Forms.FormWindowState.Normal;
+                _windowForm.Bounds = screenBounds;
+            }
+            else
+            {
+                _windowForm.FormBorderStyle = Forms.FormBorderStyle.Sizable;
 
                 if (_lastWindowState == Forms.FormWindowState.Maximized)
                 {
-                    // restore the window size of the normal sized window
+                    // this is set to not loose the old state because fullscreen and windowed are both using the "Normal" state
                     _windowForm.Bounds = _lastWindowRestoreBounds;
 
                     _windowForm.WindowState = _lastWindowState;
                 }
-            }
-            else
-            {
-                _isFullscreen = !_isFullscreen;
-
-                // change to fullscreen
-                if (_isFullscreen)
-                {
-                    _lastWindowState = _windowForm.WindowState;
-                    _lastWindowBounds = _windowForm.Bounds;
-
-                    _windowForm.FormBorderStyle = Forms.FormBorderStyle.None;
-                    _windowForm.WindowState = Forms.FormWindowState.Normal;
-                    _windowForm.Bounds = screenBounds;
-                }
                 else
                 {
-                    _windowForm.FormBorderStyle = Forms.FormBorderStyle.Sizable;
-
-                    if (_lastWindowState == Forms.FormWindowState.Maximized)
-                    {
-                        // this is set to not loose the old state because fullscreen and windowed are both using the "Normal" state
-                        _windowForm.Bounds = _lastWindowRestoreBounds;
-
-                        _windowForm.WindowState = _lastWindowState;
-                    }
-                    else
-                    {
-                        _windowForm.WindowState = _lastWindowState;
-                        _windowForm.Bounds = _lastWindowBounds;
-                    }
+                    _windowForm.WindowState = _lastWindowState;
+                    _windowForm.Bounds = _lastWindowBounds;
                 }
             }
+
 #endif
         }
 
@@ -877,7 +798,7 @@ namespace ProjectZ
                 _lastWindowRestoreBounds = _windowForm.RestoreBounds;
 
             // minimize the fullscreen window
-            if (!GameSettings.BorderlessWindowed && Graphics.IsFullScreen && _windowForm.WindowState == Forms.FormWindowState.Minimized && !_wasMinimized)
+            if (Graphics.IsFullScreen && _windowForm.WindowState == Forms.FormWindowState.Minimized && !_wasMinimized)
             {
                 _wasMinimized = true;
 
@@ -885,7 +806,7 @@ namespace ProjectZ
                 _windowForm.WindowState = Forms.FormWindowState.Minimized;
             }
             // reopen the fullscreen window
-            if (!GameSettings.BorderlessWindowed && _windowForm.WindowState == Forms.FormWindowState.Normal && _wasMinimized)
+            if (_windowForm.WindowState == Forms.FormWindowState.Normal && _wasMinimized)
             {
                 _wasMinimized = false;
                 ToggleFullscreen();
@@ -910,7 +831,7 @@ namespace ProjectZ
             UpdateScale();
         }
 
-        private void UpdateScale(bool SkipEditor = false)
+        private void UpdateScale(bool EditorDelay = false)
         {
             // Scale of the game field.
             ScreenScale = MathHelper.Clamp(Math.Min(WindowWidth / Values.MinWidth, WindowHeight / Values.MinHeight), 1, 25);
@@ -932,13 +853,13 @@ namespace ProjectZ
             // Scale of the user interface.
             UiScale = GameSettings.UiScale == 0 ? ScreenScale : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
 
-            // Update the UI of the editor as well. This will cause issues on initialization where scale
-            // needs to be called to avoid render target issues, so avoid updating if SkipEditor is true.
-            if (SkipEditor)
-                EditorUi.SizeChanged();
+            // Update the UI of the editor as well. 
+            EditorUi.SizeChanged();
 
             ScreenManager.OnResize(WindowWidth, WindowHeight);
             UiPageManager.OnResize(WindowWidth, WindowHeight);
+
+            ScaleChanged = false;
         }
 
         private void UpdateRenderTargets()
