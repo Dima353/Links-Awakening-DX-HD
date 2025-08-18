@@ -2474,7 +2474,7 @@ namespace ProjectZ.InGame.GameObjects
                 UpdateCharging();
 
             // hit stuff with the sword
-            if (CurrentState == State.Attacking || CurrentState == State.AttackBlocking || _bootsRunning && CarrySword)
+            if (CurrentState == State.Attacking || CurrentState == State.AttackBlocking || CurrentState == State.AttackSwimming || _bootsRunning && CarrySword)
                 UpdateAttacking();
 
             if (CurrentState == State.PickingUp)
