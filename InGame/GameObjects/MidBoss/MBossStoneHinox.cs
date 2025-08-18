@@ -200,7 +200,7 @@ namespace ProjectZ.InGame.GameObjects.MidBoss
             {
                 var newState = Game1.RandomNumber.Next(0, 2);
 
-                var state = (newState == 0 && _jumpCount < 3) 
+                var state = (newState != 0 && _jumpCount < 2) 
                     ? (_jumpCount++, "jump") 
                     : (_jumpCount = 0, "walk");
 
