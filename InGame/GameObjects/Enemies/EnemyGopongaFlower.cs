@@ -76,24 +76,35 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             RemoveComponent(CollisionComponent.Index);
         }
 
-        private Values.HitCollision OnHit(GameObject originObject, Vector2 direction, HitType type, int damage, bool pieceOfPower)
+        private bool ValidateHit(HitType hitType, bool pieceOfPower)
         {
             // What can kill these:
-            // Bow-wow, Hookshot, Magic Rod, Boomerang, Sword lvl2 + Spin Slash, Sword lvl 2 + Piece of Power
-            if (type != HitType.BowWow && type != HitType.Hookshot && type != HitType.MagicRod && type != HitType.Boomerang && 
-                ((type & HitType.Sword2) == 0 || (type & HitType.SwordSpin) == 0) && (type == HitType.Sword2 && !pieceOfPower))
-                return Values.HitCollision.Blocking;
+            // Bow-wow ; Hookshot ; Magic Rod ; Boomerang ; Sword2 + Spin Slash ; Sword2 + Piece of Power/Red Tunic
+            if (hitType == HitType.BowWow || hitType == HitType.Hookshot || hitType == HitType.MagicRod ||  hitType == HitType.Boomerang ||
+                ((hitType & HitType.Sword2) != 0 && (hitType & HitType.SwordSpin) != 0) ||  
+                ((hitType & HitType.Sword2) != 0 && pieceOfPower))
+            {
+                return true;
+            }
+            return false;
+        }
 
-            if (type != HitType.BowWow && (type == HitType.MagicRod || damage >= _aiDamageState.CurrentLives))
+        private Values.HitCollision OnHit(GameObject originObject, Vector2 direction, HitType type, int damage, bool pieceOfPower)
+        {
+            if (ValidateHit(type, pieceOfPower))
             {
-                _aiDamageState.HitMultiplierX = 4;
-                _aiDamageState.HitMultiplierY = 4;
+                if (type != HitType.BowWow && (type == HitType.MagicRod || damage >= _aiDamageState.CurrentLives))
+                {
+                    _aiDamageState.HitMultiplierX = 4;
+                    _aiDamageState.HitMultiplierY = 4;
+                }
+                if (_dealsDamage)
+                {
+                    return _aiDamageState.OnHit(originObject, direction, type, damage, pieceOfPower);
+                }
+                return Values.HitCollision.None;
             }
-            if (_dealsDamage)
-            {
-                return _aiDamageState.OnHit(originObject, direction, type, damage, pieceOfPower);
-            }
-            return Values.HitCollision.None;
+            return Values.HitCollision.Blocking;
         }
     }
 }
