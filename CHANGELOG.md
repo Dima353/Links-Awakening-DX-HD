@@ -1,5 +1,4 @@
-##The Legend of Zelda: Link's Awakening HD v1.1.0 Changelog
-
+# **The Legend of Zelda: Link's Awakening v1.1.0 Changelog:**
 ### **General:**
  * Saves and settings files are now located in "..\AppData\Local\Zelda_LA".
  * Intro and title screen reworked to better match original game.
