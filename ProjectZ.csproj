@@ -44,6 +44,7 @@
     <PublishSingleFile>true</PublishSingleFile>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>1.1.0</Version>
   </PropertyGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
