@@ -1,5 +1,4 @@
 ﻿﻿using System.Collections.Generic;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
@@ -53,12 +52,10 @@ namespace ProjectZ.InGame.Pages
 
         public void OnClickYes(InterfaceElement element)
         {
-            // If page was created from in-game menu, save progress on exit.
             if (Game1.SaveAndExitGame)
                 SaveGameSaveLoad.SaveGame(Game1.GameManager);
 
-            // quit the game
-            Application.Exit();
+            Game1.Instance.Exit();
         }
     }
 }

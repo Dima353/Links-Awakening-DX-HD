@@ -28,7 +28,7 @@ namespace ProjectZ
     {
         public static GraphicsDeviceManager Graphics;
         public static SpriteBatch SpriteBatch;
-
+        public static Game1 Instance { get; private set; }
         public static UiManager EditorUi = new UiManager();
         public static ScreenManager ScreenManager = new ScreenManager();
         public static PageManager UiPageManager = new PageManager();
@@ -148,6 +148,7 @@ namespace ProjectZ
 
         public Game1(bool editorMode, bool loadFirstSave)
         {
+            Instance = this;
 #if WINDOWS
             _windowForm = (Forms.Form)Forms.Control.FromHandle(Window.Handle);
             _windowForm.Icon = Properties.Resources.Icon;

@@ -41,7 +41,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private bool _bushDestroyed;
 
-        public EnemySpinyBeetle() : base("spiny beetle") { }
+        public EnemySpinyBeetle() : base("spiny Beetle") { }
 
         public EnemySpinyBeetle(Map.Map map, int posX, int posY, int type) : base(map)
         {
@@ -50,7 +50,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             EntityPosition = new CPosition(posX + 8, posY + 7, 0);
             EntitySize = new Rectangle(-8, -7, 16, 16);
 
-            _animator = AnimatorSaveLoad.LoadAnimator("Enemies/spiny beetle");
+            _animator = AnimatorSaveLoad.LoadAnimator("Enemies/spiny Beetle");
             _animator.Play("idle");
 
             _sprite = new CSprite(EntityPosition);

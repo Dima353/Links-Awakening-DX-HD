@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 
 namespace ProjectZ
 {
@@ -18,6 +17,7 @@ namespace ProjectZ
                 else if (arg == "loadSave")
                     loadFirstSave = true;
             }
+
             try
             {
                 using (var game = new Game1(editorMode, loadFirstSave))
@@ -25,8 +25,10 @@ namespace ProjectZ
             }
             catch (Exception exception)
             {
-               MessageBox.Show(exception.StackTrace, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-               throw;
+                Console.WriteLine("=== Unhandled Exception ===");
+                Console.WriteLine(exception.Message);
+                Console.WriteLine(exception.StackTrace);
+                throw;
             }
         }
     }
