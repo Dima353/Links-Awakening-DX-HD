@@ -3,17 +3,15 @@ namespace ProjectZ.InGame.Things
 {
     class GameSettings
     {
-        public static int UiScale = 4;
+        public static int UiScale = 0;
         public static int GameScale = 11; // autoscale
 
         public static bool EnableShadows = true;
-        public static bool LockFps = true;
         public static bool Autosave = true;
         public static bool HeartBeep = true;
         public static bool ScreenShake = true;
         public static bool SmoothCamera = true;
-        public static bool IsFullscreen = false;
-        public static bool ItemsOnRight = false;
+        public static bool IsFullscreen = true;
 
         private static int _musicVolume = 100;
         private static int _effectVolume = 100;

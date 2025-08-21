@@ -455,7 +455,7 @@ namespace ProjectZ
             {
                 Graphics.GraphicsDevice.SetRenderTarget(null);
 
-                SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap);
+                SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 
                 //draw the original image
                 SpriteBatch.Draw(MainRenderTarget, new Rectangle(0, 0, MainRenderTarget.Width, MainRenderTarget.Height), Color.White);
@@ -751,6 +751,26 @@ namespace ProjectZ
                 }
             }
 
+#else
+ 			GameSettings.IsFullscreen = !GameSettings.IsFullscreen;
+ 			if (GameSettings.IsFullscreen)
+            {
+                _lastWindowWidth  = WindowWidth  > 0 ? WindowWidth  : Graphics.PreferredBackBufferWidth;
+                _lastWindowHeight = WindowHeight > 0 ? WindowHeight : Graphics.PreferredBackBufferHeight;
+ 
+                var mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+                Graphics.IsFullScreen = true;
+                Graphics.PreferredBackBufferWidth  = mode.Width;
+                Graphics.PreferredBackBufferHeight = mode.Height;
+                Graphics.ApplyChanges();
+            }
+            else
+            {
+                Graphics.IsFullScreen = false;
+                Graphics.PreferredBackBufferWidth  = _lastWindowWidth  > 0 ? _lastWindowWidth  : 1500;
+                Graphics.PreferredBackBufferHeight = _lastWindowHeight > 0 ? _lastWindowHeight : 1000;
+                Graphics.ApplyChanges();
+            }
 #endif
         }
 
@@ -823,12 +843,13 @@ namespace ProjectZ
 
         private void OnResize()
         {
-            if (Window.ClientBounds.Width <= 0 &&
-                Window.ClientBounds.Height <= 0)
-                return;
+            var bbW = GraphicsDevice?.PresentationParameters.BackBufferWidth  ?? 0;
+            var bbH = GraphicsDevice?.PresentationParameters.BackBufferHeight ?? 0;
+            if (bbW <= 0 && bbH <= 0)
+               return;
 
-            WindowWidth = Window.ClientBounds.Width;
-            WindowHeight = Window.ClientBounds.Height;
+            WindowWidth  = bbW;
+            WindowHeight = bbH;
             UpdateScale();
         }
 
