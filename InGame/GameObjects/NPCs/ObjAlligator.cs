@@ -21,7 +21,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
         private Vector2 _canPosition;
         private Vector2 _canVelocity;
-        private float _canGravity = 0.035f;
+        private float _canGravity = 0.005f;
+        private float _canSpeed = -0.10f;
+        private float _canMultiplier = 0.25f;
         private bool _isCanActive;
         private bool _isEating;
 
@@ -79,8 +81,9 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             {
                 MapManager.ObjLink.UpdatePlayer = false;
 
-                _canPosition += _canVelocity;
-                _canVelocity.Y += _canGravity * Game1.TimeMultiplier;
+                _canVelocity.Y += _canGravity * Game1.TimeMultiplier * _canMultiplier;
+                _canPosition += _canVelocity * Game1.DeltaTime;
+                _canVelocity.Y += _canGravity * Game1.TimeMultiplier * _canMultiplier;
 
                 if (_canPosition.Y > EntityPosition.Y - 7 - _canSprite.ScaledRectangle.Height)
                 {
@@ -111,7 +114,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             _canPosition = new Vector2(
                 EntityPosition.X - 2 - _canSprite.ScaledRectangle.Width,
                 EntityPosition.Y - 10 - _canSprite.ScaledRectangle.Height);
-            _canVelocity = new Vector2(0, -1f);
+            _canVelocity = new Vector2(0, _canSpeed);
 
             Game1.GameManager.PlaySoundEffect("D360-36-24");
         }
