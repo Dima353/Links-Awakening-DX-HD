@@ -55,6 +55,7 @@ settings_game_header Игра
 settings_game_language Язык; Русский 
 settings_game_change_language Change Language
 settings_game_autosave Автосохранение
+settings_game_items_on_right Слоты предметов справа
 settings_game_heartbeep Сигнал низкого здоровья
 settings_game_screenshake Тряска экрана при уроне
 settings_game_change_smooth_camera Плавность камеры
