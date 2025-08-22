@@ -12,6 +12,8 @@ namespace ProjectZ.InGame.Overlay
         public static int DistX = 2;
         public static int DistY = 2;
 
+        private int _itemHud_x;
+
         public Point ItemSlotPosition;
 
         // 4 5
@@ -67,8 +69,12 @@ namespace ProjectZ.InGame.Overlay
 
         public void UpdatePositions(Rectangle uiWindow, Point offset, int scale)
         {
-            // bottom left corner
-            ItemSlotPosition = new Point(uiWindow.X + 16 * scale,
+            if (GameSettings.ItemsOnRight)
+                _itemHud_x = uiWindow.X + uiWindow.Width - (RecItemselection.Width * 2 + DistX * 2 + 16) * scale;
+            else
+                _itemHud_x = uiWindow.X + 16 * scale;
+
+            ItemSlotPosition = new Point(_itemHud_x,
                 uiWindow.Y + uiWindow.Height - (RecItemselection.Height * 3 + DistY * 2 + 16) * scale);
 
             // update the background rectangles

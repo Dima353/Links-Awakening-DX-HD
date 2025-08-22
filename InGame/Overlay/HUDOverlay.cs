@@ -98,21 +98,24 @@ namespace ProjectZ.InGame.Overlay
                 _keyBackground.BackgroundColor = Values.OverlayBackgroundColor * transparency;
                 _keyBackground.BlurColor = Values.OverlayBackgroundBlurColor * transparency;
             }
+            // Update overlay position
+            int direction = GameSettings.ItemsOnRight ? 1 : -1;
+            _itemSlotOverlay.UpdatePositions(_gameUiWindow, new Point(direction * (int)(fadePercentage * FadeOffsetBackground * Game1.UiScale), 0), Game1.UiScale);
 
-            // bottom left
-            _itemSlotOverlay.UpdatePositions(_gameUiWindow, new Point(-(int)(fadePercentage * FadeOffsetBackground * Game1.UiScale), 0), Game1.UiScale);
-            _itemSlotOverlay.SetTransparency(transparency);
-
-            // bottom right
-            _saveIconPosition = new Vector2(
-                _gameUiWindow.X + _gameUiWindow.Width - _saveIcon.SourceRectangle.Width * Game1.UiScale - 16 * Game1.UiScale,
+            // Save icon position
+            _saveIconPosition = new Vector2(GameSettings.ItemsOnRight 
+                ? _gameUiWindow.X + _saveIcon.SourceRectangle.Width * Game1.UiScale
+                : _gameUiWindow.X + _gameUiWindow.Width - _saveIcon.SourceRectangle.Width * Game1.UiScale - 16 * Game1.UiScale,
                 _gameUiWindow.Y + _gameUiWindow.Height - _saveIcon.SourceRectangle.Height * Game1.UiScale - 16 * Game1.UiScale);
+
+            _itemSlotOverlay.SetTransparency(transparency);
         }
 
         public void DrawTop(SpriteBatch spriteBatch, float fadePercentage, float transparency)
         {
             // draw the item slots
-            ItemSlotOverlay.Draw(spriteBatch, _itemSlotOverlay.ItemSlotPosition - new Point((int)(fadePercentage * FadeOffset * Game1.UiScale), 0), Game1.UiScale, transparency);
+            int direction = GameSettings.ItemsOnRight ? 1 : -1;
+            ItemSlotOverlay.Draw(spriteBatch, _itemSlotOverlay.ItemSlotPosition + new Point(direction * (int)(fadePercentage * FadeOffset * Game1.UiScale), 0), Game1.UiScale, transparency);
 
             // draw dungeon keys
             ItemDrawHelper.DrawSmallKeys(spriteBatch, _keyPosition + new Point((int)(fadePercentage * FadeOffset * Game1.UiScale), 0), Game1.UiScale, Color.White * transparency);

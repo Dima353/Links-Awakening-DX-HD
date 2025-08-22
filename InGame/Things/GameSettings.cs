@@ -13,6 +13,7 @@ namespace ProjectZ.InGame.Things
         public static bool ScreenShake = true;
         public static bool SmoothCamera = true;
         public static bool IsFullscreen = false;
+        public static bool ItemsOnRight = false;
 
         private static int _musicVolume = 100;
         private static int _effectVolume = 100;
