@@ -61,6 +61,15 @@ namespace ProjectZ.InGame.Pages
             // contentLayout.AddElement(shadowToggle);
             //
 
+            // FPS lock toggler.
+            var toggleFpsLock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
+                "settings_graphics_fps_lock", GameSettings.LockFps, newState =>
+                {
+                    GameSettings.LockFps = newState;
+                    Game1.FpsSettingChanged = true;
+                });
+            contentLayout.AddElement(toggleFpsLock);
+
             // Smooth camera toggler.
             var smoothCameraToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_change_smooth_camera", GameSettings.SmoothCamera, newState => { GameSettings.SmoothCamera = newState; });

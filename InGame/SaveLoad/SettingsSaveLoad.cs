@@ -32,6 +32,7 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.ScreenShake = saveManager.GetBool("ScreenShake", GameSettings.ScreenShake);
             GameSettings.SmoothCamera = saveManager.GetBool("SmoothCamera", GameSettings.SmoothCamera);
             GameSettings.IsFullscreen = saveManager.GetBool("IsFullscreen", GameSettings.IsFullscreen);
+            GameSettings.LockFps = saveManager.GetBool("LockFPS", GameSettings.LockFps);
 
             Values.ControllerDeadzone = saveManager.GetFloat("ControllerDeadzone", Values.ControllerDeadzone);
             Game1.LanguageManager.CurrentLanguageIndex = saveManager.GetInt("CurrentLanguage", Game1.LanguageManager.CurrentLanguageIndex);
@@ -58,6 +59,7 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetBool("ScreenShake", GameSettings.ScreenShake);
             saveManager.SetBool("SmoothCamera", GameSettings.SmoothCamera);
             saveManager.SetBool("IsFullscreen", GameSettings.IsFullscreen);
+            saveManager.SetBool("LockFPS", GameSettings.LockFps);
 
             saveManager.SetFloat("ControllerDeadzone", Values.ControllerDeadzone);
             saveManager.SetInt("CurrentLanguage", Game1.LanguageManager.CurrentLanguageIndex);

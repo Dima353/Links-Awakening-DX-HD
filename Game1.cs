@@ -780,7 +780,7 @@ namespace ProjectZ
         public void UpdateFpsSettings()
         {
             IsFixedTimeStep = false;
-            Graphics.SynchronizeWithVerticalRetrace = true;
+            Graphics.SynchronizeWithVerticalRetrace = GameSettings.LockFps;
             Graphics.ApplyChanges();
         }
 
