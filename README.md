@@ -26,6 +26,4 @@ With that said, feel free to commit any potential fixes. There are no coding gui
 
 ## Publishing
 
-For the Linux version, run the file `publish-linux64.bat` which will create the folder `\bin\Release\net8.0\linux-x64\publish`.
-
-For the Windows version, run the file `publish-win64.bat` which will create the folder `Publish`.
+To publish a Linux or Windows version run `publish-linux64.bat` or `publish-win64.bat`, which will create a `Publish` folder.

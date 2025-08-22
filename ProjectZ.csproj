@@ -82,4 +82,11 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
   </ItemGroup>
+  
+  <!-- Linux: Eliminate trash -->
+  <Target Name="CleanPublishLinux" AfterTargets="Publish" Condition="'$(TargetFramework)' == 'net8.0'">
+    <Delete Files="$(PublishDir)/SDL2.dll" />
+    <Delete Files="$(PublishDir)/soft_oal.dll" />
+    <Delete Files="$(PublishDir)/LinksAwakeningDXHD.exe" />
+  </Target>
 </Project>

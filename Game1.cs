@@ -101,8 +101,8 @@ namespace ProjectZ
 
         private static System.Drawing.Rectangle _lastWindowBounds;
         private static System.Drawing.Rectangle _lastWindowRestoreBounds;
-//      private static int _lastWindowWidth;
-//      private static int _lastWindowHeight;
+        private static int _lastWindowWidth;
+        private static int _lastWindowHeight;
         private static bool _isFullscreen;
         private bool _isResizing;
 //      static private bool _userBorderlessSetting;

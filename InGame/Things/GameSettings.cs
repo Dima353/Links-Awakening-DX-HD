@@ -7,11 +7,13 @@ namespace ProjectZ.InGame.Things
         public static int GameScale = 11; // autoscale
 
         public static bool EnableShadows = true;
+        public static bool LockFps = true;
         public static bool Autosave = true;
         public static bool HeartBeep = true;
         public static bool ScreenShake = true;
         public static bool SmoothCamera = true;
         public static bool IsFullscreen = true;
+        public static bool ItemsOnRight = false;
 
         private static int _musicVolume = 100;
         private static int _effectVolume = 100;
