@@ -127,7 +127,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
             _sprite.Draw(spriteBatch);
 
             return;
-
+/*
             var rectangle = _animator.CollisionRectangle;
 
             spriteBatch.Draw(Resources.SprWhite, new Rectangle(
@@ -135,6 +135,7 @@ namespace ProjectZ.InGame.GameObjects.Bosses
 
             spriteBatch.Draw(Resources.SprWhite, new Rectangle(
                 (int)EntityPosition.Position.X - rectangle.X - rectangle.Width, (int)EntityPosition.Position.Y - rectangle.Y - rectangle.Height, rectangle.Width, rectangle.Height), Color.White * 0.5f);
+*/
         }
 
         private void Despawn()

@@ -763,11 +763,7 @@ namespace ProjectZ.InGame.Things
         {
             // 0: Delayed with sound effect
             // 1: Music starts instantly.
-            int trackId = Variation switch
-            {
-                0 => 38,
-                1 => 72,
-            };
+            int trackId = Variation == 0 ? 38 : 72;
             Game1.GameManager.SetMusic(trackId, 1);
 
             // @HACK: When music is restarted for any reason: map/area transition, healing

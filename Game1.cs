@@ -101,11 +101,11 @@ namespace ProjectZ
 
         private static System.Drawing.Rectangle _lastWindowBounds;
         private static System.Drawing.Rectangle _lastWindowRestoreBounds;
-        private static int _lastWindowWidth;
-        private static int _lastWindowHeight;
+//      private static int _lastWindowWidth;
+//      private static int _lastWindowHeight;
         private static bool _isFullscreen;
         private bool _isResizing;
-        static private bool _userBorderlessSetting;
+//      static private bool _userBorderlessSetting;
 
         private static RenderTarget2D _renderTarget1;
         private static RenderTarget2D _renderTarget2;
@@ -784,13 +784,13 @@ namespace ProjectZ
             Graphics.ApplyChanges();
         }
 
-        private void OnResizeBegin(object? sender, EventArgs e)
+        private void OnResizeBegin(object sender, EventArgs e)
         {
             _isResizing = true;
             gameScaleStart = gameScale;
         }
 
-        private void OnResize(object? sender, EventArgs e)
+        private void OnResize(object sender, EventArgs e)
         {
 #if WINDOWS
             // save the restore bounds when going into borderless fullscreen mode from an maximized state
@@ -814,7 +814,7 @@ namespace ProjectZ
 #endif
         }
 
-        private void OnResizeEnd(object? sender, EventArgs e)
+        private void OnResizeEnd(object sender, EventArgs e)
         {
             _isResizing = false;
             gameScaleStart = gameScale;

@@ -43,13 +43,8 @@ namespace ProjectZ.Editor
 
         private int _toolBarWidth = 200;
         private int _currentSelection;
-        private int _selctionEnd;
         private int _tileSize = 16;
 
-        private int _selectionStart;
-        public int[,] SelectedTiles;
-
-        private bool _selecting;
         private int _outputWidth = 15;
         private int _outputHeight;
 
@@ -112,7 +107,6 @@ namespace ProjectZ.Editor
                 _currentSelection =
                     ((position.X - _camera.Location.X) / (int)(_tileSize * _camera.Scale)) % _outputWidth +
                     ((position.Y - _camera.Location.Y) / (int)(_tileSize * _camera.Scale)) * _outputWidth;
-                _selctionEnd = _currentSelection;
 
                 if (_currentSelection >= _tileSetData.Count)
                     _currentSelection = -1;

@@ -31,7 +31,7 @@ namespace ProjectZ.InGame.Things
         public static Effect BlurEffectH;
         public static Effect BBlurEffectV;
         public static Effect BBlurEffectH;
-        public static Effect BBlurMapping;
+//      public static Effect BBlurMapping;
         public static Effect FullShadowEffect;
         public static Effect SaturationEffect;
         public static Effect WobbleEffect;
@@ -75,12 +75,12 @@ namespace ProjectZ.InGame.Things
 
         public static Texture2D SprIconOptions, SprIconErase, SprIconCopy, EditorIconEdit, EditorIconSelect;
 
-        public static List<Texture> TextureList = new List<Texture>();
+        public static List<Texture> TextureList = new();
 
-        public static Dictionary<string, DictAtlasEntry> SpriteAtlas = new Dictionary<string, DictAtlasEntry>();
-        public static Dictionary<string, int> TilesetSizes = new Dictionary<string, int>();
+        public static Dictionary<string, DictAtlasEntry> SpriteAtlas = new();
+        public static Dictionary<string, int> TilesetSizes = new();
 
-        public static Dictionary<string, SoundEffect> SoundEffects = new Dictionary<string, SoundEffect>();
+        public static Dictionary<string, SoundEffect> SoundEffects = new();
 
         public static int GameFontHeight = 10;
         public static int EditorFontHeight;
@@ -111,8 +111,8 @@ namespace ProjectZ.InGame.Things
             LoadTexture(out SprGameSequences, Values.PathContentFolder + "Sequences/game sequences.png");
             LoadTexture(out SprGameSequencesFinal, Values.PathContentFolder + "Sequences/end sequence.png");
             LoadTexture(out SprPhotos, Values.PathContentFolder + "Photo Mode/photos.png");
-            LoadTexture(out var bigEditorIcons, Values.PathContentFolder + "Editor/editorIcons4x.png");
-            LoadTexture(out var SprUI, Values.PathContentFolder + "ui.png");
+            LoadTexture(out _, Values.PathContentFolder + "Editor/editorIcons4x.png");
+            LoadTexture(out _, Values.PathContentFolder + "ui.png");
 
             LoadTexturesFromFolder(Values.PathContentFolder + "/Sequences/");
             LoadTexturesFromFolder(Values.PathContentFolder + "/Light/");

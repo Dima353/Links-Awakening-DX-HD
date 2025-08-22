@@ -343,7 +343,6 @@ namespace ProjectZ.InGame.GameObjects
 
         private double _instrumentPickupTime;
         private float _instrumentCounter;
-        private float _instrumentEndTime;
         private int _instrumentIndex;
         private int _instrumentCycleTime = 1000;
         private bool _drawInstrumentEffect;
@@ -388,10 +387,6 @@ namespace ProjectZ.InGame.GameObjects
         private bool _isGrabbed;
         private bool _isFlying;
         private bool _inDungeon;
-
-#if DEBUG
-        private bool _attackMode;
-#endif
 
         private DictAtlasEntry _stunnedParticleSprite;
 
@@ -1084,7 +1079,7 @@ namespace ProjectZ.InGame.GameObjects
 
             if (_instrumentCounter < timeOffset ||
                 (CurrentState != State.ShowInstrumentPart1 || _drawInstrumentEffect) &&
-                ((_instrumentCounter - timeOffset) / _instrumentCycleTime + 1) * _instrumentCycleTime + timeOffset > _instrumentEndTime)
+                ((_instrumentCounter - timeOffset) / _instrumentCycleTime + 1) * _instrumentCycleTime + timeOffset > 0)
                 return;
 
             var time = (_instrumentCounter + timeOffset) % _instrumentCycleTime;

@@ -17,9 +17,6 @@ namespace ProjectZ.InGame.Screens
         private Texture2D _sprBackground;
         private Rectangle _menuRectangle;
 
-        private Vector2 _linkPosition;
-        private bool _linkVisible;
-
         private int _scale = 3;
         private int _menuWidth;
         private int _menuHeight;
@@ -79,24 +76,6 @@ namespace ProjectZ.InGame.Screens
 
             _leftBar = (int)Math.Ceiling((Game1.WindowWidth / 2 - _menuWidth * _scale / 2) / (float)_scale / _sprBackground.Width) * _sprBackground.Width;
             _rightBar = _leftBar;
-
-            {
-                // update the animation
-                _linkAnimation.Update();
-
-                _linkVisible = false;
-                var mainMenuPage = (MainMenuPage)Game1.UiPageManager.GetPage(typeof(MainMenuPage));
-
-                if (Game1.UiPageManager.PageStack.Count == 1)
-                    foreach (var saveButton in mainMenuPage.SaveEntries)
-                    {
-                        if (saveButton.Selected)
-                        {
-                            _linkVisible = true;
-                            _linkPosition = new Vector2(saveButton.Position.X + 22, saveButton.Position.Y + 22);
-                        }
-                    }
-            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -161,10 +140,6 @@ namespace ProjectZ.InGame.Screens
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, _animationMatrix);
-
-            //if (_linkVisible)
-            //    _linkAnimation.Draw(spriteBatch, new Vector2(
-            //        _menuRectangle.X / _scale + _linkPosition.X + 8, _menuRectangle.Y / _scale + _linkPosition.Y + 32), Color.White);
 
             spriteBatch.End();
             spriteBatch.Begin();

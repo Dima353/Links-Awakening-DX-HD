@@ -10,7 +10,7 @@ namespace ProjectZ.InGame.SaveLoad
         public class SpriteAtlas
         {
             public int Scale = 1;
-            public List<AtlasEntry> Data = new List<AtlasEntry>();
+            public List<AtlasEntry> Data = new();
         }
 
         public class AtlasEntry
@@ -68,17 +68,19 @@ namespace ProjectZ.InGame.SaveLoad
                 var split = strLine.Split(':');
                 if (split.Length == 2)
                 {
-                    var newEntry = new AtlasEntry();
-                    newEntry.EntryId = split[0];
-
                     var rectangleData = split[1].Split(",");
-                    if (rectangleData.Length >= 4)
-                        newEntry.SourceRectangle = new Rectangle(
-                            int.Parse(rectangleData[0]), int.Parse(rectangleData[1]),
-                            int.Parse(rectangleData[2]), int.Parse(rectangleData[3]));
-                    if (rectangleData.Length >= 6)
-                        newEntry.Origin = new Vector2(int.Parse(rectangleData[4]), int.Parse(rectangleData[5]));
-
+                    var newEntry = new AtlasEntry
+                    {
+                        EntryId = split[0],
+                        SourceRectangle = rectangleData.Length >= 4
+                            ? new Rectangle(
+                                int.Parse(rectangleData[0]), int.Parse(rectangleData[1]),
+                                int.Parse(rectangleData[2]), int.Parse(rectangleData[3]))
+                            : default,
+                        Origin = rectangleData.Length >= 6
+                            ? new Vector2(int.Parse(rectangleData[4]), int.Parse(rectangleData[5]))
+                            : default
+                    };
                     spriteAtlas.Data.Add(newEntry);
                 }
             }

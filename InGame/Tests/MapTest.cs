@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.Tests
 
         private float _counter;
         private float ChangeTime = 25;
-
+/*
         private float DigTime = 500;
         private bool _hasDug;
 
@@ -42,7 +42,7 @@ namespace ProjectZ.InGame.Tests
 
         private bool _isRunning;
         private bool _paused = true;
-
+*/
         public MapTest()
         {
             var mapPaths = Directory.GetFiles(Values.PathMapsFolder);
@@ -58,7 +58,7 @@ namespace ProjectZ.InGame.Tests
 
         private void Start()
         {
-            _isRunning = true;
+//          _isRunning = true;
             _counter = ChangeTime;
 
             Game1.ScreenManager.ChangeScreen(Values.ScreenNameGame);
@@ -74,7 +74,7 @@ namespace ProjectZ.InGame.Tests
                 SpawnBalls();
 
             return;
-
+/*
             if (!_isRunning)
             {
                 if (Game1.FinishedLoading)
@@ -145,6 +145,7 @@ namespace ProjectZ.InGame.Tests
                 if (!UpdateView())
                     OffsetMap(1);
             }
+*/
         }
 
         private void OffsetMap(int offset)
@@ -291,13 +292,13 @@ namespace ProjectZ.InGame.Tests
                 }
             }
         }
-
+/*
         private void CheckMusic()
         {
             if (Game1.GameManager.MapManager.CurrentMap.MapMusic[0] == -1)
                 _paused = true;
         }
-
+*/
         private void SpawnBalls()
         {
             for (var i = 0; i < 100; i++)
