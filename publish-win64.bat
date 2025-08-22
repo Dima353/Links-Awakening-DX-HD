@@ -1,0 +1,1 @@
+dotnet publish -f net8.0-windows -c Release -p:"PublishProfile=FolderProfile"

@@ -25,9 +25,17 @@ namespace ProjectZ
             }
             catch (Exception exception)
             {
+#if WINDOWS
+                System.Windows.Forms.MessageBox.Show(
+                    exception.StackTrace,
+                    exception.Message,
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
+#else
                 Console.WriteLine("=== Unhandled Exception ===");
                 Console.WriteLine(exception.Message);
                 Console.WriteLine(exception.StackTrace);
+#endif
                 throw;
             }
         }

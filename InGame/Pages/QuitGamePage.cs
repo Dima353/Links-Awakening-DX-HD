@@ -54,8 +54,11 @@ namespace ProjectZ.InGame.Pages
         {
             if (Game1.SaveAndExitGame)
                 SaveGameSaveLoad.SaveGame(Game1.GameManager);
-
+#if WINDOWS
+            System.Windows.Forms.Application.Exit();
+#else
             Game1.Instance.Exit();
-        }
+#endif
+		}
     }
 }

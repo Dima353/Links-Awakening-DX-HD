@@ -26,4 +26,6 @@ With that said, feel free to commit any potential fixes. There are no coding gui
 
 ## Publishing
 
-To publish, you can run the `publish.bat`, which will produce the folder `\bin\Release\net8.0\linux-x64\publish` that you can send to your friends.
+For the Linux version, run the file `publish-linux64.bat` which will create the folder `\bin\Release\net8.0\linux-x64\publish`.
+
+For the Windows version, run the file `publish-win64.bat` which will create the folder `Publish`.
