@@ -6,3 +6,4 @@ ui heart:1,1,7,7,0,0
 ui letter:1,32,6,6,0,0
 ui ruby:1,9,7,7,0,0
 ui game over:0,39,78,24,0,0
+ui key:17,18,7,9,0,0
