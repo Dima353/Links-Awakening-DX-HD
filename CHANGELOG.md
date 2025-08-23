@@ -1,6 +1,27 @@
-# **The Legend of Zelda: Link's Awakening v1.1.0 Changelog:**
-### **General:**
- * Saves and settings files are now located in "..\AppData\Local\Zelda_LA".
+# Обновленная версия The Legend of Zelda: Link's Awakening DX HD
+### Дополнения от PG Team
+ * Добавлен Redux патч.
+ * Добавлена русская локализация от Zelda64Rus v2.2.
+ * Добавлена сборка нативной Linux-версии.
+
+Исправления взяты из репозитория https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated
+
+# **The Legend of Zelda: Link's Awakening Changelog:**
+
+### **v1.1.1 Changelog:**
+#### **Minor Update:**
+ * Reimplement the option to unlock FPS.
+ * Fix alligator can throw with unlocked FPS (credit @buttcheeks69).
+ * Fix incorrectly calculated custom text height for confirm button (credit @squiddingme).
+ * More accurate timing when picking up sword on beach (credit: @buttcheeks69).
+ * Show key counter on HUD when in dungeons (credit: @squiddingme)
+ * Custom sprite for key counter.
+ * Add option to display items in the bottom right (credit: @squiddingme).
+ * Pay the Shop Keeper to no longer be called "Thief" after stealing.
+ * Reduced collision size / pull strength of holes to more closely match the original game.
+
+### **v1.1.0 Changelog:**
+#### **General:**
  * Intro and title screen reworked to better match original game.
  * Always show the title screen even when skipping intro video.
  * Fix crashing and many other issues when starting in "Fullscreen" with "Borderless" disabled.
@@ -11,7 +32,7 @@
  * Save files reference hearts/health as "maxHearts/maxHealth" instead of "Hearth".
  * New version compatible with old save files but not vice versa.
  
- ### **User Interface:**
+ #### **User Interface:**
  * Swapped the Start and Select buttons from the original release.
  * Quit button on the main menu after the title screen.
  * Restored commented out Audio Settings page and move volume controls there.
@@ -23,7 +44,7 @@
  * Low hearts beep can be disabled from game settings menu.
  * Screen shake when taking damage can be disable from game settings menu.
  
- ### **Items:**
+ #### **Items:**
  * Items can be assigned to two additional buttons: LB and RB.
  * Inventory cursor sound was added.
  * Items can be used when pushing against objects.
@@ -43,7 +64,7 @@
  * Knockback effect (piece of power) of sword lvl 2 removed.
  * Knockback effect (piece of power) of red tunic restored.
  
- ### **Enemies:**
+ #### **Enemies:**
  * Stunned enemies no longer deal damage.
  * Enemies dying from burning no longer deal damage.
  * Goponga Swamp flowers can be killed with Lvl 2 sword + spin attack/piece of power/red tunic.
@@ -61,7 +82,7 @@
  * Final boss Lanmola can be attacked with spin attack.
  * Final boss DethI can be killed with boomerang.
  
- ### **Overworld:**
+ #### **Overworld:**
  * Mabe/Animal Village music always takes priority over piece of power/acorn music.
  * Trendy game timings are closer to original game.
  * Owl conversations now properly freeze all enemies until he flies away.
@@ -81,14 +102,14 @@
  * Flying rooster can no longer skip the flame trap on the way to Turtle Rock.
  * Fixed dying when holding onto the flying rooster.
  
- ### **Dungeons:**
+ #### **Dungeons:**
  * Softlock fixed when picking up instruments.
  * Increased interaction range of dungeon teleporters.
  * Tail Cave (dungeon 1) block near trap is now pushable.
  * Face Shrine (dungeon 6) now references the correct key.
- * Face Shrine (dungeon 6) doors can only be opened with statures.
+ * Face Shrine (dungeon 6) doors can only be opened with statues.
  * Face Shrine (dungeon 6) fixed spot where it was possible to get stuck in a wall.
- * Eagle Tower (dungeon 7) pull lever works with small analog left/right values.
+ * Eagle Tower (dungeon 7) pull lever now works with small analog left/right values.
  * Eagle Tower (dungeon 7) when falling in holes Z-axis is remembered.
  * Turtle Rock (dungeon 8) fixed locked door that took a key but did not open.
  * Turtle Rock (dungeon 8) breakable wall was fixed (it couldn't be broken).
