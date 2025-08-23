@@ -34,7 +34,15 @@ namespace ProjectZ.InGame.GameObjects.Things
                 EntitySize = new Rectangle(0, 0, sourceRectangle.Width, sourceRectangle.Height);
             }
 
-            _collisionComponent = new BoxCollisionComponent(new CBox(posX + offsetX, posY + offsetY, 0, width, height, 16), Values.CollisionTypes.Hole);
+            // HACK: We want the collision with the hole to be slightly smaller than the actual hole since Link's body will intersect with
+            // the edges as soon as he cross the boundary of the sprite. This limits the distance at which it starts pulling, which matches
+            // the behavior of the original game. The modifications below make hole collision size 14x8 pixels instead of 16x16 pixels.
+            float RectOffsetX = posX + offsetX + 1;
+            float RectOffsetY = posY + offsetY + 4;
+            float RectWidth = width - 2;
+            float RectHeight = height - 8;
+
+            _collisionComponent = new BoxCollisionComponent(new CBox(RectOffsetX, RectOffsetY, 0, RectWidth, RectHeight, 16), Values.CollisionTypes.Hole);
             AddComponent(CollisionComponent.Index, _collisionComponent);
 
             // visible hole?

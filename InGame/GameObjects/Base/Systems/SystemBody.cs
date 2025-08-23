@@ -416,9 +416,13 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
                 body.WasHolePulled = false;
                 return;
             }
-
             var bodyBox = body.BodyBox.Box;
-            var bodyArea = bodyBox.Width * bodyBox.Height;
+
+            // HACK: A hole is visibly 16x16 pixels. The collision rectangle is actually 14x8 pixels. Holes are wider than
+            // they are taller. This is how it was in the original game, as you could get closer to them on the Y axis than
+            // than the X axis. The hack below makes sure the body falls in the boundaries of the modified hole's collision.
+            var bodyArea = (bodyBox.Width - 2) * (bodyBox.Height - 2);
+
             var bodyBoxCenter = body.BodyBox.Box.Center;
 
             var holeCollisionCoM = Vector2.Zero;
@@ -450,7 +454,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
                     holeCollisionCoM * (holeCollisionArea / (holeCollisionArea + collidingArea)) +
                     collidingRec.Center * (collidingArea / (holeCollisionArea + collidingArea));
 
-                // this makes sure to not cancle out two holes pulling the body into different directions; otherwise the body would be able to walk between them if he is aligned with the
+                // this makes sure to not cancel out two holes pulling the body into different directions; otherwise the body would be able to walk between them if he is aligned with the
                 if (collidingArea == holeCollisionArea && holeCollisionCoM.X == bodyBoxCenter.X && collidingRec.Width * 2 != bodyBox.Width)
                     holeCollisionCoM.X -= 4;
                 if (collidingArea == holeCollisionArea && holeCollisionCoM.Y == bodyBoxCenter.Y && collidingRec.Height * 2 != bodyBox.Height)
@@ -491,7 +495,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
             // body is getting pulled towards the hole
             else if (collisionAreaPercentage > body.AbsorbStop)
             {
-                var holePull = new Vector2(holeDirection.X, holeDirection.Y) * collisionAreaPercentage * 0.5f;
+                var holePull = new Vector2(holeDirection.X, holeDirection.Y) * collisionAreaPercentage * 0.45f;
 
                 // calculate the new direction of the hole pull 
                 var oldPercentage = (float)Math.Pow(0.8f, Game1.TimeMultiplier);
