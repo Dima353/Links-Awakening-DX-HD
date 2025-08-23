@@ -99,7 +99,38 @@ namespace ProjectZ.InGame.Overlay
 
         public override bool Execute()
         {
-            Game1.GameManager.SaveManager.SetString(_key, _value);
+            if (_key == "savename")
+                Game1.GameManager.SaveName = (_value == "backupname")
+                    ? Game1.GameManager.BackupName
+                    : _value;
+            else
+                Game1.GameManager.SaveManager.SetString(_key, _value);
+
+            return true;
+        }
+    }
+
+    class DialogActionGetVariable : DialogAction
+    {
+        private readonly string _key;
+        private readonly string _compare;
+        private readonly string _resultKey;
+
+        public DialogActionGetVariable(string key, string compare, string resultKey)
+        {
+            _key = key;
+            _compare = compare;
+            _resultKey = resultKey;
+        }
+
+        public override bool Execute()
+        {
+            // Get the current variable value and check if it matches the comparison.
+            var value = (_key == "savename") 
+                ? Game1.GameManager.SaveName 
+                : Game1.GameManager.SaveManager.GetString(_key, "");
+            var checkState = value == _compare;
+            Game1.GameManager.SaveManager.SetString(_resultKey, checkState ? "1" : "0");
             return true;
         }
     }

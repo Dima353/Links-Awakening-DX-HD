@@ -583,6 +583,13 @@ shopkeeper_2 Sorry kid! You don't have the Rupees! Come back when you have the c
 shopkeeper_3 Aye Caramba! Kid, you have a lot to learn, trying to buy something you have no use for!
 shopkeeper_4 Hey! You! Stop! You gotta pay! Put it back!
 shopkeeper_5 Guess what? You got it for free. Are you proud of yourself?
+shopkeeper_6 Hey! You stole my items, but I want to give you the chance to make things right. If you'll give me 999 Rupees, 30 Bombs, 30 Arrows, and 20 Magic Powder, I'll call us square. What do you think?
+
+shopkeeper_debt_0 Pay off your debts?
+
+shopkeeper_debt_1 Nice doing business with you. I'll make sure to clear your name!
+shopkeeper_debt_2 Well, that's a shame. Then forever be known as a Thief!
+shopkeeper_debt_3 Sorry kid! You don't have the resources! Come back when you have everything I want!
 
 itemShop_revenge I wasn't kidding when I said pay! Now, you'll pay the ultimate price!!
 

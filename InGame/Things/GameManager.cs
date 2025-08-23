@@ -108,6 +108,7 @@ namespace ProjectZ.InGame.Things
         public bool[,] MapVisibility;
 
         public string SaveName = "Link";
+        public string BackupName = "Link";
 
         // playtime tracking
         public float TotalPlaytime = 0.0f; // total playtime across all sessions in minutes

@@ -605,12 +605,20 @@ alligator_traded:choice:1 -> [update_objects] -> alligator_3
 
 alligator_after_eat:0 -> [update_objects] -> [save_history:true] -> alligator_5 -> [remove_item:trade2:1:result] -> [add_item:trade3:1] -> trade2 -> [set:trade2:1] -> [set:tarin:gone] -> [save_history:false]
 
-
 npc11:0 -> [path:npc05]
 
 // shop
-shopkeeper:holdItem:0 -> [update_objects] -> shopkeeper_0
+shopkeeper:holdItem:0 -> [update_objects] -> [get:savename:Thief:shopkeeper_hi] -> [path:shopkeeper_hi]
 shopkeeper:holdItem:1 -> [path:shopkeeper_buy]
+
+shopkeeper_hi:0 -> shopkeeper_0
+shopkeeper_hi:1 -> shopkeeper_6 -> [dialog:choice:shopkeeper_debt_0:choice_Pay:choice_Leave] -> [path:shopkeeper_debt]
+
+shopkeeper_debt:choice:0 -> [check_item:ruby:999:money] -> [check_item:bomb:30:money] -> [check_item:bow:30:money] -> [check_item:powder:20:money] -> [path:shopkeeper_money]
+shopkeeper_debt:choice:1 -> shopkeeper_debt_2
+
+shopkeeper_money:money:0 -> shopkeeper_debt_3
+shopkeeper_money:money:1 -> [save_history:true] -> [remove_item:ruby:999:result] -> [remove_item:bomb:30:result] -> [remove_item:bow:30:result] -> [remove_item:powder:20:result] -> [set:shopkeeper_hi:0] -> [set:savename:backupname] -> shopkeeper_debt_1 -> [save_history:false]
 
 shopkeeper_buy:itemShopItem:bow -> [update_objects] -> [dialog:choice:itemShop_bow:itemShop_buy:itemShop_no_way] -> [path:itemShop]
 shopkeeper_buy:itemShopItem:arrow -> [update_objects] -> [dialog:choice:itemShop_arrow:itemShop_buy:itemShop_dont] -> [path:itemShop]

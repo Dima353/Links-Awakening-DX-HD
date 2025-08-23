@@ -105,6 +105,10 @@ namespace ProjectZ.InGame.SaveLoad
                 else
                     path.Action.Add(new DialogActionSetVariable(stringSplit[1], stringSplit[2]));
             }
+            else if (stringSplit[0] == "get")
+            {
+                path.Action.Add(new DialogActionGetVariable(stringSplit[1], stringSplit[2], stringSplit[3]));
+            }
             else if (stringSplit[0] == "check_item")
             {
                 var itemCount = int.Parse(stringSplit[2]);
