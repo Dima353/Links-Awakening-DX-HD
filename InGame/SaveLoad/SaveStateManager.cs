@@ -15,6 +15,7 @@ namespace ProjectZ.InGame.SaveLoad
             public int MaxHearts;
             public int CurrentHealth;
             public int CurrentRubee;
+            public float TotalPlaytimeMinutes;
         }
 
         public static SaveState[] SaveStates = new SaveState[SaveCount];
@@ -35,6 +36,7 @@ namespace ProjectZ.InGame.SaveLoad
                     SaveStates[i].CurrentHealth = saveManager.GetInt("currentHealth");
                     SaveStates[i].MaxHearts = saveManager.GetInt("maxHearts");
                     SaveStates[i].CurrentRubee = saveManager.GetInt("rubyCount", 0);
+                    SaveStates[i].TotalPlaytimeMinutes = saveManager.GetFloat("totalPlaytime", 0.0f);
                 }
                 else
                     SaveStates[i] = null;

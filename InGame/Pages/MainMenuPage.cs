@@ -34,6 +34,7 @@ namespace ProjectZ.InGame.Pages
         private InterfaceGravityLayout[] _saveButtonLayouts = new InterfaceGravityLayout[SaveStateManager.SaveCount];
         private InterfaceLabel[] _saveNames = new InterfaceLabel[SaveStateManager.SaveCount];
         private InterfaceLabel[] _saveRuby = new InterfaceLabel[SaveStateManager.SaveCount];
+        private InterfaceLabel[] _savePlaytime = new InterfaceLabel[SaveStateManager.SaveCount];
         private InterfaceListLayout[] _deleteCopyLayouts = new InterfaceListLayout[SaveStateManager.SaveCount];
 
         private InterfaceListLayout _mainLayout;
@@ -101,15 +102,17 @@ namespace ProjectZ.InGame.Pages
                         saveInfoLayout.AddElement(hearts);
                     }
 
-                    // name + rubys on the right
+                    // name + rubys + playtime on the right
                     {
                         var rightWidth = saveButtonRec.X / 2 + 8;
                         var middle = new InterfaceListLayout { Gravity = InterfaceElement.Gravities.Left, Margin = new Point(2, 0), Size = new Point(rightWidth, 30) };
 
                         // name
-                        middle.AddElement(_saveNames[i] = new InterfaceLabel(null, new Point(rightWidth - 3, 15), Point.Zero) { Margin = new Point(1, 0), TextAlignment = InterfaceElement.Gravities.Left | InterfaceElement.Gravities.Bottom });
+                        middle.AddElement(_saveNames[i] = new InterfaceLabel(null, new Point(rightWidth - 3, 10), Point.Zero) { Margin = new Point(1, 0), TextAlignment = InterfaceElement.Gravities.Left | InterfaceElement.Gravities.Bottom });
                         // ruby
-                        middle.AddElement(_saveRuby[i] = new InterfaceLabel(null, new Point(rightWidth - 2, 13), Point.Zero) { Margin = new Point(0, 0), TextAlignment = InterfaceElement.Gravities.Left });
+                        middle.AddElement(_saveRuby[i] = new InterfaceLabel(null, new Point(rightWidth - 2, 10), Point.Zero) { Margin = new Point(0, 0), TextAlignment = InterfaceElement.Gravities.Left });
+                        // playtime
+                        middle.AddElement(_savePlaytime[i] = new InterfaceLabel(null, new Point(rightWidth - 2, 10), Point.Zero) { Margin = new Point(0, 0), TextAlignment = InterfaceElement.Gravities.Left });
 
                         saveInfoLayout.AddElement(middle);
                     }
@@ -391,6 +394,13 @@ namespace ProjectZ.InGame.Pages
 
                 _saveNames[i].SetText(SaveStateManager.SaveStates[i].Name);
                 _saveRuby[i].SetText(SaveStateManager.SaveStates[i].CurrentRubee.ToString());
+                
+                // format playtime display as HH:MM
+                var totalMinutes = SaveStateManager.SaveStates[i].TotalPlaytimeMinutes;
+                var hours = (int)(totalMinutes / 60);
+                var minutes = (int)(totalMinutes % 60);
+                var playtimeText = $"{hours:D2}:{minutes:D2}";
+                _savePlaytime[i].SetText(playtimeText);
 
                 for (var j = 0; j < 14; j++)
                 {

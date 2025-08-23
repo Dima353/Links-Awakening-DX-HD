@@ -94,6 +94,7 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetInt("ocarinaSong", gameManager.SelectedOcarinaSong);
             saveManager.SetInt("guardianAcornCount", gameManager.GuardianAcornCount);
             saveManager.SetInt("pieceOfPowerCount", gameManager.PieceOfPowerCount);
+            saveManager.SetFloat("totalPlaytime", gameManager.TotalPlaytime + gameManager.CurrentSessionPlaytime);
 
             saveManager.SetBool("debugMode", gameManager.DebugMode);
 
@@ -192,6 +193,8 @@ namespace ProjectZ.InGame.SaveLoad
             gameManager.GuardianAcornCount = saveManager.GetInt("guardianAcornCount", 0);
             gameManager.PieceOfPowerCount = saveManager.GetInt("pieceOfPowerCount", 0);
             gameManager.DeathCount = saveManager.GetInt("deathCount", 0);
+            gameManager.TotalPlaytime = saveManager.GetFloat("totalPlaytime", 0.0f);
+            gameManager.CurrentSessionPlaytime = 0.0f;
 
             gameManager.DebugMode = saveManager.GetBool("debugMode", false);
 
