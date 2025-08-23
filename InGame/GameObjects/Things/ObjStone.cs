@@ -138,7 +138,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             if (pushType == PushableComponent.PushType.Impact)
                 return false;
 
-            Game1.GameManager.StartDialogPath(_dialogPath);
+            if (!(GameSettings.NoPickupDialogs && _dialogPath == "stone"))
+                Game1.GameManager.StartDialogPath(_dialogPath);
 
             return false;
         }

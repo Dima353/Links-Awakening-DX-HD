@@ -35,6 +35,10 @@ namespace ProjectZ.InGame.Pages
                 "settings_game_heartbeep", GameSettings.HeartBeep, newState => { GameSettings.HeartBeep = newState; });
             contentLayout.AddElement(toggleHeartBeep);
 
+            var toggleNoPickupDialogs = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
+                "settings_modifier_no_pickup_dialogs", GameSettings.NoPickupDialogs, value => { GameSettings.NoPickupDialogs = value; Game1.GameManager.ItemManager.Load(); });
+            contentLayout.AddElement(toggleNoPickupDialogs);
+
             var toggleScreenShake = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_screenshake", GameSettings.ScreenShake, newState => { GameSettings.ScreenShake = newState; });
             contentLayout.AddElement(toggleScreenShake);
