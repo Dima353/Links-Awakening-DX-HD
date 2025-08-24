@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -50,19 +50,10 @@ namespace ProjectZ.InGame.Things
 
             public SoundEffectInstance Instance;
         }
-        // _activeRenderTarget == null ???
-
-        // TODO: Based on the comment above, it seems the original developer has experienced this issue. Unfortunately, it
-        // was never actually fixed so the game would just outright crash. For now, if the render target is null return a
-        // basic matrix instead of crashing the game with a null exception.
-        // See also: ..\InGame\Map\MapManager.cs
         public Matrix GetMatrix
         {
             get
             {
-                if (_activeRenderTarget == null)
-                    return Matrix.Identity;
-
                 float scaleX = (float)_activeRenderTarget.Width / (int)(Game1.WindowWidth * _scaleMultiplier);
                 float scaleY = (float)_activeRenderTarget.Height / (int)(Game1.WindowHeight * _scaleMultiplier);
 
@@ -107,8 +98,8 @@ namespace ProjectZ.InGame.Things
 
         public bool[,] MapVisibility;
 
-        public string SaveName = "Линк";
-        public string BackupName = "Линк";
+        public string SaveName = "Link";
+        public string BackupName = "Link";
 
         // playtime tracking
         public float TotalPlaytime = 0.0f; // total playtime across all sessions in minutes
@@ -193,7 +184,8 @@ namespace ProjectZ.InGame.Things
         private float[] _musicCounter = new float[MusicChannels];
 
         // Muting the sound requires overwriting effect volume so store user setting.
-        public int _curEffectVolume;
+        private int _curEffectVolume = GameSettings.EffectVolume;
+        private bool _lastStateSet;
 
         public GameManager()
         {
@@ -277,11 +269,6 @@ namespace ProjectZ.InGame.Things
         {
             if (GameSettings.EnableShadows && MapManager.CurrentMap.UseShadows && !UseShockEffect)
             {
-                // TODO: Another place where null render target causes a crash. For now, just don't draw anything
-                // on the screen instead of crashing the game.
-                // See also: ..\InGame\Map\MapManager.cs
-                if (_shadowRenderTarget == null) return;
-
                 // render the shadows
                 RenderShadows(spriteBatch);
 
@@ -377,14 +364,8 @@ namespace ProjectZ.InGame.Things
             ChangeRenderTarget();
             Game1.Graphics.GraphicsDevice.SetRenderTarget(Game1.MainRenderTarget);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicWrap);
+            spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight), Color.White);
 
-            // TODO: Another place where null render target causes a crash. For now, just don't draw anything
-            // on the screen instead of crashing the game.
-            // See also: ..\InGame\Map\MapManager.cs
-            if (_inactiveRenderTarget1 != null)
-            {
-                spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight), Color.White);
-            }
             // debug stuff
             MapManager.Camera.Draw(spriteBatch);
 
@@ -573,7 +554,7 @@ namespace ProjectZ.InGame.Things
                     stateString = SaveManager.GetString(dialogKey);
 
                 InGameOverlay.TextboxOverlay.StartDialog(
-                    Game1.LanguageManager.GetString(dialogKey + (stateString != null ? "_" + stateString : ""), "error " + dialogKey + " " + stateString));
+                    Game1.LanguageManager.GetString(dialogKey + (stateString != null ? "_" + stateString : ""), "error"));
             }
 
             return null;
@@ -882,11 +863,21 @@ namespace ProjectZ.InGame.Things
 
         public void HandleInactiveWindow(bool IsActive)
         {
-            if (!IsActive & GameSettings.MuteInactive)
-                _curEffectVolume = 0;
-            else
-                _curEffectVolume = GameSettings.EffectVolume;
-            Game1.GbsPlayer.SetVolumeMultiplier(Convert.ToInt32(IsActive));
+            // We don't need this to run every single game tick.
+            if (IsActive != _lastStateSet)
+            {
+                if (!IsActive & GameSettings.MuteInactive)
+                {
+                    _curEffectVolume = 0;
+                    Game1.GbsPlayer.SetVolume(0f);
+                }
+                else
+                {
+                    _curEffectVolume = GameSettings.EffectVolume;
+                    Game1.GbsPlayer.SetVolume(GameSettings.MusicVolume / 100.0f);
+                }
+            }
+            _lastStateSet = IsActive;
         }
 
         public void UpdateSoundEffects()

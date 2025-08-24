@@ -108,7 +108,7 @@ namespace ProjectZ.InGame.Pages
         private string GameScaleSliderAdjustmentString(int number)
         {   
             string value = ((GameSettings.GameScale == 11) 
-                ? "Auto-Detect" 
+                ? " Авто" 
                 : " x" + ((number < 1) 
                     ? "1/" + (2 - number) 
                     : number.ToString()));
@@ -118,7 +118,7 @@ namespace ProjectZ.InGame.Pages
         private string UIScaleSliderAdjustmentString(int number)
         {   
             string value = (number == Game1.ScreenScale)
-                ? "Auto-Detect" 
+                ? " Авто" 
                 : " x" + number;
             return value;
         }

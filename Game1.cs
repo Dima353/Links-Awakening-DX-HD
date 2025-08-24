@@ -314,18 +314,20 @@ namespace ProjectZ
 
         protected override void Update(GameTime gameTime)
         {
+            // Store the state to be referenced by InputHandler.
             WasActive = IsActive;
 
             // Mute music and sound effects if user disabled on inactive window.
             GameManager.HandleInactiveWindow(IsActive);
 
+            // Check for console input commands.
             UpdateConsoleInput();
 
             // SetTransparency _fpsCounter counter
             _fpsCounter.Update(gameTime);
 
             // toggle fullscreen
-            if (InputHandler.KeyDown(Keys.LeftAlt) && InputHandler.KeyPressed(Keys.Enter))
+            if ((InputHandler.KeyDown(Keys.LeftAlt) || InputHandler.KeyDown(Keys.RightAlt)) && InputHandler.KeyPressed(Keys.Enter))
             {
                 ToggleFullscreen();
                 InputHandler.ResetInputState();
