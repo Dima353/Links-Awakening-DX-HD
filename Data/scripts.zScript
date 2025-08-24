@@ -608,7 +608,7 @@ alligator_after_eat:0 -> [update_objects] -> [save_history:true] -> alligator_5 
 npc11:0 -> [path:npc05]
 
 // shop
-shopkeeper:holdItem:0 -> [update_objects] -> [get:savename:Thief:shopkeeper_hi] -> [path:shopkeeper_hi]
+shopkeeper:holdItem:0 -> [update_objects] -> [get:savename:Жулик:shopkeeper_hi] -> [path:shopkeeper_hi]
 shopkeeper:holdItem:1 -> [path:shopkeeper_buy]
 
 shopkeeper_hi:0 -> shopkeeper_0

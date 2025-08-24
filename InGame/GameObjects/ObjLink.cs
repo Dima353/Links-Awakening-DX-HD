@@ -3760,11 +3760,11 @@ namespace ProjectZ.InGame.GameObjects
             Game1.GameManager.SaveManager.SetString("result", "0");
 
             // Back up the player's name for a chance at redemption.
-            if (Game1.GameManager.SaveName != "Thief")
+            if (Game1.GameManager.SaveName != "Жулик")
                 Game1.GameManager.BackupName = Game1.GameManager.SaveName;
 
             // Rename the player to "Thief".
-            Game1.GameManager.SaveName = "Thief";
+            Game1.GameManager.SaveName = "Жулик";
 
             // add the item to the inventory
             var strItem = Game1.GameManager.SaveManager.GetString("itemShopItem");
