@@ -7,6 +7,7 @@ namespace ProjectZ.InGame.Things
         public static int GameScale = 11; // autoscale
 
         public static bool EnableShadows = true;
+        public static float ShadowOpacity = 0.55f;
         public static bool LockFps = true;
         public static bool Autosave = true;
         public static bool HeartBeep = true;
