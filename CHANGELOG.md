@@ -3,10 +3,17 @@
  * Добавлен Redux патч.
  * Добавлена русская локализация от Zelda64Rus v2.2.
  * Добавлена сборка нативной Linux-версии.
+ * Добавлена регулировка непрозрачности теней by FeraiAI
+ * Добавлен подсчёт времени проведенного в игре by LouisSF
+ * Добавлена возможность отключения диалоговых окон о поднятии камней, части-силы и жолудя-хранителя. by FeraiAI
 
-Исправления взяты из репозитория https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated
+# Исправления взяты из репозитория: https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated
 
-# **The Legend of Zelda: Link's Awakening Changelog:**
+### **The Legend of Zelda: Link's Awakening Changelog:**
+
+### **v1.1.2 Changelog:**
+#### **Emergency Update:**
+ * Don't apply smaller collision scale to holes already smaller than 16x16.
 
 ### **v1.1.1 Changelog:**
 #### **Minor Update:**
