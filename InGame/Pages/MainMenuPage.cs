@@ -399,7 +399,7 @@ namespace ProjectZ.InGame.Pages
                 var totalMinutes = SaveStateManager.SaveStates[i].TotalPlaytimeMinutes;
                 var hours = (int)(totalMinutes / 60);
                 var minutes = (int)(totalMinutes % 60);
-                var playtimeText = $"{hours:D2}:{minutes:D2}";
+                var playtimeText = $"{hours:D2};{minutes:D2}";
                 _savePlaytime[i].SetText(playtimeText);
 
                 for (var j = 0; j < 14; j++)
