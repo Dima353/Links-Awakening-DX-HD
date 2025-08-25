@@ -18,6 +18,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
         private readonly Animator _animator;
         private readonly BoxCollisionComponent _bodyCollision;
         private readonly DamageFieldComponent _damageField;
+        private readonly HittableComponent _hitcomponent;
         private readonly AiDamageState _damageState;
 
         private int FadeTime = 75;
@@ -81,7 +82,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
             if (Map.Is2dMap)
                 _damageState.HitMultiplierY = 1.0f;
-            AddComponent(HittableComponent.Index, new HittableComponent(_body.BodyBox, OnHit));
+            AddComponent(HittableComponent.Index, _hitcomponent = new HittableComponent(_body.BodyBox, OnHit));
 
             AddComponent(BodyComponent.Index, _body);
             AddComponent(AiComponent.Index, _aiComponent);
@@ -185,6 +186,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
             _aiComponent.ChangeState("dead");
             _body.VelocityTarget = Vector2.Zero;
             _damageField.IsActive = false;
+            _hitcomponent.IsActive = false;
             if (_bodyCollision != null)
                 _bodyCollision.IsActive = false;
         }
