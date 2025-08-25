@@ -47,12 +47,12 @@ settings_menu_video Видео
 settings_menu_back Назад
 
 settings_audio_header Звук
-settings_audio_music_volume Громкость музыки;
-settings_audio_effect_volume Громкость эффектов;
+settings_audio_music_volume Громкость музыки:
+settings_audio_effect_volume Громкость эффектов:
 settings_audio_mute_inactive Отключать звук в фоне
 
 settings_game_header Игра
-settings_game_language Язык; Русский 
+settings_game_language Язык: Русский 
 settings_game_change_language Change Language
 settings_game_autosave Автосохранение
 settings_game_items_on_right Слоты предметов справа
@@ -83,9 +83,9 @@ settings_controls_Start Start
 settings_controls_reset Сброс
 
 settings_graphics_header Графика
-settings_graphics_game_scale Масштаб камеры;
-settings_graphics_ui_scale Масштаб UI;
-settings_graphics_shadow Непрозрачность теней;
+settings_graphics_game_scale Масштаб камеры:
+settings_graphics_ui_scale Масштаб UI:
+settings_graphics_shadow Непрозрачность теней:
 settings_graphics_fps_lock Ограничение FPS
 
 map_overlay_close Закрыть

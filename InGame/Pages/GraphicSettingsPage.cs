@@ -31,7 +31,7 @@ namespace ProjectZ.InGame.Pages
                     GameSettings.GameScale = number;
                     Game1.ScaleChanged = true;
                 })
-            { SetString = number => GameSettings.GameScale == 11 ? ":Авто" : " x" + (number < 1 ? "1/" + (2 - number) : number.ToString()) };
+            { SetString = number => GameSettings.GameScale == 11 ? " Авто" : " x" + (number < 1 ? "1/" + (2 - number) : number.ToString()) };
             contentLayout.AddElement(_gameScaleSlider);
 
             // Slider to adjust the user interface.
@@ -42,7 +42,7 @@ namespace ProjectZ.InGame.Pages
                     GameSettings.UiScale = number;
                     Game1.ScaleChanged = true;
                 })
-            { SetString = number => GameSettings.UiScale == 0 ? ":Авто" : " x" + number };
+            { SetString = number => GameSettings.UiScale == 0 ? " Авто" : " x" + number };
             contentLayout.AddElement(_uiScaleSlider);
 
             contentLayout.AddElement(new InterfaceSlider(Resources.GameFont, "settings_graphics_shadow",
@@ -52,7 +52,7 @@ namespace ProjectZ.InGame.Pages
                     GameSettings.ShadowOpacity = number / 100.0f;
                     GameSettings.EnableShadows = number > 0;
                 })
-            { SetString = number => GameSettings.ShadowOpacity == 0 ? " off" : " " + number + "%" });
+            { SetString = number => GameSettings.ShadowOpacity == 0 ? " Выкл." : " " + number + "%" });
 
             // Fullscreen toggler.
             _toggleFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, _toggleHeight), new Point(5, 2),
