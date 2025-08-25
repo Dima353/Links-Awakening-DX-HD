@@ -342,6 +342,9 @@ namespace ProjectZ.InGame.Map
             if (!_finishedLoading)
                 return;
 
+            // Draw the hole map before other objects so it doesn't overwrite them.
+            Owner.HoleMap.Draw(spriteBatch);
+
             Game1.StopWatchTracker.Start("2 draw sorted objects shadow");
 
             SpriteBatchBegin(spriteBatch, null);
@@ -352,9 +355,6 @@ namespace ProjectZ.InGame.Map
                 (int)(Game1.RenderWidth / MapManager.Camera.Scale),
                 (int)(Game1.RenderHeight / MapManager.Camera.Scale), 1, 2);
             spriteBatch.End();
-
-            // draw the hole map
-            Owner.HoleMap.Draw(spriteBatch);
 
             Game1.StopWatchTracker.Start("3 draw the shadows");
             if (GameSettings.EnableShadows && Owner.UseShadows && !Game1.GameManager.UseShockEffect && ShadowTexture != null)
