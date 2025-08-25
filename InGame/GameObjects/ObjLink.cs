@@ -2035,14 +2035,19 @@ namespace ProjectZ.InGame.GameObjects
                         _moveVelocity += walkVelocity * _currentWalkSpeed;
                     }
                 }
-
-                // update the direction the player is facing
-                if (CurrentState != State.Attacking && 
-                    CurrentState != State.AttackBlocking && 
-                    CurrentState != State.Charging && 
-                    CurrentState != State.ChargeBlocking && 
+                // Update the direction the player is walking towards.
+                if (CurrentState != State.Attacking && CurrentState != State.AttackBlocking && 
+                    CurrentState != State.Charging && CurrentState != State.ChargeBlocking && 
                     CurrentState != State.ChargeJumping)
                     Direction = vectorDirection;
+            }
+            // Allow changing direction when attacking while standing still.
+            else
+            {
+                Vector2 vecMoved = ControlHandler.GetMoveVector2();
+                if ((CurrentState == State.Attacking || CurrentState == State.AttackBlocking) &&
+                    !_isHoldingSword && vecMoved != Vector2.Zero && _body.IsGrounded)
+                    Direction = ToDirection(vecMoved);
             }
             _lastBaseMoveVelocity = _moveVelocity;
 
