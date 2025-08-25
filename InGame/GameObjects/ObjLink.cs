@@ -442,9 +442,9 @@ namespace ProjectZ.InGame.GameObjects
 
             _arrowOffset = new[]
             {
-                new Vector2(-10, 0),
+                new Vector2(-10, -2),
                 new Vector2(-2, -CollisionBoxSize.Y -1),
-                new Vector2(10, 0),
+                new Vector2(10, -2),
                 new Vector2(2, 6)
             };
 
