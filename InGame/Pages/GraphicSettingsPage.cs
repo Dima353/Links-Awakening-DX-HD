@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
@@ -10,7 +11,6 @@ namespace ProjectZ.InGame.Pages
     {
         private readonly InterfaceSlider _uiScaleSlider;
         private readonly InterfaceSlider _gameScaleSlider;
-        private int _toggleHeight = 16;
         private readonly InterfaceListLayout _bottomBar;
         private readonly InterfaceListLayout _toggleFullscreen;
 
@@ -31,31 +31,26 @@ namespace ProjectZ.InGame.Pages
                     GameSettings.GameScale = number;
                     Game1.ScaleChanged = true;
                 })
-            { SetString = number => GameSettings.GameScale == 11 ? " Авто" : " x" + (number < 1 ? "1/" + (2 - number) : number.ToString()) };
+            { SetString = number => GameScaleSliderAdjustmentString(number) };
             contentLayout.AddElement(_gameScaleSlider);
+
+            // Saved value may be larger than current size.
+            if (GameSettings.UiScale > Game1.ScreenScale)
+                GameSettings.UiScale = Game1.ScreenScale;
 
             // Slider to adjust the user interface.
             _uiScaleSlider = new InterfaceSlider(Resources.GameFont, "settings_graphics_ui_scale",
-                buttonWidth, new Point(1, 2), 0, Game1.ScreenScale - 1, 1, GameSettings.UiScale,
+                buttonWidth, new Point(1, 2), 1, Game1.ScreenScale, 1, GameSettings.UiScale - 1,
                 number =>
                 {
                     GameSettings.UiScale = number;
                     Game1.ScaleChanged = true;
                 })
-            { SetString = number => GameSettings.UiScale == 0 ? " Авто" : " x" + number };
+            { SetString = number => UIScaleSliderAdjustmentString(number) };
             contentLayout.AddElement(_uiScaleSlider);
 
-            contentLayout.AddElement(new InterfaceSlider(Resources.GameFont, "settings_graphics_shadow",
-                buttonWidth, new Point(1, 2), 0, 100, 5, (int)(GameSettings.ShadowOpacity * 100),
-                number =>
-                {
-                    GameSettings.ShadowOpacity = number / 100.0f;
-                    GameSettings.EnableShadows = number > 0;
-                })
-            { SetString = number => GameSettings.ShadowOpacity == 0 ? " Выкл." : " " + number + "%" });
-
             // Fullscreen toggler.
-            _toggleFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, _toggleHeight), new Point(5, 2),
+            _toggleFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_fullscreen_mode", GameSettings.IsFullscreen,
                 newState => {
                     Game1.ToggleFullscreen();
@@ -63,8 +58,14 @@ namespace ProjectZ.InGame.Pages
                 });
             contentLayout.AddElement(_toggleFullscreen);
 
+            // Shadow toggler.
+            // TODO: Also disables shadows under the player sprite. At least this shadow should be drawn.
+            var shadowToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
+               "settings_graphics_shadow", GameSettings.EnableShadows, newState => GameSettings.EnableShadows = newState);
+             contentLayout.AddElement(shadowToggle);
+
             // FPS lock toggler.
-            var toggleFpsLock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, _toggleHeight), new Point(5, 2),
+            var toggleFpsLock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_graphics_fps_lock", GameSettings.LockFps, newState =>
                 {
                     GameSettings.LockFps = newState;
@@ -73,7 +74,7 @@ namespace ProjectZ.InGame.Pages
             contentLayout.AddElement(toggleFpsLock);
 
             // Smooth camera toggler.
-            var smoothCameraToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, _toggleHeight), new Point(5, 2),
+            var smoothCameraToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_change_smooth_camera", GameSettings.SmoothCamera, newState => { GameSettings.SmoothCamera = newState; });
             contentLayout.AddElement(smoothCameraToggle);
             _graphicSettingsLayout.AddElement(contentLayout);
@@ -85,9 +86,8 @@ namespace ProjectZ.InGame.Pages
             {
                 Game1.UiPageManager.PopPage();
             }));
-			
-            _graphicSettingsLayout.AddElement(_bottomBar);
 
+            _graphicSettingsLayout.AddElement(_bottomBar);
             PageLayout = _graphicSettingsLayout;
         }
 
@@ -100,8 +100,26 @@ namespace ProjectZ.InGame.Pages
             UpdateUIScaleSlider();
 
             // close the page
-            if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+            if (ControlHandler.ButtonPressed(CButtons.B))
                 Game1.UiPageManager.PopPage();
+        }
+
+        private string GameScaleSliderAdjustmentString(int number)
+        {   
+            string value = ((GameSettings.GameScale == 11) 
+                ? "Auto-Detect" 
+                : " x" + ((number < 1) 
+                    ? "1/" + (2 - number) 
+                    : number.ToString()));
+            return value;
+        }
+
+        private string UIScaleSliderAdjustmentString(int number)
+        {   
+            string value = (number == Game1.ScreenScale)
+                ? "Auto-Detect" 
+                : " x" + number;
+            return value;
         }
 
         public override void OnLoad(Dictionary<string, object> intent)
@@ -119,7 +137,6 @@ namespace ProjectZ.InGame.Pages
         {
             UpdateUIScaleSlider();
         }
-
         private void UpdateFullscreenState()
         {
             var toggle = ((InterfaceToggle)_toggleFullscreen.Elements[1]);
@@ -135,8 +152,8 @@ namespace ProjectZ.InGame.Pages
 
         private void UpdateUIScaleSlider()
         {
-            GameSettings.UiScale = MathHelper.Clamp(GameSettings.UiScale, 0, Game1.ScreenScale - 1);
-            _uiScaleSlider.UpdateStepSize(0, Game1.ScreenScale - 1, 1);
+            _uiScaleSlider.UpdateStepSize(1, Game1.ScreenScale, 1);
+            _uiScaleSlider.CurrentStep = GameSettings.UiScale - 1;
         }
     }
 }

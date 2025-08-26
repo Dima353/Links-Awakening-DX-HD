@@ -855,6 +855,9 @@ namespace ProjectZ
 
         private void UpdateScale(bool EditorDelay = false)
         {
+            // Track if the maximum value was set.
+            bool wasAutoDetect = (GameSettings.UiScale == Game1.ScreenScale);
+
             // Scale of the game field.
             ScreenScale = MathHelper.Clamp(Math.Min(WindowWidth / Values.MinWidth, WindowHeight / Values.MinHeight), 1, 25);
 
@@ -872,8 +875,14 @@ namespace ProjectZ
             {
                 GameManager.SetGameScale(GameSettings.GameScale == 11 ? gameScale : GameSettings.GameScale);
             }
+
             // Scale of the user interface.
-            UiScale = GameSettings.UiScale == 0 ? ScreenScale : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
+            if (wasAutoDetect)
+                GameSettings.UiScale = UiScale = ScreenScale;
+            else
+                UiScale = GameSettings.UiScale == Game1.ScreenScale
+                    ? ScreenScale 
+                    : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
 
             // Update the UI of the editor as well. 
             EditorUi.SizeChanged();
