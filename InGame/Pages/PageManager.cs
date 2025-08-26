@@ -42,11 +42,13 @@ namespace ProjectZ.InGame.Pages
         private const int TransitionNormal = 200;
 
         private bool _isTransitioning;
+        private ControlSettingsPage _controlSettingsPage;
 
         public void Load()
         {
             _width = Values.MinWidth - 32;
             _height = Values.MinHeight - 32;
+            _controlSettingsPage = new ControlSettingsPage(_width, _height);
 
             AddPage(new MainMenuPage(_width, _height));
             AddPage(new CopyPage(_width, _height));
@@ -56,12 +58,17 @@ namespace ProjectZ.InGame.Pages
             AddPage(new SettingsPage(_width, _height));
             AddPage(new GameSettingsPage(_width, _height));
             AddPage(new AudioSettingsPage(_width, _height));
-            AddPage(new ControlSettingsPage(_width, _height));
+            AddPage(_controlSettingsPage);
             AddPage(new GraphicSettingsPage(_width, _height));
             AddPage(new GameMenuPage(_width, _height));
             AddPage(new ExitGamePage(_width, _height));
             AddPage(new GameOverPage(_width, _height));
             AddPage(new QuitGamePage(_width, _height));
+        }
+
+        public void UpdateControlSettingsPage()
+        {
+            _controlSettingsPage.UpdateLayout();
         }
 
         public virtual void Update(GameTime gameTime)

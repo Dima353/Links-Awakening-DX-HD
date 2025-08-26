@@ -34,6 +34,7 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.IsFullscreen = saveManager.GetBool("IsFullscreen", GameSettings.IsFullscreen);
             GameSettings.LockFps = saveManager.GetBool("LockFPS", GameSettings.LockFps);
             GameSettings.ItemsOnRight = saveManager.GetBool("ItemsOnRight", GameSettings.ItemsOnRight);
+            GameSettings.SwapButtons = saveManager.GetBool("SwapButtons", GameSettings.SwapButtons);
             GameSettings.NoPickupDialogs = saveManager.GetBool("NoPickupDialogs", GameSettings.NoPickupDialogs);
             GameSettings.ShadowOpacity = saveManager.GetFloat("ShadowOpacity", GameSettings.ShadowOpacity);
 
@@ -64,6 +65,7 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetBool("IsFullscreen", GameSettings.IsFullscreen);
             saveManager.SetBool("LockFPS", GameSettings.LockFps);
             saveManager.SetBool("ItemsOnRight", GameSettings.ItemsOnRight);
+            saveManager.SetBool("SwapButtons", GameSettings.SwapButtons);
             saveManager.SetBool("NoPickupDialogs", GameSettings.NoPickupDialogs);
             saveManager.SetFloat("ShadowOpacity", GameSettings.ShadowOpacity);
 

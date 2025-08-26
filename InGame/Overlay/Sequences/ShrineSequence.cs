@@ -19,7 +19,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
             base.Update();
 
             // can close the overlay if the dialog isn't running anymore
-            if (!Game1.GameManager.DialogIsRunning() && ControlHandler.ButtonPressed(CButtons.B))
+            if (!Game1.GameManager.DialogIsRunning() && ControlHandler.ButtonPressed(ControlHandler.CancelButton))
                 Game1.GameManager.InGameOverlay.CloseOverlay();
         }
     }

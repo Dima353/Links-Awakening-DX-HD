@@ -56,6 +56,7 @@ settings_game_language Language: English
 settings_game_change_language Change Language
 settings_game_autosave Autosave
 settings_game_items_on_right Item Slots on Right
+settings_game_swap_buttons Swap Button Layout
 settings_modifier_no_pickup_dialogs No Pickup Dialogs
 settings_game_heartbeep Low Hearts Alarm
 settings_game_screenshake Damage Screen Shake

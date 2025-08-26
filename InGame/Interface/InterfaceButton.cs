@@ -55,7 +55,7 @@ namespace ProjectZ.InGame.Interface
 
         public override InputEventReturn PressedButton(CButtons pressedButton)
         {
-            if (pressedButton != CButtons.A)
+            if (pressedButton != ControlHandler.ConfirmButton)
                 return InputEventReturn.Nothing;
 
             if (ClickFunction != null)

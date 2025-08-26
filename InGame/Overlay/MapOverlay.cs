@@ -225,7 +225,7 @@ namespace ProjectZ.InGame.Overlay
                 MoveSelection(_selectionPosition + new Point(0, 1));
             }
 
-            if (ControlHandler.ButtonPressed(CButtons.A))
+            if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
             {
                 if (0 <= _selectionPosition.X && _selectionPosition.X < _mapDialog.GetLength(1) &&
                     0 <= _selectionPosition.Y && _selectionPosition.Y < _mapDialog.GetLength(0))

@@ -56,6 +56,7 @@ settings_game_language Язык: Русский
 settings_game_change_language Change Language
 settings_game_autosave Автосохранение
 settings_game_items_on_right Слоты предметов справа
+settings_game_swap_buttons Поменять А и B
 settings_modifier_no_pickup_dialogs Без диалогов о поднятии
 settings_game_heartbeep Сигнал низкого здоровья
 settings_game_screenshake Тряска экрана при уроне

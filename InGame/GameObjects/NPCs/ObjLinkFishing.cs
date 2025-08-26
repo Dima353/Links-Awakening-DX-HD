@@ -88,7 +88,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             if (!_isFishing)
             {
                 // start hook throw animation
-                if (ControlHandler.ButtonPressed(CButtons.A))
+                if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
                 {
                     _animator.Play("throw");
                 }
@@ -119,7 +119,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                         _animator.Play(HookedFish == null ? "idle" : "hooked");
                     }
 
-                    if (ControlHandler.ButtonPressed(CButtons.A))
+                    if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
                     {
                         _animator.Play(HookedFish == null ? "pull_right" : "hooked_pull");
 

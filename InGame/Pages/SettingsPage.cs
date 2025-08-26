@@ -73,7 +73,7 @@ namespace ProjectZ.InGame.Pages
             base.Update(pressedButtons, gameTime);
 
             // close the page
-            if (ControlHandler.ButtonPressed(CButtons.B))
+            if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
                 ExitPage();
         }
 

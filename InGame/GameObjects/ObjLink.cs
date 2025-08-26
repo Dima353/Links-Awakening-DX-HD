@@ -1761,18 +1761,18 @@ namespace ProjectZ.InGame.GameObjects
                     _diveCounter -= Game1.DeltaTime;
 
                     // stop diving
-                    if (ControlHandler.ButtonPressed(CButtons.B))
+                    if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
                         _diveCounter = 0;
                 }
                 // start diving
-                else if (ControlHandler.ButtonPressed(CButtons.B))
+                else if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
                 {
                     StartDiving(1500);
                 }
 
                 if (_swimBoostCount > -300)
                     _swimBoostCount -= Game1.DeltaTime;
-                else if (ControlHandler.ButtonPressed(CButtons.A))
+                else if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
                 {
                     _swimBoostCount = 300;
                     Game1.GameManager.PlaySoundEffect("D360-15-0F");
@@ -2394,7 +2394,7 @@ namespace ProjectZ.InGame.GameObjects
                     CurrentState == State.Pushing || 
                     CurrentState == State.Swimming || 
                     CurrentState == State.CarryingItem) &&
-                    ControlHandler.ButtonPressed(CButtons.A) && InteractWithObject())
+                    ControlHandler.ButtonPressed(ControlHandler.ConfirmButton) && InteractWithObject())
                     InputHandler.ResetInputState();
 
                 if (_isTrapped && !_trappedDisableItems &&
