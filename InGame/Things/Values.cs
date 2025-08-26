@@ -5,7 +5,7 @@ namespace ProjectZ.InGame.Things
 {
     public partial class Values
     {
-        public static string VersionString = "v1.1.2";
+        public static string VersionString = "v1.1.4";
 
         public static Color ColorBackgroundLight = Color.Black * 0.8f;
         public static Color ColorBackgroundDark = Color.Black * 0.85f;

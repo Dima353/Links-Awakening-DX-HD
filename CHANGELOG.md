@@ -5,11 +5,25 @@
  * Добавлена сборка нативной Linux-версии.
  * Добавлена регулировка непрозрачности теней by FeraiAI
  * Добавлен подсчёт времени проведенного в игре by LouisSF
- * Добавлена возможность отключения диалоговых окон о поднятии камней, части-силы и жолудя-хранителя. by FeraiAI
-
-# Исправления взяты из репозитория: https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated
+ * Добавлена возможность отключения диалоговых окон о поднятии камней, части-силы и жёлудя-хранителя. by FeraiAI
+ * Добавлена возможность менять раскладку кнопок "А" и "B" by FeraiAI
+ 
+# Исправления взяты из репозитория: 
+https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated
 
 ### **The Legend of Zelda: Link's Awakening Changelog:**
+
+## **v1.1.4**
+### **Bugfix Update:**
+  * Fix sprite of hole dug with shovel overwriting rocks pushed over it.
+  * When attacking and standing still, it's possible to change facing direction.
+  * Shooting arrows left and right when next to a south wall no longer triggers collision.
+  * Goomba can no longer be attacked after it has already been stomped.
+  * Hardhat Beetle is affected by knockback effect of piece of power and red tunic.
+
+## **v1.1.3**
+### **The Languages Update:**
+  * Playtime is now tracked and visible on file selection. Thanks to [LouisSF](https://github.com/LouisSF).  
 
 ### **v1.1.2 Changelog:**
 #### **Emergency Update:**
