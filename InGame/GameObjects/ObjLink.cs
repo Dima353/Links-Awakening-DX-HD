@@ -2972,6 +2972,9 @@ namespace ProjectZ.InGame.GameObjects
             CurrentState = State.Ocarina;
             Direction = 3;
             Animation.Play("ocarina");
+
+            // Freeze the game world while the song is played.
+            Game1.GameManager.SaveManager.SetString("freezeGame", "1");
         }
 
         private void UpdateOcarina()
@@ -3012,6 +3015,9 @@ namespace ProjectZ.InGame.GameObjects
 
         private void FinishedOcarinaSong()
         {
+            // Unfreeze the game world when the song is finished.
+            Game1.GameManager.SaveManager.SetString("freezeGame", "0");
+
             // continue playing music
             if (_ocarinaSong != 1)
                 Game1.GbsPlayer.Play();

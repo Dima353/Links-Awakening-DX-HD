@@ -143,20 +143,10 @@ namespace ProjectZ.InGame.Map
                 AddSpawnedObjects();
                 return;
             }
-            // Freeze most things except specific types when an event takes place.
-            else if (Game1.GameManager.FreezeWorldForEvents)
-            {
-                _systemAnimator.Update(false, _AlwaysAnimateTypes);
-                UpdateGameObjects();
-                _systemAi.Update(_AlwaysAnimateTypes);
-                UpdateKeyListeners();
-                _systemBody.Update(0, 1, _AlwaysAnimateTypes);
-                UpdatePlayerCollision();
-                UpdateDeleteObjects();
-                AddSpawnedObjects();
-                return;
-            }
-            // If the world is frozen still update Link.
+            // NOTE: I'm honestly not sure what the point of any of this is. It is titled in a way that makes you think that
+            // when true, the world freezes except for Link. But this is NOT the case, I have tried to use it for different
+            // events but it never worked like I thought. I keep it here because it probably is important for something.
+
             if (Game1.GameManager.FreezeWorldAroundPlayer)
             {
                 Game1.GameManager.FreezeWorldAroundPlayer = false;
@@ -164,13 +154,37 @@ namespace ProjectZ.InGame.Map
                 updateComponent?.UpdateFunction();
                 return;
             }
-            // Normal behavior; everything is active.
+
+            // When the game world is frozen, certain types should still be active. It is set to null at first and updated
+            // depending on whether or not the "freezeGame" flag is set. When "null" everything in the world is updated.
+
+            Type[] AlwaysAnimate = null;
+
+            // Freeze most things except specific types when an event takes place. This variable should not be set directly,
+            // but rather set via: Game1.GameManager.SaveManager.SetString("freezeGame", "1"); The listener on ObjLink will
+            // detect this and set the "FreezeWorldForEvents" boolean accordingly. To unfreeze, just set it back to "0". 
+
+            if (Game1.GameManager.FreezeWorldForEvents)
+            {
+                // Copy the group of objects to always animate into the array. Currently only "ObjGhost" and "ObjOwl".
+                AlwaysAnimate = _AlwaysAnimateTypes;
+
+                // HACK: Keep link playing the ocarina when everything else is frozen. This may be
+                // useful for other states to keep Link active when the world should be frozen.
+                if (MapManager.ObjLink.CurrentState == ObjLink.State.Ocarina)
+                    MapManager.ObjLink.Animation.Update();
+            }
+
+            // Update everything: animations, listeners, bodies, etc. When "AlwaysAnimate" contains something, only those
+            // types found that have been added to the type array will be updated. This is a method used to "freeze" the entire
+            // game world when an event takes place. It also freezes Link so care must be taken when applying it.
+
             Game1.StopWatchTracker.Start("update gameobjects");
-            _systemAnimator.Update(false);
+            _systemAnimator.Update(false, AlwaysAnimate);
             UpdateGameObjects();
-            _systemAi.Update();
+            _systemAi.Update(AlwaysAnimate);
             UpdateKeyListeners();
-            _systemBody.Update(0, 1);
+            _systemBody.Update(0, 1, AlwaysAnimate);
             UpdatePlayerCollision();
             UpdateDamageFields();
             UpdateDeleteObjects();
