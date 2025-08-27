@@ -34,7 +34,8 @@ namespace ProjectZ.InGame.Pages
             { SetString = number => GameScaleSliderAdjustmentString(number) };
             contentLayout.AddElement(_gameScaleSlider);
 
-            // Saved value may be larger than current size.
+            // Saved value may be larger than current size on menu creation. This only fires
+            // once before slider is created. Concurrent checks are in "UpdateUIScaleSlider".
             if (GameSettings.UiScale > Game1.ScreenScale)
                 GameSettings.UiScale = Game1.ScreenScale;
 
@@ -152,6 +153,11 @@ namespace ProjectZ.InGame.Pages
 
         private void UpdateUIScaleSlider()
         {
+            // If resize causes UI scale setting to be larger than screen scale, force
+            // the UI scale to the screen scale which sets it back to "Auto-Detect".
+            if (GameSettings.UiScale > Game1.ScreenScale)
+                GameSettings.UiScale = Game1.ScreenScale;
+
             _uiScaleSlider.UpdateStepSize(1, Game1.ScreenScale, 1);
             _uiScaleSlider.CurrentStep = GameSettings.UiScale - 1;
         }
