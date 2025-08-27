@@ -291,6 +291,7 @@ namespace ProjectZ.InGame.GameObjects
         public ObjHookshot Hookshot = new ObjHookshot();
         private Vector2[] _hookshotOffset;
         private bool _hookshotPull;
+        private bool _hookshotActive;
 
         // magic rod
         private Vector2[] _magicRodOffset;
@@ -2862,6 +2863,15 @@ namespace ProjectZ.InGame.GameObjects
 
         private void UseHookshot()
         {
+            if (!_hookshotActive)
+            {
+                _hookshotActive = true;
+            }
+            else
+            {
+                Hookshot.ForceComeback();
+                return;
+            }
             if (CurrentState != State.Idle && 
                 CurrentState != State.Rafting && 
                 CurrentState != State.Pushing && 
@@ -3479,6 +3489,7 @@ namespace ProjectZ.InGame.GameObjects
             if (Hookshot.IsMoving)
                 return;
 
+            _hookshotActive = false;
             _body.IgnoreHoles = false;
             ReturnToIdle();
         }

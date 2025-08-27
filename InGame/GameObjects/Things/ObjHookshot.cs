@@ -244,5 +244,10 @@ namespace ProjectZ.InGame.GameObjects.Things
             animation.EntityPosition.Set(_hookshotPosition.Position);
             Map.Objects.SpawnObject(animation);
         }
+
+        public void ForceComeback()
+        {
+            ComeBack();
+        }
     }
 }
