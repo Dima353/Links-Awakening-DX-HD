@@ -50,6 +50,15 @@ namespace ProjectZ.InGame.Pages
             { SetString = number => UIScaleSliderAdjustmentString(number) };
             contentLayout.AddElement(_uiScaleSlider);
 
+            contentLayout.AddElement(new InterfaceSlider(Resources.GameFont, "settings_graphics_shadow",
+                buttonWidth, new Point(1, 2), 0, 100, 5, (int)(GameSettings.ShadowOpacity * 100),
+                number =>
+                {
+                    GameSettings.ShadowOpacity = number / 100.0f;
+                    GameSettings.EnableShadows = number > 0;
+                })
+            { SetString = number => GameSettings.ShadowOpacity == 0 ? " Выкл." : " " + number + "%" });
+
             // Fullscreen toggler.
             _toggleFullscreen = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_fullscreen_mode", GameSettings.IsFullscreen,
@@ -58,12 +67,6 @@ namespace ProjectZ.InGame.Pages
                     Game1.ScaleChanged = true;
                 });
             contentLayout.AddElement(_toggleFullscreen);
-
-            // Shadow toggler.
-            // TODO: Also disables shadows under the player sprite. At least this shadow should be drawn.
-            var shadowToggle = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
-               "settings_graphics_shadow", GameSettings.EnableShadows, newState => GameSettings.EnableShadows = newState);
-             contentLayout.AddElement(shadowToggle);
 
             // FPS lock toggler.
             var toggleFpsLock = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
