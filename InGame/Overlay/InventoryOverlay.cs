@@ -52,8 +52,6 @@ namespace ProjectZ.InGame.Overlay
         public const int DistX = 8;
         public const int DistY = 2;
 
-        private static string[] _itemSlotString = new[] { "A", "B", "X", "Y", "L", "R" };
-
         // 4 5
         //  3
         // 2 1
@@ -73,6 +71,8 @@ namespace ProjectZ.InGame.Overlay
             new Rectangle(RecItemselection.Width + DistX, -RecItemselection.Height - DistY,
                 RecItemselection.Width, RecItemselection.Height)
         };
+        private static readonly string[] _itemSlotString = new string[_itemSlots.Length];
+
         private int _selectedItemSlot;
 
         private readonly Point _itemRectangleSize = new Point(36, 26);
@@ -341,9 +341,12 @@ namespace ProjectZ.InGame.Overlay
                     ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.GetItem("shell"), offsetBottom, _shellRectangle, 1, Color.White);
                     ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.GetItem("goldLeaf"), offsetBottom, _leafRectangle, 1, Color.White);
                 }
-
                 // draw the collected equipment
                 DrawEquipment(spriteBatch, offsetBottom + _equipmentPosition);
+
+                // Copy the button labels from ControlHandler "Labels" field. We only need the first 6 buttons.
+                for (int y = 0; y < _itemSlots.Length; y++)
+                    _itemSlotString[y] = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, y];
 
                 // draw the item slots
                 for (var i = 0; i < _itemSlots.Length; i++)
@@ -361,7 +364,6 @@ namespace ProjectZ.InGame.Overlay
 
                 DrawRelicts(spriteBatch, offsetBottom + _relictPosition);
             }
-
             spriteBatch.End();
         }
 
@@ -404,8 +406,7 @@ namespace ProjectZ.InGame.Overlay
                     if (hasSong)
                         continue;
                 }
-
-               ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.Equipment[itemIndex], new Point(drawPosition.X, drawPosition.Y + offsetY + 1), slotRectangle, 1, Color.White);
+                ItemDrawHelper.DrawItemWithInfo(spriteBatch, Game1.GameManager.Equipment[itemIndex], new Point(drawPosition.X, drawPosition.Y + offsetY + 1), slotRectangle, 1, Color.White);
             }
 
             // draw the ocarina face selection

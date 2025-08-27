@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
@@ -9,6 +10,7 @@ namespace ProjectZ.InGame.Pages
     class GameSettingsPage : InterfacePage
     {
         private readonly InterfaceListLayout _bottomBar;
+        private readonly InterfaceButton _controllerType;
 
         public GameSettingsPage(int width, int height)
         {
@@ -21,12 +23,20 @@ namespace ProjectZ.InGame.Pages
 
             var contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize)), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
 
+            // Language Button:
             contentLayout.AddElement(new InterfaceButton(new Point(buttonWidth, 18), new Point(0, 2), "settings_game_language", PressButtonLanguageChange));
 
+            // Controller Type Button:
+            // There wasn't a way to just display what we want on the button so a little bit of hackery was needed.
+            contentLayout.AddElement(_controllerType = new InterfaceButton(new Point(buttonWidth, 18), new Point(0, 2), "", PressButtonSetController)) ;
+            _controllerType.InsideLabel.OverrideText = "Controller: " + GameSettings.Controller;
+
+            // AutoSave Toggle:
             var toggleAutosave = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_autosave", GameSettings.Autosave, newState => { GameSettings.Autosave = newState; });
             contentLayout.AddElement(toggleAutosave);
 
+            // Items on Right Toggle:
             var toggleItemSlotSide = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_items_on_right", GameSettings.ItemsOnRight, newState => { GameSettings.ItemsOnRight = newState; });
             contentLayout.AddElement(toggleItemSlotSide);
@@ -35,6 +45,7 @@ namespace ProjectZ.InGame.Pages
                 "settings_modifier_no_pickup_dialogs", GameSettings.NoPickupDialogs, value => { GameSettings.NoPickupDialogs = value; Game1.GameManager.ItemManager.Load(); });
             contentLayout.AddElement(toggleNoPickupDialogs);
 
+            // Screen-Shake Toggle:
             var toggleScreenShake = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_screenshake", GameSettings.ScreenShake, newState => { GameSettings.ScreenShake = newState; });
             contentLayout.AddElement(toggleScreenShake);
@@ -76,6 +87,21 @@ namespace ProjectZ.InGame.Pages
         public void PressButtonLanguageChange(InterfaceElement element)
         {
             Game1.LanguageManager.ToggleLanguage();
+        }
+
+        public void PressButtonSetController(InterfaceElement element)
+        {
+            // Push forward the index +1 and loop back around.
+            int index = Array.IndexOf(ControlHandler.ControllerNames, GameSettings.Controller);
+            index = (index + 1) % ControlHandler.ControllerNames.Length;
+            GameSettings.Controller = ControlHandler.ControllerNames[index];
+            ControlHandler.SetControllerIndex();
+
+            // Override the button text with this fancy hack.
+            _controllerType.InsideLabel.OverrideText = $"Controller: {GameSettings.Controller}";
+
+            // Update the buttons on the controller page.
+            ControlSettingsPage.UpdateLabels();
         }
     }
 }

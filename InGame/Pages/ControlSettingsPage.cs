@@ -14,8 +14,13 @@ namespace ProjectZ.InGame.Pages
         private readonly InterfaceListLayout[] _remapButtons;
         private readonly InterfaceListLayout _bottomBar;
 
+        // Being able to reference a static field makes updating the label text much easier down the road.
+        public static InterfaceLabel[] _buttonLabels = new InterfaceLabel[14];
+
         private CButtons _selectedButton;
         private bool _updateButton;
+
+        private int _lastControllerIndex = ControlHandler.ControllerIndex;
 
         public ControlSettingsPage(int width, int height)
         {
@@ -39,7 +44,6 @@ namespace ProjectZ.InGame.Pages
             controlLayout.AddElement(remapHeader);
 
             var remapButtons = new InterfaceListLayout { AutoSize = true, Margin = new Point(2, 0), Selectable = true };
-
             _remapButtons = new InterfaceListLayout[Enum.GetValues(typeof(CButtons)).Length - 1];
             var index = 0;
 
@@ -48,9 +52,16 @@ namespace ProjectZ.InGame.Pages
                 if (eButton == CButtons.None)
                     continue;
 
+                // Override the button text when we reach the face and top buttons.
+                string overrideText = "";
+                if (index is >= 4 and <= 13)
+                    overrideText =  ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, index - 4];
+
+                // Most buttons are pulled from language files except for when override text is not empty.
                 _remapButtons[index] = new InterfaceListLayout { Size = new Point(buttonWidth + lableWidth * 2, lableHeight), HorizontalMode = true };
-                _remapButtons[index].AddElement(new InterfaceLabel("settings_controls_" + eButton, new Point(buttonWidth, lableHeight), Point.Zero)
-                { CornerRadius = 0, Color = Values.MenuButtonColor });
+                _remapButtons[index].AddElement(_buttonLabels[index] = new InterfaceLabel("settings_controls_" + eButton, new Point(buttonWidth, lableHeight), Point.Zero)
+                    { CornerRadius = 0, Color = Values.MenuButtonColor, OverrideText = overrideText });
+
                 _remapButtons[index].AddElement(new InterfaceLabel("error", new Point(lableWidth, lableHeight), new Point(0, 0)) { Translate = false });
                 _remapButtons[index].AddElement(new InterfaceLabel("error", new Point(lableWidth, lableHeight), new Point(0, 0)) { Translate = false });
 
@@ -67,7 +78,6 @@ namespace ProjectZ.InGame.Pages
 
                 index++;
             }
-
             controlLayout.AddElement(remapButtons);
 
             _bottomBar = new InterfaceListLayout { Size = new Point(width - 50, (int)(height * Values.MenuFooterSize)), HorizontalMode = true, Selectable = true };
@@ -85,8 +95,29 @@ namespace ProjectZ.InGame.Pages
             UpdateUi();
         }
 
+        public static void UpdateLabels()
+        {
+            for (int index = 0; index < _buttonLabels.Length ; index++)
+            {
+                string overrideText = "";
+
+                if (index is >= 4 and <= 13)
+                    overrideText = ControlHandler.ControllerLabels[ControlHandler.ControllerIndex, index - 4];
+
+                if (overrideText != "")
+                    _buttonLabels[index].OverrideText = overrideText;
+            }
+        }
+
         public override void OnLoad(Dictionary<string, object> intent)
         {
+            // We only want to force an update if the controller has changed.
+            if (_lastControllerIndex != ControlHandler.ControllerIndex)
+            {
+                UpdateUi();
+                _lastControllerIndex = ControlHandler.ControllerIndex;
+            }
+
             // the left button is always the first one selected
             _bottomBar.Deselect(false);
             _bottomBar.Select(InterfaceElement.Directions.Right, false);
@@ -108,7 +139,6 @@ namespace ProjectZ.InGame.Pages
                     UpdateKeyboard(_selectedButton, pressedKeys[0]);
                     UpdateUi();
                 }
-
                 var pressedGamepadButtons = InputHandler.GetPressedButtons();
                 if (pressedGamepadButtons.Count > 0)
                 {
@@ -116,7 +146,6 @@ namespace ProjectZ.InGame.Pages
                     UpdateButton(_selectedButton, pressedGamepadButtons[0]);
                     UpdateUi();
                 }
-
                 InputHandler.ResetInputState();
             }
             else
@@ -134,17 +163,20 @@ namespace ProjectZ.InGame.Pages
         {
             var buttonNr = 0;
 
+            // This method is responsible for displaying the keyboard and controller buttons.
             foreach (var bEntry in ControlHandler.ButtonDictionary)
             {
                 var str = "";
 
                 for (var j = 0; j < bEntry.Value.Keys.Length; j++)
                     str += bEntry.Value.Keys[j];
+
                 ((InterfaceLabel)_remapButtons[buttonNr].Elements[1]).SetText(str);
 
                 str = " ";
                 for (var j = 0; j < bEntry.Value.Buttons.Length; j++)
-                    str += bEntry.Value.Buttons[j];
+                    str += ControlHandler.GetButtonName(bEntry.Value.Buttons[j]);
+
                 ((InterfaceLabel)_remapButtons[buttonNr].Elements[2]).SetText(str);
 
                 buttonNr++;
@@ -171,9 +203,8 @@ namespace ProjectZ.InGame.Pages
 
         private void OnClickReset(InterfaceElement element)
         {
-            ControlHandler.ResetControlls();
+            ControlHandler.ResetControls();
             UpdateUi();
-
             InputHandler.ResetInputState();
         }
     }

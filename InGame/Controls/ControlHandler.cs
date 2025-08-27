@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ProjectZ.Base;
@@ -22,12 +23,59 @@ namespace ProjectZ.InGame.Controls
 
         private static bool _initDirection;
 
+        public static string[] ControllerNames;
+        public static string[,] ControllerLabels;
+        public static int ControllerIndex = 0;
+
         public static void Initialize()
         {
-            ResetControlls();
+            ResetControls();
+
+            // A simple array to reference the names by index.
+            ControllerNames = new string[]{ "XBox", "Nintendo", "Playstation" };
+
+            // A rectangular 2D array is used to easily reference the button labels.
+            ControllerLabels = new string[,] 
+            { 
+                { "A", "B", "X", "Y", "LB", "RB", "LT", "RT",   "Back",   "Start" },  // XBox
+                { "B", "A", "Y", "X",  "L",  "R", "ZL", "ZR", "Select",   "Start" },  // Nintendo
+                { "Χ", "Ο", "Γ", "Δ", "L1", "R1", "L2", "R2",  "Share", "Options" }   // Playstation
+            }; 
         }
 
-        public static void ResetControlls()
+        public static void SetControllerIndex()
+        {
+            // Controller index is set when loading a save file or when switching a controller.
+            ControllerIndex = Array.IndexOf(ControllerNames, GameSettings.Controller);
+        }
+
+        private static readonly Dictionary<string, int> ButtonIndexMap = new()
+        {
+            // This serves as a lookup table to translate the MonoGame button name to the 
+            // selected controller. The value references the button position in the 2D array.
+            ["A"]             = 0,
+            ["B"]             = 1,
+            ["X"]             = 2,
+            ["Y"]             = 3,
+            ["LeftShoulder"]  = 4,
+            ["RightShoulder"] = 5,
+            ["LeftTrigger"]   = 6,
+            ["RightTrigger"]  = 7,
+            ["Back"]          = 8,
+            ["Start"]         = 9
+        };
+
+        public static string GetButtonName(Buttons button)
+        {
+            // This method should be used anywhere a button name is displayed in-game.
+            string buttonName = button.ToString();
+
+            return ButtonIndexMap.TryGetValue(buttonName, out int index)
+                ? ControllerLabels[ControllerIndex, index]
+                : buttonName;
+        }
+
+        public static void ResetControls()
         {
             ButtonDictionary.Clear();
             ButtonDictionary.Add(CButtons.Up, new ButtonMapper(new[] { Keys.Up }, new[] { Buttons.DPadUp }));

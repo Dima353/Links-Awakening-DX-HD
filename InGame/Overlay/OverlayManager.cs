@@ -255,7 +255,7 @@ namespace ProjectZ.InGame.Overlay
                     if (ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.Start].Keys.Length > 0)
                         selectStr = ControlHandler.ButtonDictionary[CButtons.Select].Keys[0].ToString();
                     if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.Start].Buttons.Length > 0)
-                        selectStr = ControlHandler.ButtonDictionary[CButtons.Select].Buttons[0].ToString();
+                        selectStr = ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[CButtons.Select].Buttons[0]);
 
                     var strType = Game1.LanguageManager.GetString((_updateInventory ? "overlay_map" : "overlay_inventory"), "error");
                     var inputHelper = selectStr + ": " + strType;

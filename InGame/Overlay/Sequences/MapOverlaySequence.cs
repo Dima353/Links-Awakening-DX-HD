@@ -64,8 +64,10 @@ namespace ProjectZ.InGame.Overlay.Sequences
                 var selectStr = "";
                 if (ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.B].Keys.Length > 0)
                     selectStr = ControlHandler.ButtonDictionary[CButtons.B].Keys[0].ToString();
+
                 if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.B].Buttons.Length > 0)
-                    selectStr = ControlHandler.ButtonDictionary[CButtons.B].Buttons[0].ToString();
+                    selectStr = ControlHandler.GetButtonName(ControlHandler.ButtonDictionary[CButtons.B].Buttons[0]);
+
                 var inputHelper = selectStr + ": " + Game1.LanguageManager.GetString("map_overlay_close", "error");
 
                 spriteBatch.DrawString(Resources.GameFont, inputHelper,

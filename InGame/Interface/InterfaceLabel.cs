@@ -24,6 +24,10 @@ namespace ProjectZ.InGame.Interface
         public string Text { get; set; }
         public bool Translate = true;
 
+        // The InterfaceLabel seems to always want to reference a language string, so let's
+        // have a way to override the text and put whatever we want here whenever we want.
+        public string OverrideText = "";
+
         private Vector2 _drawOffset;
         private Vector2 _textSize;
 
@@ -78,14 +82,17 @@ namespace ProjectZ.InGame.Interface
 
         public void UpdateLanguageText()
         {
-            SetText(Game1.LanguageManager.GetString(_textKey, "error"));
+            if (OverrideText == "")
+                SetText(Game1.LanguageManager.GetString(_textKey, "error"));
+            else
+                SetText(OverrideText);
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 drawPosition, float scale, float transparency)
         {
             base.Draw(spriteBatch, drawPosition, scale, transparency);
 
-            if (Translate && _textKey != null && Game1.LanguageManager.GetString(_textKey, "error") != Text)
+            if (OverrideText != "" || (Translate && _textKey != null && Game1.LanguageManager.GetString(_textKey, "error") != Text))
                 UpdateLanguageText();
 
             if (Text == null)

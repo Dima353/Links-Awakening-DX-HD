@@ -37,11 +37,13 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.ItemsOnRight = saveManager.GetBool("ItemsOnRight", GameSettings.ItemsOnRight);
             GameSettings.NoPickupDialogs = saveManager.GetBool("NoPickupDialogs", GameSettings.NoPickupDialogs);
             GameSettings.ShadowOpacity = saveManager.GetFloat("ShadowOpacity", GameSettings.ShadowOpacity);
+            GameSettings.Controller = saveManager.GetString("Controller", GameSettings.Controller);
 
             Values.ControllerDeadzone = saveManager.GetFloat("ControllerDeadzone", Values.ControllerDeadzone);
             Game1.LanguageManager.CurrentLanguageIndex = saveManager.GetInt("CurrentLanguage", Game1.LanguageManager.CurrentLanguageIndex);
 
             ControlHandler.LoadButtonMap(saveManager);
+            ControlHandler.SetControllerIndex();
         }
 
         public static void SaveSettings()
@@ -68,6 +70,7 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetBool("ItemsOnRight", GameSettings.ItemsOnRight);
             saveManager.SetBool("NoPickupDialogs", GameSettings.NoPickupDialogs);
             saveManager.SetFloat("ShadowOpacity", GameSettings.ShadowOpacity);
+            saveManager.SetString("Controller", GameSettings.Controller);
 
             saveManager.SetFloat("ControllerDeadzone", Values.ControllerDeadzone);
             saveManager.SetInt("CurrentLanguage", Game1.LanguageManager.CurrentLanguageIndex);

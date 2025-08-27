@@ -4,8 +4,9 @@ namespace ProjectZ.InGame.Things
     class GameSettings
     {
         public static int UiScale = 0;
-        public static int GameScale = 11; // autoscale
+        public static int GameScale = 11;
 
+        public static string Controller = "XBox";
         public static bool EnableShadows = true;
         public static float ShadowOpacity = 0.55f;
         public static bool LockFps = true;

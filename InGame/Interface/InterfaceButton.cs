@@ -8,6 +8,7 @@ namespace ProjectZ.InGame.Interface
     public class InterfaceButton : InterfaceElement
     {
         public InterfaceElement InsideElement;
+        public InterfaceLabel InsideLabel;
 
         public delegate void BFunction(InterfaceElement element);
         public BFunction ClickFunction;
@@ -15,7 +16,6 @@ namespace ProjectZ.InGame.Interface
         public InterfaceButton()
         {
             Selectable = true;
-
             Color = Values.MenuButtonColor;
             SelectionColor = Values.MenuButtonColorSelected;
         }
@@ -33,9 +33,10 @@ namespace ProjectZ.InGame.Interface
             Size = size;
             Margin = margin;
 
-            var label = new InterfaceLabel(text, size, Point.Zero);
+            // By setting this to a public field we can easily access it's internals directly.
+            InsideLabel = new InterfaceLabel(text, size, Point.Zero);
 
-            InsideElement = label;
+            InsideElement = InsideLabel;
             ClickFunction = clickFunction;
         }
 
