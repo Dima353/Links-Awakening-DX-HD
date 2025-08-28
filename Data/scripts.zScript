@@ -436,7 +436,7 @@ bowWow_dig_cooldown:result:1 -> bowWow_dig
 npc_fisherman:0 -> npc_fisherman_0 -> [dialog:choice:npc_fisherman_choice:choice_Fish:choice_Not_Now] -> [path:npc_fisherman_choice]
 npc_fisherman_choice:choice:0 -> [check_item:ruby:10:result] -> [path:npc_fisherman_money]
 npc_fisherman_choice:choice:1 -> npc_fisherman_1
-
+  
 npc_fisherman_money:result:0 -> npc_fisherman_2
 npc_fisherman_money:result:1 -> [remove_item:ruby:10:result] -> npc_fisherman_3 -> [set:enterPond:yes]
 
@@ -567,13 +567,13 @@ castle_boss_door_open:1 ->
 fish_big:0 -> npc_fisherman_6 -> [add_item:ruby:20] -> [dialog:choice:npc_fisherman_6_1:choice_Cast:choice_Not_Now] -> [path:fishing_replay]
 fish_small:0 -> npc_fisherman_7 -> [add_item:ruby:5] -> [dialog:choice:npc_fisherman_7_1:choice_Okay:choice_No] -> [path:fishing_replay]
 fish_big_heart:0 -> [sound:D360-01-01] -> [set:pondHeart:1] -> [set:pondReset:1] -> [add_item:heartMeterSilent:1] -> [add_item:ruby:20] -> [check_item:heartMeter:1:result] -> [path:fish_heart_full]
-
+  
 // different dialog depending on if the piece fills out a complete heart or not
 fish_heart_full:result:1 -> npc_fisherman_8 -> [dialog:choice:npc_fisherman_8_1:choice_Yes:choice_No] -> [path:fishing_replay]
 fish_heart_full:result:0 -> npc_fisherman_8_full -> [dialog:choice:npc_fisherman_8_1:choice_Yes:choice_No] -> [path:fishing_replay]
 
 fishing_replay:choice:0 -> [check_item:ruby:10:money] -> [path:fishing_replay_money]
-fishing_replay:choice:1 -> [set:leavePond:yes]
+fishing_replay:choice:1 -> npc_fisherman_1 -> [set:leavePond:yes]
 
 fishing_replay_money:money:0 -> npc_fisherman_2 -> [set:leavePond:yes]
 fishing_replay_money:money:1 -> [path:fishing_replay_pond]
