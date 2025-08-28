@@ -46,6 +46,7 @@ settings_menu_game Игра
 settings_menu_audio Звук
 settings_menu_controls Управление
 settings_menu_video Видео
+settings_menu_misc Miscellaneous
 settings_menu_back Назад
 
 settings_audio_header Звук
@@ -58,7 +59,7 @@ settings_audio_mute_powerups Отключить музыку PowerUp
 settings_game_header Игра
 settings_game_language Язык: Русский 
 settings_game_change_language Change Language
-settings_game_controller Контроллер
+settings_game_controller Геймпад
 settings_game_autosave Автосохранение
 settings_game_items_on_right Слоты предметов справа
 settings_game_swap_buttons Поменять А и B местами
@@ -92,6 +93,9 @@ settings_graphics_game_scale Масштаб камеры:
 settings_graphics_ui_scale Масштаб UI:
 settings_graphics_shadow Непрозрачность теней:
 settings_graphics_fps_lock Ограничение FPS
+
+settings_misc_header Misc Settings
+settings_misc_menubricks Original Menu Border
 
 map_overlay_close Закрыть
 overlay_map Карта

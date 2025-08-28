@@ -29,7 +29,7 @@ namespace ProjectZ.InGame.Pages
             // Controller Type Button:
             // There wasn't a way to just display what we want on the button so a little bit of hackery was needed.
             contentLayout.AddElement(_controllerType = new InterfaceButton(new Point(buttonWidth, 18), new Point(0, 2), "", PressButtonSetController)) ;
-            _controllerType.InsideLabel.OverrideText = "Controller: " + GameSettings.Controller;
+            _controllerType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_game_controller", "error") + ":" + GameSettings.Controller;
 
             // AutoSave Toggle:
             var toggleAutosave = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
@@ -87,6 +87,9 @@ namespace ProjectZ.InGame.Pages
         public void PressButtonLanguageChange(InterfaceElement element)
         {
             Game1.LanguageManager.ToggleLanguage();
+
+            // Because of the hacky way that text is imposed on the Controller button, we need to manually update the language change.
+            _controllerType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_game_controller", "error") + ":" + GameSettings.Controller;
         }
 
         public void PressButtonSetController(InterfaceElement element)
@@ -98,7 +101,7 @@ namespace ProjectZ.InGame.Pages
             ControlHandler.SetControllerIndex();
 
             // Override the button text with this fancy hack.
-            _controllerType.InsideLabel.OverrideText = $"Controller: {GameSettings.Controller}";
+            _controllerType.InsideLabel.OverrideText = Game1.LanguageManager.GetString("settings_game_controller", "error") + ":" + GameSettings.Controller;
 
             // Update the buttons on the controller page.
             ControlSettingsPage.UpdateLabels();

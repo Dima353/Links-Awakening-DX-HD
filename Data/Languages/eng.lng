@@ -45,6 +45,7 @@ settings_menu_header Settings
 settings_menu_game Game
 settings_menu_audio Audio
 settings_menu_controls Controls
+settings_menu_misc Miscellaneous
 settings_menu_video Video
 settings_menu_back Back
 
@@ -57,10 +58,9 @@ settings_audio_mute_powerups No PowerUp Music
 settings_game_header Game Settings
 settings_game_language Language: English
 settings_game_change_language Change Language
-settings_game_controller Controller
+settings_game_controller Gamepad
 settings_game_autosave Autosave
 settings_game_items_on_right Item Slots on Right
-settings_modifier_no_pickup_dialogs No Pickup Dialogs
 settings_game_heartbeep Low Hearts Alarm
 settings_game_screenshake Damage Screen Shake
 settings_game_change_smooth_camera Smooth Camera
@@ -89,8 +89,11 @@ settings_controls_reset Reset
 settings_graphics_header Video Settings
 settings_graphics_game_scale Game Scale:
 settings_graphics_ui_scale UI Scale:
-settings_graphics_shadow Shadow Opacity:
-settings_graphics_fps_lock FPS Lock
+settings_graphics_shadow Shadows
+settings_graphics_fps_lock Vertical Sync
+
+settings_misc_header Misc Settings
+settings_misc_menubricks Original Menu Border
 
 map_overlay_close Close
 overlay_map Map
