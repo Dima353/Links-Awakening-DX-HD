@@ -734,13 +734,18 @@ namespace ProjectZ.InGame.Things
             GuardianAcornIsActive = true;
             GuardianAcornDamageCount = 0;
 
-            StartPieceOfPowerMusic(0);
+            if (!GameSettings.MutePowerups)
+                StartPieceOfPowerMusic(0);
+            else
+                Game1.GameManager.PlaySoundEffect("D360-23-17");
         }
 
         public void StopGuardianAcorn()
         {
             GuardianAcornIsActive = false;
-            Game1.GameManager.SetMusic(-1, 1, false);
+
+            if (!GameSettings.MutePowerups)
+                Game1.GameManager.SetMusic(-1, 1, false);
         }
 
         public void InitPieceOfPower()
@@ -751,7 +756,10 @@ namespace ProjectZ.InGame.Things
             PieceOfPowerIsActive = true;
             PieceOfPowerDamageCount = 0;
 
-            StartPieceOfPowerMusic(0);
+            if (!GameSettings.MutePowerups)
+                StartPieceOfPowerMusic(0);
+            else
+                Game1.GameManager.PlaySoundEffect("D360-23-17");
         }
         public void StartPieceOfPowerMusic(int Variation)
         {
@@ -771,7 +779,9 @@ namespace ProjectZ.InGame.Things
         public void StopPieceOfPower()
         {
             PieceOfPowerIsActive = false;
-            Game1.GameManager.SetMusic(-1, 1, false);
+
+            if (!GameSettings.MutePowerups)
+                Game1.GameManager.SetMusic(-1, 1, false);
         }
 
         public void ResetMusic()

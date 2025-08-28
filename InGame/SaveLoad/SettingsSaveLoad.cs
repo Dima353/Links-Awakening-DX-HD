@@ -26,6 +26,7 @@ namespace ProjectZ.InGame.SaveLoad
             GameSettings.MusicVolume = saveManager.GetInt("MusicVolume", GameSettings.MusicVolume);
             GameSettings.EffectVolume = saveManager.GetInt("EffectVolume", GameSettings.EffectVolume);
             GameSettings.MuteInactive = saveManager.GetBool("MuteInactive", GameSettings.MuteInactive);
+            GameSettings.MutePowerups = saveManager.GetBool("MutePowerups", GameSettings.MutePowerups);
             GameSettings.EnableShadows = saveManager.GetBool("EnableShadows", GameSettings.EnableShadows);
             GameSettings.Autosave = saveManager.GetBool("Autosave", GameSettings.Autosave);
             GameSettings.HeartBeep = saveManager.GetBool("HeartBeep", GameSettings.HeartBeep);
@@ -57,6 +58,7 @@ namespace ProjectZ.InGame.SaveLoad
             saveManager.SetInt("MusicVolume", GameSettings.MusicVolume);
             saveManager.SetInt("EffectVolume", GameSettings.EffectVolume);
             saveManager.SetBool("MuteInactive", GameSettings.MuteInactive);
+            saveManager.SetBool("MutePowerups", GameSettings.MutePowerups);
             saveManager.SetBool("EnableShadows", GameSettings.EnableShadows);
             saveManager.SetBool("Autosave", GameSettings.Autosave);
             saveManager.SetBool("HeartBeep", GameSettings.HeartBeep);

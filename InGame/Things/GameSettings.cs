@@ -21,6 +21,7 @@ namespace ProjectZ.InGame.Things
         private static int _musicVolume = 100;
         private static int _effectVolume = 100;
         public static bool MuteInactive = true;
+        public static bool MutePowerups = false;
 
         public static int MusicVolume
         {
