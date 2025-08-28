@@ -47,11 +47,11 @@ namespace ProjectZ.InGame.Pages
 
         public MainMenuPage(int width, int height)
         {
-            var smallButtonWidth = 80;
+            var smallButtonWidth = 100;
             var smallButtonMargin = 2;
 
-            var saveButtonRec = new Point(186, 30);
-            var sideSize = 50;
+            var saveButtonRec = new Point(204, 30);
+            var sideSize = 70;
 
             _heartSprite = Resources.GetSprite("heart menu");
 
@@ -79,7 +79,7 @@ namespace ProjectZ.InGame.Pages
 
                     // hearts on the left
                     {
-                        var heartsWidth = saveButtonRec.X / 2 - numberWidth - 8;
+                        var heartsWidth = saveButtonRec.X / 2 - numberWidth - 20;
                         var hearts = new InterfaceListLayout { Size = new Point(heartsWidth, 30) };
 
                         var rowOne = new InterfaceListLayout { Size = new Point(heartsWidth - 4, 7), Margin = new Point(2, 1), HorizontalMode = true, ContentAlignment = InterfaceElement.Gravities.Right };
@@ -108,11 +108,11 @@ namespace ProjectZ.InGame.Pages
                         var middle = new InterfaceListLayout { Gravity = InterfaceElement.Gravities.Left, Margin = new Point(2, 0), Size = new Point(rightWidth, 30) };
 
                         // name
-                        middle.AddElement(_saveNames[i] = new InterfaceLabel(null, new Point(rightWidth - 3, 10), Point.Zero) { Margin = new Point(1, 0), TextAlignment = InterfaceElement.Gravities.Left | InterfaceElement.Gravities.Bottom });
+                        middle.AddElement(_saveNames[i] = new InterfaceLabel(null, new Point(rightWidth - 18, 10), Point.Zero) { Margin = new Point(1, 0), TextAlignment = InterfaceElement.Gravities.Left | InterfaceElement.Gravities.Bottom });
                         // ruby
-                        middle.AddElement(_saveRuby[i] = new InterfaceLabel(null, new Point(rightWidth - 2, 10), Point.Zero) { Margin = new Point(0, 0), TextAlignment = InterfaceElement.Gravities.Left });
+                        middle.AddElement(_saveRuby[i] = new InterfaceLabel(null, new Point(rightWidth - 17, 10), Point.Zero) { Margin = new Point(0, 0), TextAlignment = InterfaceElement.Gravities.Left });
                         // playtime
-                        middle.AddElement(_savePlaytime[i] = new InterfaceLabel(null, new Point(rightWidth - 2, 10), Point.Zero) { Margin = new Point(0, 0), TextAlignment = InterfaceElement.Gravities.Left });
+                        middle.AddElement(_savePlaytime[i] = new InterfaceLabel(null, new Point(rightWidth - 17, 10), Point.Zero) { Margin = new Point(0, 0), TextAlignment = InterfaceElement.Gravities.Left });
 
                         saveInfoLayout.AddElement(middle);
                     }
@@ -169,7 +169,7 @@ namespace ProjectZ.InGame.Pages
             {
                 _menuBottomBar = new InterfaceListLayout
                 {
-                    Size = new Point(saveButtonRec.X, (int)(height * Values.MenuFooterSize)),
+                    Size = new Point(saveButtonRec.X, (int)(height * Values.MenuFooterSize - 10)),
                     HorizontalMode = true,
                     Selectable = true
                 };
@@ -203,7 +203,7 @@ namespace ProjectZ.InGame.Pages
 
             // main layout
             {
-                _mainLayout = new InterfaceListLayout { Size = new Point(width, height), Gravity = InterfaceElement.Gravities.Left, Selectable = true };
+                _mainLayout = new InterfaceListLayout { Size = new Point(width, height - 10), Gravity = InterfaceElement.Gravities.Left, Selectable = true };
 
                 _mainLayout.AddElement(new InterfaceLabel(Resources.GameHeaderFont, "main_menu_select_header", new Point(width, (int)(height * Values.MenuHeaderSize)), new Point(0, 0)));
                 _mainLayout.AddElement(_saveFileList);

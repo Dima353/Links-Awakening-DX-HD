@@ -18,7 +18,7 @@ namespace ProjectZ.InGame.Pages
         {
             // Graphics settings layout.
             var _graphicSettingsLayout = new InterfaceListLayout { Size = new Point(width, height), Selectable = true };
-            var buttonWidth = 240;
+            var buttonWidth = 320;
             _graphicSettingsLayout.AddElement(new InterfaceLabel(Resources.GameHeaderFont, "settings_graphics_header",
                 new Point(buttonWidth, (int)(height * Values.MenuHeaderSize)), new Point(0, 0)));
             var contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize)), Selectable = true, ContentAlignment = InterfaceElement.Gravities.Top };
@@ -86,7 +86,7 @@ namespace ProjectZ.InGame.Pages
             _bottomBar = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true, HorizontalMode = true };
 
             // Back button.
-            _bottomBar.AddElement(new InterfaceButton(new Point(60, 20), new Point(2, 4), "settings_menu_back", element =>
+            _bottomBar.AddElement(new InterfaceButton(new Point(100, 20), new Point(2, 4), "settings_menu_back", element =>
             {
                 Game1.UiPageManager.PopPage();
             }));

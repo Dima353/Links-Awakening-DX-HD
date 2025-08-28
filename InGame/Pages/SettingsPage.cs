@@ -59,7 +59,7 @@ namespace ProjectZ.InGame.Pages
             var bottomLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true };
 
             // Button: Back to Menu
-            bottomLayout.AddElement(new InterfaceButton(new Point(60, 20), new Point(2, 4), "settings_menu_back", element =>
+            bottomLayout.AddElement(new InterfaceButton(new Point(100, 20), new Point(2, 4), "settings_menu_back", element =>
             {
                 ExitPage();
             }));
