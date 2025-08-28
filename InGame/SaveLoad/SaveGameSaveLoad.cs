@@ -86,8 +86,8 @@ namespace ProjectZ.InGame.SaveLoad
         {
             saveManager = new SaveManager();
 
-            saveManager.SetString("savename", gameManager.SaveName);
-            saveManager.SetString("backupname", gameManager.BackupName);
+            saveManager.SetString("savename", gameManager.RealSaveName);
+            saveManager.SetBool("ThiefState", gameManager.ThiefState);
             saveManager.SetInt("maxHearts", gameManager.MaxHearts);
             saveManager.SetInt("deathCount", gameManager.DeathCount);
             saveManager.SetInt("currentHealth", gameManager.CurrentHealth);
@@ -187,7 +187,7 @@ namespace ProjectZ.InGame.SaveLoad
                 return;
 
             gameManager.SaveName = saveManager.GetString("savename");
-            gameManager.BackupName = saveManager.GetString("backupname");
+            gameManager.ThiefState = saveManager.GetBool("ThiefState", false);
             gameManager.MaxHearts = saveManager.GetInt("maxHearts");
             gameManager.CurrentHealth = saveManager.GetInt("currentHealth");
             gameManager.CloakType = saveManager.GetInt("cloak", 0);

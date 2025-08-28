@@ -99,13 +99,11 @@ namespace ProjectZ.InGame.Overlay
 
         public override bool Execute()
         {
-            if (_key == "savename")
-                Game1.GameManager.SaveName = (_value == "backupname")
-                    ? Game1.GameManager.BackupName
-                    : _value;
-            else
+            if (_value == "backupname") {
+                Game1.GameManager.ThiefState = false;
+            } else {
                 Game1.GameManager.SaveManager.SetString(_key, _value);
-
+            }
             return true;
         }
     }
@@ -125,11 +123,9 @@ namespace ProjectZ.InGame.Overlay
 
         public override bool Execute()
         {
-            // Get the current variable value and check if it matches the comparison.
-            var value = (_key == "savename") 
-                ? Game1.GameManager.SaveName 
-                : Game1.GameManager.SaveManager.GetString(_key, "");
-            var checkState = value == _compare;
+            var checkState = (_key == "savename")
+                ? (Game1.GameManager.ThiefState == true)
+                : (Game1.GameManager.SaveManager.GetString(_key, "") == _compare);
             Game1.GameManager.SaveManager.SetString(_resultKey, checkState ? "1" : "0");
             return true;
         }

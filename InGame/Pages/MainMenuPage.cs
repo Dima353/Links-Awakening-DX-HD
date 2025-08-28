@@ -240,6 +240,7 @@ namespace ProjectZ.InGame.Pages
 
         public override void OnReturn(Dictionary<string, object> intent)
         {
+            UpdateUi();
             base.OnReturn(intent);
 
             if (intent != null && intent.TryGetValue("deleteReturn", out var deleteReturn) && (bool)deleteReturn)
@@ -392,7 +393,7 @@ namespace ProjectZ.InGame.Pages
                     _saveButtons[i].InsideElement = _saveButtonLayouts[i];
                 }
 
-                _saveNames[i].SetText(SaveStateManager.SaveStates[i].Name);
+                _saveNames[i].SetText(SaveStateManager.SaveStates[i].Thief ? Game1.LanguageManager.GetString("savename_thief", "error") : SaveStateManager.SaveStates[i].Name);
                 _saveRuby[i].SetText(SaveStateManager.SaveStates[i].CurrentRubee.ToString());
                 
                 // format playtime display as HH:MM

@@ -5,6 +5,8 @@ main_menu_settings Settings
 main_menu_copy Copy
 main_menu_erase Erase
 main_menu_quit Quit
+main_menu_back Back
+main_menu_select Select
 
 main_menu_delete_confirmation_header Erase Save?
 main_menu_delete_confirmation_header_yes Yes
@@ -50,14 +52,14 @@ settings_audio_header Audio Settings
 settings_audio_music_volume Music Volume:
 settings_audio_effect_volume Effect Volume:
 settings_audio_mute_inactive Mute Inactive Window
+settings_audio_mute_powerups No PowerUp Music
 
 settings_game_header Game Settings
 settings_game_language Language: English
 settings_game_change_language Change Language
+settings_game_controller Controller
 settings_game_autosave Autosave
 settings_game_items_on_right Item Slots on Right
-settings_game_swap_buttons Swap Button Layout
-settings_modifier_no_pickup_dialogs No Pickup Dialogs
 settings_game_heartbeep Low Hearts Alarm
 settings_game_screenshake Damage Screen Shake
 settings_game_change_smooth_camera Smooth Camera
@@ -86,9 +88,11 @@ settings_controls_reset Reset
 settings_graphics_header Video Settings
 settings_graphics_game_scale Game Scale:
 settings_graphics_ui_scale UI Scale:
-settings_graphics_shadow Shadow Opacity:
+settings_graphics_shadow Shadows
 settings_graphics_fps_lock FPS Lock
 
 map_overlay_close Close
 overlay_map Map
 overlay_inventory Inventory
+
+savename_thief Thief

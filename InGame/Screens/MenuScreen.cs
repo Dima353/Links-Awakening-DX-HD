@@ -92,7 +92,8 @@ namespace ProjectZ.InGame.Screens
                     backStr = ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Keys[0].ToString();
                 if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Buttons.Length > 0)
                     backStr = ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Buttons[0].ToString();
-                var backHelp = backStr + " Назад";
+                var strType = Game1.LanguageManager.GetString("main_menu_back", "error");
+                var backHelp = backStr + " " + strType;
 
                 var backTextSize = Resources.GameFont.MeasureString(backHelp);
                 spriteBatch.DrawString(Resources.GameFont, backHelp,
@@ -105,7 +106,8 @@ namespace ProjectZ.InGame.Screens
                     selectStr = ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Keys[0].ToString();
                 if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Buttons.Length > 0)
                     selectStr = ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Buttons[0].ToString();
-                var inputHelper = selectStr + " Выбор";
+                var strType = Game1.LanguageManager.GetString("main_menu_select", "error");
+                var inputHelper = selectStr + " " + strType;
 
                 var selectTextSize = Resources.GameFont.MeasureString(inputHelper);
                 spriteBatch.DrawString(Resources.GameFont, inputHelper,

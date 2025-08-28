@@ -12,6 +12,7 @@ namespace ProjectZ.InGame.SaveLoad
         public class SaveState
         {
             public string Name;
+            public bool Thief;
             public int MaxHearts;
             public int CurrentHealth;
             public int CurrentRubee;
@@ -32,6 +33,7 @@ namespace ProjectZ.InGame.SaveLoad
                 if (saveManager.LoadFile(Values.PathSaveFolder + "/" + SaveGameSaveLoad.SaveFileName + i))
                 {
                     SaveStates[i] = new SaveState();
+                    SaveStates[i].Thief = saveManager.GetBool("ThiefState", false);
                     SaveStates[i].Name = saveManager.GetString("savename");
                     SaveStates[i].CurrentHealth = saveManager.GetInt("currentHealth");
                     SaveStates[i].MaxHearts = saveManager.GetInt("maxHearts");

@@ -5,6 +5,8 @@ main_menu_settings Настройки
 main_menu_copy Копия
 main_menu_erase Удал.
 main_menu_quit Выход
+main_menu_back Назад
+main_menu_select Выбор
 
 main_menu_delete_confirmation_header Удалить данные?
 main_menu_delete_confirmation_header_yes Да
@@ -50,10 +52,12 @@ settings_audio_header Звук
 settings_audio_music_volume Громкость музыки:
 settings_audio_effect_volume Громкость эффектов:
 settings_audio_mute_inactive Отключать звук в фоне
+settings_audio_mute_powerups Нет музыки PowerUp
 
 settings_game_header Игра
 settings_game_language Язык: Русский 
 settings_game_change_language Change Language
+settings_game_controller Контроллер
 settings_game_autosave Автосохранение
 settings_game_items_on_right Слоты предметов справа
 settings_game_swap_buttons Поменять А и B
@@ -92,3 +96,5 @@ settings_graphics_fps_lock Ограничение FPS
 map_overlay_close Закрыть
 overlay_map Карта
 overlay_inventory Инвентарь
+
+savename_thief Жулик

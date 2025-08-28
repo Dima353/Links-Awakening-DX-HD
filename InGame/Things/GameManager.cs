@@ -98,8 +98,13 @@ namespace ProjectZ.InGame.Things
 
         public bool[,] MapVisibility;
 
-        public string SaveName = "Линк";
-        public string BackupName = "Линк";
+        public bool ThiefState = false;
+
+        public string RealSaveName = "Линк";
+        public string SaveName {
+            get { return ThiefState ? Game1.LanguageManager.GetString("savename_thief", "error") : RealSaveName; }
+            set { RealSaveName = value; } 
+        } 
 
         // playtime tracking
         public float TotalPlaytime = 0.0f; // total playtime across all sessions in minutes
@@ -1399,7 +1404,7 @@ namespace ProjectZ.InGame.Things
 
             // set up values
             // debug fill the inventory
-            if (SaveName == "DebugMode")
+            if (RealSaveName == "DebugMode")
             {
                 DebugMode = true;
 
