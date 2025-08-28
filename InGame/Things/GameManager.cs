@@ -50,10 +50,16 @@ namespace ProjectZ.InGame.Things
 
             public SoundEffectInstance Instance;
         }
+        // _activeRenderTarget == null ???
+
+        /// RT:CRASH BYPASS
         public Matrix GetMatrix
         {
             get
             {
+                if (_activeRenderTarget == null)
+                    return Matrix.Identity;
+
                 float scaleX = (float)_activeRenderTarget.Width / (int)(Game1.WindowWidth * _scaleMultiplier);
                 float scaleY = (float)_activeRenderTarget.Height / (int)(Game1.WindowHeight * _scaleMultiplier);
 
@@ -274,6 +280,9 @@ namespace ProjectZ.InGame.Things
         {
             if (GameSettings.EnableShadows && MapManager.CurrentMap.UseShadows && !UseShockEffect)
             {
+                /// RT:CRASH BYPASS
+                if (_shadowRenderTarget == null) return;
+
                 // render the shadows
                 RenderShadows(spriteBatch);
 
@@ -369,7 +378,10 @@ namespace ProjectZ.InGame.Things
             ChangeRenderTarget();
             Game1.Graphics.GraphicsDevice.SetRenderTarget(Game1.MainRenderTarget);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicWrap);
-            spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight), Color.White);
+
+            /// RT:CRASH BYPASS
+            if (_inactiveRenderTarget1 != null)
+                spriteBatch.Draw(_inactiveRenderTarget1, new Rectangle(0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight), Color.White);
 
             // debug stuff
             MapManager.Camera.Draw(spriteBatch);

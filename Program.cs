@@ -1,4 +1,5 @@
 ﻿using System;
+using ProjectZ.InGame.Things;
 
 namespace ProjectZ
 {
@@ -16,6 +17,8 @@ namespace ProjectZ
                     editorMode = true;
                 else if (arg == "loadSave")
                     loadFirstSave = true;
+                else if (arg == "exclusive")
+                    GameSettings.ExFullscreen = true;
             }
 
             try

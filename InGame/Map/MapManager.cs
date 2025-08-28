@@ -121,6 +121,9 @@ namespace ProjectZ.InGame.Map
 
         private void DrawBlur(SpriteBatch spriteBatch, RenderTarget2D blurRT0, RenderTarget2D blurRT1, RenderTarget2D blurRT2)
         {
+            /// RT:CRASH BYPASS
+            if (blurRT0 == null) return;
+
             var matrixPosition = Vector2.Zero;
 
             if (!Game1.GameManager.UseShockEffect)

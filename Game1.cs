@@ -105,7 +105,7 @@ namespace ProjectZ
         private static int _lastWindowHeight;
         private static bool _isFullscreen;
         private bool _isResizing;
-//      static private bool _userBorderlessSetting;
+        static private bool _userExclusiveSetting;
 
         private static RenderTarget2D _renderTarget1;
         private static RenderTarget2D _renderTarget2;
@@ -238,6 +238,9 @@ namespace ProjectZ
             // load the intro screen + the resources needed for it
             Resources.LoadIntro(Graphics.GraphicsDevice, Content);
             ScreenManager.LoadIntro(Content);
+
+            // NOTE: NEEDED FOR EXCLUSIVE FULLSCREEN TO NOT CRASH
+            UpdateScale(true);
 
             // toggle fullscreen
             if (GameSettings.IsFullscreen)
@@ -716,6 +719,24 @@ namespace ProjectZ
             Graphics.ApplyChanges();
         }
 
+        public static void SwitchFullscreenWindowedSetting()
+        {
+            _userExclusiveSetting = GameSettings.ExFullscreen;
+
+            if (GameSettings.ExFullscreen && Graphics.IsFullScreen ||
+                GameSettings.ExFullscreen && _isFullscreen)
+            {
+                ToggleFullscreen();
+                GameSettings.ExFullscreen = !GameSettings.ExFullscreen;
+                ToggleFullscreen();
+            }
+            else
+            {
+                GameSettings.ExFullscreen = !GameSettings.ExFullscreen;
+            }
+            GameSettings.ExFullscreen = !_userExclusiveSetting;
+        }
+
         public static void ToggleFullscreen()
         {
 #if WINDOWS
@@ -723,33 +744,68 @@ namespace ProjectZ
 
             var screenBounds = System.Windows.Forms.Screen.GetBounds(_windowForm);
 
-            _isFullscreen = !_isFullscreen;
-
-            // change to fullscreen
-            if (_isFullscreen)
+            if (GameSettings.ExFullscreen)
             {
-                _lastWindowState = _windowForm.WindowState;
-                _lastWindowBounds = _windowForm.Bounds;
+                if (!Graphics.IsFullScreen)
+                {
+                    _lastWindowWidth = Graphics.PreferredBackBufferWidth;
+                    _lastWindowHeight = Graphics.PreferredBackBufferHeight;
 
-                _windowForm.FormBorderStyle = Forms.FormBorderStyle.None;
-                _windowForm.WindowState = Forms.FormWindowState.Normal;
-                _windowForm.Bounds = screenBounds;
-            }
-            else
-            {
-                _windowForm.FormBorderStyle = Forms.FormBorderStyle.Sizable;
+                    _lastWindowRestoreBounds = _windowForm.RestoreBounds;
+
+                    Graphics.PreferredBackBufferWidth = screenBounds.Width;
+                    Graphics.PreferredBackBufferHeight = screenBounds.Height;
+
+                    _lastWindowState = _windowForm.WindowState;
+                }
+                else
+                {
+                    if (_lastWindowState != Forms.FormWindowState.Maximized)
+                    {
+                        Graphics.PreferredBackBufferWidth = _lastWindowWidth;
+                        Graphics.PreferredBackBufferHeight = _lastWindowHeight;
+                    }
+                }
+                Graphics.ToggleFullScreen();
 
                 if (_lastWindowState == Forms.FormWindowState.Maximized)
                 {
-                    // this is set to not loose the old state because fullscreen and windowed are both using the "Normal" state
+                    // restore the window size of the normal sized window
                     _windowForm.Bounds = _lastWindowRestoreBounds;
 
                     _windowForm.WindowState = _lastWindowState;
                 }
+            }
+            else
+            {
+                _isFullscreen = !_isFullscreen;
+            
+                // change to fullscreen
+                if (_isFullscreen)
+                {
+                    _lastWindowState = _windowForm.WindowState;
+                    _lastWindowBounds = _windowForm.Bounds;
+
+                    _windowForm.FormBorderStyle = Forms.FormBorderStyle.None;
+                    _windowForm.WindowState = Forms.FormWindowState.Normal;
+                    _windowForm.Bounds = screenBounds;
+                }
                 else
                 {
-                    _windowForm.WindowState = _lastWindowState;
-                    _windowForm.Bounds = _lastWindowBounds;
+                    _windowForm.FormBorderStyle = Forms.FormBorderStyle.Sizable;
+
+                    if (_lastWindowState == Forms.FormWindowState.Maximized)
+                    {
+                        // this is set to not loose the old state because fullscreen and windowed are both using the "Normal" state
+                        _windowForm.Bounds = _lastWindowRestoreBounds;
+
+                        _windowForm.WindowState = _lastWindowState;
+                    }
+                    else
+                    {
+                        _windowForm.WindowState = _lastWindowState;
+                        _windowForm.Bounds = _lastWindowBounds;
+                    }
                 }
             }
 
@@ -821,7 +877,7 @@ namespace ProjectZ
                 _lastWindowRestoreBounds = _windowForm.RestoreBounds;
 
             // minimize the fullscreen window
-            if (Graphics.IsFullScreen && _windowForm.WindowState == Forms.FormWindowState.Minimized && !_wasMinimized)
+            if (GameSettings.ExFullscreen && Graphics.IsFullScreen && _windowForm.WindowState == Forms.FormWindowState.Minimized && !_wasMinimized)
             {
                 _wasMinimized = true;
 
@@ -829,7 +885,7 @@ namespace ProjectZ
                 _windowForm.WindowState = Forms.FormWindowState.Minimized;
             }
             // reopen the fullscreen window
-            if (_windowForm.WindowState == Forms.FormWindowState.Normal && _wasMinimized)
+            if (GameSettings.ExFullscreen && _windowForm.WindowState == Forms.FormWindowState.Normal && _wasMinimized)
             {
                 _wasMinimized = false;
                 ToggleFullscreen();
@@ -855,7 +911,7 @@ namespace ProjectZ
             UpdateScale();
         }
 
-        private void UpdateScale(bool EditorDelay = false)
+        private void UpdateScale(bool SkipEditor = false)
         {
             // Track if the maximum value was set.
             bool wasAutoDetect = (GameSettings.UiScale == Game1.ScreenScale);
@@ -886,8 +942,10 @@ namespace ProjectZ
                     ? ScreenScale 
                     : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
 
-            // Update the UI of the editor as well. 
-            EditorUi.SizeChanged();
+            // Update the UI of the editor as well. This will cause issues on initialization where scale
+            // needs to be called to avoid render target issues, so avoid updating if SkipEditor is true.
+            if (SkipEditor)
+                EditorUi.SizeChanged();
 
             ScreenManager.OnResize(WindowWidth, WindowHeight);
             UiPageManager.OnResize(WindowWidth, WindowHeight);

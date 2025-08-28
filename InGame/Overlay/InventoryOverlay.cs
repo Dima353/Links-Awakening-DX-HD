@@ -204,7 +204,9 @@ namespace ProjectZ.InGame.Overlay
 
         public void Draw(SpriteBatch spriteBatch, Rectangle drawPosition, Color color)
         {
-            spriteBatch.Draw(_renderTarget, drawPosition, color);
+            /// RT:CRASH BYPASS
+            if (_renderTarget != null)
+                spriteBatch.Draw(_renderTarget, drawPosition, color);
         }
 
         public void DrawRT(SpriteBatch spriteBatch)
