@@ -69,6 +69,11 @@ namespace ProjectZ
         public static int UiScale;
         public static int UiRtScale;
 
+        // Tracks changes in window scaling.
+        private int _lastPixels;
+        private int _lastScale;
+        private bool _wasUIAutoDetect;
+
         public static int RenderWidth;
         public static int RenderHeight;
 
@@ -911,10 +916,51 @@ namespace ProjectZ
             UpdateScale();
         }
 
+        private int CalculateUiScale(int CurUiScale, int CurScrScale)
+        {
+            // We hope this is never what is returned.
+            int returnScale = 1;
+            int totalPixels = WindowWidth * WindowHeight;
+
+            // Did the user have the UI scale set to auto-detect?
+            _wasUIAutoDetect = (CurUiScale == CurScrScale);
+
+            // Store scale when window resize is larger to smaller and no auto-detect.
+            if (_lastPixels > totalPixels && !_wasUIAutoDetect)
+                _lastScale = CurUiScale;
+
+            // Restore scale when window resize is smaller to larger and a scale was remembered.
+            if (totalPixels > _lastPixels && _lastScale > 0)
+            {
+                int scale = _lastScale;
+                _lastScale = 0;
+                returnScale = scale;
+            }
+            // Restore auto-detect if it was set and the above conditions were not met.
+            else if (_wasUIAutoDetect)
+            {
+                _wasUIAutoDetect = false;
+                _lastScale = 0;
+                returnScale = ScreenScale;
+            }
+            // Under normal circumstances calculate the new UI scale.
+            else
+            {
+                returnScale = (GameSettings.UiScale == Game1.ScreenScale)
+                    ? ScreenScale
+                    : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
+            }
+            // Remember the last screen size to detect a resize event.
+            _lastPixels = totalPixels;
+            return returnScale;
+        }
+
         private void UpdateScale(bool SkipEditor = false)
         {
-            // Track if the maximum value was set.
-            bool wasAutoDetect = (GameSettings.UiScale == Game1.ScreenScale);
+
+            // Store these in their current form as they will be needed to calculate UI scale.
+            int CurUiScale = GameSettings.UiScale;
+            int CurScrScale = Game1.ScreenScale;
 
             // Scale of the game field.
             ScreenScale = MathHelper.Clamp(Math.Min(WindowWidth / Values.MinWidth, WindowHeight / Values.MinHeight), 1, 25);
@@ -924,6 +970,7 @@ namespace ProjectZ
 
             // autoscale or size set in the menu
             MapManager.Camera.Scale = GameSettings.GameScale == 11 ? MathF.Ceiling(gameScale) : GameSettings.GameScale;
+
             if (MapManager.Camera.Scale < 1)
             {
                 MapManager.Camera.Scale = 1 / (2 - MapManager.Camera.Scale);
@@ -933,20 +980,13 @@ namespace ProjectZ
             {
                 GameManager.SetGameScale(GameSettings.GameScale == 11 ? gameScale : GameSettings.GameScale);
             }
+            // Calculate the UI scale with it's many nuances.
+            UiScale = GameSettings.UiScale = CalculateUiScale(CurUiScale, CurScrScale);
 
-            // Scale of the user interface.
-            if (wasAutoDetect)
-                GameSettings.UiScale = UiScale = ScreenScale;
-            else
-                UiScale = GameSettings.UiScale == Game1.ScreenScale
-                    ? ScreenScale 
-                    : MathHelper.Clamp(GameSettings.UiScale, 1, ScreenScale);
+            // NOTE: This was used as a workaround to issues with Exclusive Fullscreen mode. Null render targets caused editor to crash on start up.
+            if (SkipEditor) EditorUi.SizeChanged();
 
-            // Update the UI of the editor as well. This will cause issues on initialization where scale
-            // needs to be called to avoid render target issues, so avoid updating if SkipEditor is true.
-            if (SkipEditor)
-                EditorUi.SizeChanged();
-
+            // NOTE: I can't remember if UiPageManager actually needs a forced resize here. Might be more workarounds to null render targets in exclusive fullscreen.
             ScreenManager.OnResize(WindowWidth, WindowHeight);
             UiPageManager.OnResize(WindowWidth, WindowHeight);
 
