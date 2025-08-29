@@ -2412,6 +2412,9 @@ namespace ProjectZ.InGame.GameObjects
                 // use/hold/release item
                 if (!DisableItems && (!_isTrapped || !_trappedDisableItems))
                 {
+                    // HACK FIX: This fixes a crash if an item is used immediately after loading a save file.
+                    if (Direction < 0) { Direction = 0; }
+
                     for (var i = 0; i < Values.HandItemSlots; i++)
                     {
                         if (Game1.GameManager.Equipment[i] != null &&
