@@ -367,8 +367,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType damageType, int damage, bool pieceOfPower)
         {
             // item can be collected with the sword
-            if ((damageType & HitType.Sword) != 0 &&
-                (damageType & HitType.SwordHold) == 0)
+            if ((damageType & HitType.Sword) != 0)
                 Collect();
 
             return Values.HitCollision.NoneBlocking;
