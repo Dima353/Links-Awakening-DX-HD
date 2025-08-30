@@ -72,7 +72,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 }
             }
 
-            _hittableBox = new CBox(EntityPosition, -8, -8, 0, 16, 16, 8, true);
+            _hittableBox = new CBox(EntityPosition, -6, -6, 0, 14, 14, 8, true);
 
             if (hasCollider)
             {
