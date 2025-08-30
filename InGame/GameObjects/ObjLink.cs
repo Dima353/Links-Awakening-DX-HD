@@ -2866,20 +2866,19 @@ namespace ProjectZ.InGame.GameObjects
 
         private void UseHookshot()
         {
-            if (!_hookshotActive)
-            {
-                _hookshotActive = true;
-            }
-            else
+            if (CurrentState != State.Idle && 
+                CurrentState != State.Rafting && 
+                CurrentState != State.Pushing && 
+                CurrentState != State.Hookshot && 
+                (!Map.Is2dMap || CurrentState != State.Swimming))
+                return;
+
+            if (_hookshotActive)
             {
                 Hookshot.ForceComeback();
                 return;
             }
-            if (CurrentState != State.Idle && 
-                CurrentState != State.Rafting && 
-                CurrentState != State.Pushing && 
-                (!Map.Is2dMap || CurrentState != State.Swimming))
-                return;
+            _hookshotActive = true;
 
             var hookshotDirection = CurrentState == State.Swimming ? _swimDirection : Direction;
 
@@ -3203,6 +3202,7 @@ namespace ProjectZ.InGame.GameObjects
 
                 var pieceOfPower = Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.CloakType == GameManager.CloakRed;
                 var hitCollision = Map.Objects.Hit(this, damageOrigin, SwordDamageBox, hitType | HitType.SwordHold, damage, pieceOfPower, out var direction, true);
+
                 // start poking?
                 if (hitCollision != Values.HitCollision.None &&
                     hitCollision != Values.HitCollision.NoneBlocking)
