@@ -13,7 +13,6 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly BodyComponent _body;
         private readonly BoxCollisionComponent _collisionComponent;
         private readonly CBox _hittableBox;
-        private readonly CBox _hittableBoxSmall;
 
         private readonly CSprite _sprite;
 
@@ -73,8 +72,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 }
             }
 
-            _hittableBox = new CBox(EntityPosition, -7, -7, 0, 14, 13, 8, true);
-            _hittableBoxSmall = new CBox(EntityPosition, -4, -4, 0, 8, 8, 8, true);
+            _hittableBox = new CBox(EntityPosition, -8, -8, 0, 16, 16, 8, true);
 
             if (hasCollider)
             {
@@ -165,7 +163,7 @@ namespace ProjectZ.InGame.GameObjects.Things
                 (damageType & HitType.Sword) != 0 &&
                 gameObject is ObjLink player && !player.IsPoking)
             {
-                var collidingRec = player.SwordDamageBox.Rectangle().GetIntersection(_hittableBoxSmall.Box.Rectangle());
+                var collidingRec = player.SwordDamageBox.Rectangle().GetIntersection(_hittableBox.Box.Rectangle());
                 var collidingArea = collidingRec.Width * collidingRec.Height;
 
                 if (collidingArea < 16)
