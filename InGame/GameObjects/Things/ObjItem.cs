@@ -174,7 +174,7 @@ namespace ProjectZ.InGame.GameObjects.Things
 
             // we make the collision box a little bit bigger; this is used for the genie where the heart can technically spawn inside the lamp
             // with the little extra size the heart will still be collectable
-            var height = Math.Min(_sourceRectangle.Width, 8);
+            var height = Math.Min(_sourceRectangle.Height, 12);
             _collectionRectangle = new CRectangle(EntityPosition,
                 new Rectangle(
                     -_sourceRectangle.Width / 2 - 1, -height,
