@@ -279,7 +279,7 @@ namespace ProjectZ
             // load the language files
             LanguageManager.Load();
 
-            UiPageManager.Load();
+            UiPageManager.Load(Content);
 
             if (EditorMode)
                 SetUpEditorUi();

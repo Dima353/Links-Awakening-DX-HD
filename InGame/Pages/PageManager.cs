@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
@@ -43,7 +44,7 @@ namespace ProjectZ.InGame.Pages
 
         private bool _isTransitioning;
 
-        public void Load()
+        public void Load(ContentManager content)
         {
             _width = Values.MinWidth - 32;
             _height = Values.MinHeight - 32;
@@ -58,6 +59,7 @@ namespace ProjectZ.InGame.Pages
             AddPage(new AudioSettingsPage(_width, _height));
             AddPage(new ControlSettingsPage(_width, _height));
             AddPage(new GraphicSettingsPage(_width, _height));
+            AddPage(new MiscellaneousPage(_width, _height, content));
             AddPage(new GameMenuPage(_width, _height));
             AddPage(new ExitGamePage(_width, _height));
             AddPage(new GameOverPage(_width, _height));

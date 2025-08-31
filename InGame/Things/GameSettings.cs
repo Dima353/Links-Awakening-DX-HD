@@ -21,6 +21,7 @@ namespace ProjectZ.InGame.Things
         public static bool NoPickupDialogs = false;
         public static bool MuteInactive = true;
         public static bool MutePowerups = false;
+        public static bool OldMenuBorder = false;
 
         private static int _musicVolume = 100;
         private static int _effectVolume = 100;

@@ -28,34 +28,39 @@ namespace ProjectZ.InGame.Pages
             settingsLayout.AddElement(headerLayout);
 
             var contentLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuContentSize)), Selectable = true };
+            var buttonSize = new Point(150, 20);
 
             // Button: Game Settings
-            contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_game", element =>
+            contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_game", element =>
             {
                 Game1.UiPageManager.ChangePage(typeof(GameSettingsPage));
             }));
 
-
             // Button: Audio Settings
-            contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_audio", element =>
+            contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_audio", element =>
             {
                Game1.UiPageManager.ChangePage(typeof(AudioSettingsPage));
             }));
 
             // Button: Video Settings
-            contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_video", element =>
+            contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_video", element =>
             {
                 Game1.UiPageManager.ChangePage(typeof(GraphicSettingsPage));
             }));
-
-            settingsLayout.AddElement(contentLayout);
-
+ 
             // Button: Control Settings
-            contentLayout.AddElement(new InterfaceButton(new Point(150, 25), new Point(1, 2), "settings_menu_controls", element =>
+            contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_controls", element =>
             {
                 Game1.UiPageManager.ChangePage(typeof(ControlSettingsPage));
             }));
 
+            // Button: Miscellaneous
+            contentLayout.AddElement(new InterfaceButton(buttonSize, new Point(1, 2), "settings_menu_misc", element =>
+            {
+                Game1.UiPageManager.ChangePage(typeof(MiscellaneousPage));
+            }));
+
+            settingsLayout.AddElement(contentLayout);
             var bottomLayout = new InterfaceListLayout { Size = new Point(width, (int)(height * Values.MenuFooterSize)), Selectable = true };
 
             // Button: Back to Menu

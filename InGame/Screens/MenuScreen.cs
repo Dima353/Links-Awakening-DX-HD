@@ -32,13 +32,23 @@ namespace ProjectZ.InGame.Screens
 
         public override void Load(ContentManager content)
         {
-            _sprBackground = content.Load<Texture2D>("Menu/menuBackground");
+            // Choose the correct background based on the saved setting
+            string textureName = GameSettings.OldMenuBorder
+                ? "Menu/menuBackgroundAlt"
+                : "Menu/menuBackground";
+
+            _sprBackground = content.Load<Texture2D>(textureName);
 
             _linkAnimation = AnimatorSaveLoad.LoadAnimator("menu_link");
             _linkAnimation.Play("idle");
 
             _menuWidth = Values.MinWidth - 32;
             _menuHeight = Values.MinHeight - 32;
+        }
+
+        public void SetBackground(Texture2D texture)
+        {
+            _sprBackground = texture;
         }
 
         public override void OnLoad()
