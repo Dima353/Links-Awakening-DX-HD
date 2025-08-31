@@ -108,7 +108,11 @@ namespace ProjectZ.InGame.GameObjects
                 (CurrentState == State.Idle || CurrentState == State.Blocking) &&
                 !_bootsRunning)
             {
-                CurrentState = State.Jumping;
+                if (CurrentState == State.Charging)
+                    CurrentState = State.ChargeJumping;
+                else
+                    CurrentState = State.Jumping;
+
                 _waterJump = false;
 
                 // if we get pushed down we change the direction in the push direction
@@ -142,6 +146,7 @@ namespace ProjectZ.InGame.GameObjects
                 CurrentState != State.Attacking && 
                 CurrentState != State.Blocking && 
                 CurrentState != State.AttackBlocking &&
+                CurrentState != State.AttackJumping &&
                 CurrentState != State.Dying && 
                 CurrentState != State.PickingUp &&
                 CurrentState != State.PreCarrying && 
@@ -399,7 +404,10 @@ namespace ProjectZ.InGame.GameObjects
 
             Animation.SpeedMultiplier = 1.0f;
 
-            if ((CurrentState != State.Jumping || !Animation.IsPlaying || _waterJump) && CurrentState != State.Attacking && CurrentState != State.AttackBlocking)
+            if ((CurrentState != State.Jumping || !Animation.IsPlaying || _waterJump) && 
+                CurrentState != State.Attacking && 
+                CurrentState != State.AttackBlocking && 
+                CurrentState != State.AttackJumping)
             {
                 if (CurrentState == State.Jumping)
                     Animation.Play("fall_" + Direction);
@@ -449,6 +457,7 @@ namespace ProjectZ.InGame.GameObjects
 
             if ((CurrentState != State.Idle && 
                 CurrentState != State.Jumping &&
+                CurrentState != State.AttackJumping &&
                 CurrentState != State.ChargeJumping &&
                 CurrentState != State.Attacking && 
                 CurrentState != State.Blocking &&
@@ -464,7 +473,7 @@ namespace ProjectZ.InGame.GameObjects
             }
 
             var walkVelocity = Vector2.Zero;
-            if (!_isLocked && ((CurrentState != State.Attacking && CurrentState != State.AttackBlocking) || !_body.IsGrounded))
+            if (!_isLocked && ((CurrentState != State.Attacking && CurrentState != State.AttackBlocking && CurrentState != State.AttackJumping) || !_body.IsGrounded))
                 walkVelocity = ControlHandler.GetMoveVector2();
 
             var walkVelLength = walkVelocity.Length();
@@ -524,6 +533,7 @@ namespace ProjectZ.InGame.GameObjects
                     CurrentState != State.Attacking && 
                     CurrentState != State.AttackBlocking && 
                     CurrentState != State.Jumping && 
+                    CurrentState != State.AttackJumping &&
                     CurrentState != State.ChargeJumping)
                     Direction = newDirection;
 
@@ -669,7 +679,11 @@ namespace ProjectZ.InGame.GameObjects
                 CurrentState != State.ChargeBlocking)
             {
                 _playedJumpAnimation = false;
-                CurrentState = State.Jumping;
+
+                if (CurrentState == State.Attacking)
+                    CurrentState = State.AttackJumping;
+                else
+                    CurrentState = State.Jumping;
             }
             else
             {
@@ -688,6 +702,8 @@ namespace ProjectZ.InGame.GameObjects
             {
                 // we cant use the check because the player can attack while jumping and avoid the jump animation the next time
                 if (CurrentState == State.Jumping ||
+                    CurrentState == State.AttackJumping ||
+                    CurrentState == State.ChargeJumping ||
                     CurrentState == State.BootKnockback)
                 {
                     CurrentState = State.Idle;

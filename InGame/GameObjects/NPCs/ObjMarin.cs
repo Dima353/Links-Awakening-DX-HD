@@ -615,6 +615,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
 
             // jump
             if ((MapManager.ObjLink.CurrentState == ObjLink.State.Jumping || 
+                 MapManager.ObjLink.CurrentState == ObjLink.State.AttackJumping || 
                  MapManager.ObjLink.CurrentState == ObjLink.State.ChargeJumping) &&
                 ((!MapManager.ObjLink.IsRailJumping() && MapManager.ObjLink._body.Velocity.Z < 0) ||
                  MapManager.ObjLink.GetRailJumpAmount() > 0.45f) && _body.IsGrounded)
