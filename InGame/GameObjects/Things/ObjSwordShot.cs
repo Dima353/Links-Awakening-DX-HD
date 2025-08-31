@@ -15,7 +15,7 @@ namespace ProjectZ.InGame.GameObjects.Things
         private readonly BodyComponent _body;
         private readonly CBox _damageBox;
 
-        private readonly Vector2 _spawnPosition;
+        private readonly Vector3 _spawnPosition;
 
         private float _spawnCounter;
         private const int SpawnTime = 10;
@@ -31,7 +31,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             EntityPosition = new CPosition(position);
             EntitySize = new Rectangle(-8, -8, 16, 16);
 
-            _spawnPosition = new Vector2(position.X, position.Y);
+            _spawnPosition = new Vector3(position.X, position.Y, position.Z);
             _damageBox = new CBox(EntityPosition, -3, -3, 0, 6, 6, 8);
 
             _sprite = new CSprite("swordShot", EntityPosition)
@@ -92,12 +92,13 @@ namespace ProjectZ.InGame.GameObjects.Things
         private void Draw(SpriteBatch spriteBatch)
         {
             // draw the trail
-            var spawnDistance = (new Vector2(EntityPosition.X, EntityPosition.Y) - _spawnPosition).Length();
+            var spawnPosVec2 = new Vector2(_spawnPosition.X, _spawnPosition.Y);
+            var spawnDistance = (new Vector2(EntityPosition.X, EntityPosition.Y) - spawnPosVec2).Length();
             var trailCount = 3;
             var distMult = 1.5f;
             for (int i = 0; i < trailCount; i++)
             {
-                var drawPosition = new Vector2(EntityPosition.X, EntityPosition.Y) + _sprite.DrawOffset - new Vector2(_body.VelocityTarget.X, _body.VelocityTarget.Y) * (trailCount - i) * distMult;
+                var drawPosition = new Vector2(EntityPosition.X, EntityPosition.Y - EntityPosition.Z) + _sprite.DrawOffset - new Vector2(_body.VelocityTarget.X, _body.VelocityTarget.Y) * (trailCount - i) * distMult;
                 // make sure to not show the tail behind the actual spawn position
                 if (spawnDistance > ((trailCount - i) * MoveSpeed * distMult))
                     spriteBatch.Draw(_sprite.SprTexture, drawPosition, _sprite.SourceRectangle, _sprite.Color * (0.20f + 0.30f * ((i + 1) / (float)trailCount)),

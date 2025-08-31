@@ -3361,8 +3361,7 @@ namespace ProjectZ.InGame.GameObjects
             if (!_shotSword && Game1.GameManager.SwordLevel == 2 && Game1.GameManager.CurrentHealth >= Game1.GameManager.MaxHearts * 4 && AnimatorWeapons.CurrentFrameIndex == 2)
             {
                 _shotSword = true;
-
-                var spawnPosition = new Vector3(EntityPosition.X + _shootSwordOffset[Direction].X, EntityPosition.Y + _shootSwordOffset[Direction].Y - EntityPosition.Z, 0);
+                var spawnPosition = new Vector3(EntityPosition.X + _shootSwordOffset[Direction].X, EntityPosition.Y + _shootSwordOffset[Direction].Y, EntityPosition.Z);
                 var objSwordShot = new ObjSwordShot(Map, spawnPosition, Direction);
                 Map.Objects.SpawnObject(objSwordShot);
             }
