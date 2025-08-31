@@ -9,6 +9,7 @@ using ProjectZ.InGame.GameObjects.Base;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
 using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.GameObjects.Base.Systems;
+using ProjectZ.InGame.GameObjects.Bosses;
 using ProjectZ.InGame.GameObjects.Dungeon;
 using ProjectZ.InGame.GameObjects.MidBoss;
 using ProjectZ.InGame.GameObjects.NPCs;
@@ -2832,7 +2833,7 @@ namespace ProjectZ.InGame.GameObjects
                 Type grabbedObjectType = grabbedObject.GetType();
 
                 // Check if the object is Flying Rooster or Smasher Ball.
-                bool InstantPickup = grabbedObject.GetType() == typeof(ObjCock) || grabbedObjectType == typeof(MBossSmasherBall);
+                bool InstantPickup = grabbedObjectType == typeof(ObjCock) || grabbedObjectType == typeof(MBossSmasherBall) || grabbedObjectType == typeof(BossGenieBottle);
 
                 // is the player pulling in the opposite direction?
                 var moveVec = ControlHandler.GetMoveVector2();
