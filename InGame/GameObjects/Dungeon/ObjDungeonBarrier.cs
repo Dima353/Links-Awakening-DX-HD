@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Timers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectZ.InGame.GameObjects.Base;
-using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.GameObjects.Base.CObjects;
+using ProjectZ.InGame.GameObjects.Base.Components;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
 
@@ -118,7 +119,54 @@ namespace ProjectZ.InGame.GameObjects.Dungeon
                             body.Position.NotifyListeners();
                         }
                     }
+                    // HACK: This is a gross, gross hack that will detect if link is jumping while the blocks are changing to the upward
+                    // state. A jump will want to return him to "0" Z-position which will cause him to get stuck into the blocks unable to
+                    // move. The timer detects if a jump was performed at 0-3.99 elevation and will set him to "4" Z-Position when he lands.
+                    // A proper fix should go into: GameObjects > Base > Systems > SystemBody >>> "UpdateVelocityZ" but it's beyond me.
+
+                    if (collidingObject.GetType() == typeof(ObjLink))
+                    {
+                        // Get the colliding object if it's link.
+                        ObjLink Link = (ObjLink)collidingObject;
+
+                        // Check if Link was jumping and his jumping off point was less than 4 on Z-Axis.
+                        if (Link.CurrentState == ObjLink.State.Jumping || 
+                            Link.CurrentState == ObjLink.State.AttackJumping  || 
+                            Link.CurrentState == ObjLink.State.ChargeJumping && Link._jumpStartZPos < 4.00)
+                        {
+                            // Run a timer to track when the jump has ended so his Z-Position can be "fixed".
+                            Timer _jumpFixHackTimer = new Timer(100);
+                            _jumpFixHackTimer.Elapsed += (s,e) => JumpFixHack(Link,_bodyBox,s,e);
+                            _jumpFixHackTimer.AutoReset = true;
+                            _jumpFixHackTimer.Enabled = true;
+                        }
+                    }
                 }
+            }
+        }
+
+        private static void JumpFixHack(ObjLink Link, CBox TrapBody, object sender, ElapsedEventArgs e)
+        {
+            // This is the part of the gross, gross hack that fixes Link's Z-Position if he jumped while blocks were going into the upward state.
+            Timer jumpFixHackTimer = (sender as Timer);
+
+            // Detect when the jump has ended.
+            if (Link._body.IsGrounded &&
+                Link.CurrentState != ObjLink.State.Jumping && 
+                Link.CurrentState != ObjLink.State.Attacking && 
+                Link.CurrentState != ObjLink.State.AttackJumping && 
+                Link.CurrentState != ObjLink.State.Powdering && 
+                Link.CurrentState != ObjLink.State.Pushing && 
+                Link.CurrentState != ObjLink.State.Charging &&
+                Link.CurrentState != ObjLink.State.ChargeJumping ||
+                Link.CurrentState == ObjLink.State.Idle )
+            {
+                // If he's still over the boxes, then fix his Z-Position.
+                if (Link._body.BodyBox.Box.Intersects(TrapBody.Box))
+                    Link._body.Position.Z = 4;
+
+                jumpFixHackTimer.Stop();
+                jumpFixHackTimer.Dispose();
             }
         }
 
