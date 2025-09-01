@@ -462,12 +462,11 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
 
                 holeCollisionArea += collidingArea;
             }
-
             // calculate the new centers of mass and collision/none collision areas
             noneCollisionCoM += (noneCollisionCoM - holeCollisionCoM) * (holeCollisionArea / noneCollisionArea);
             noneCollisionArea -= holeCollisionArea;
 
-            body.SpeedMultiply = 1 - holeCollisionArea / bodyArea;
+            body.SpeedMultiply = bodyArea > 0 ? Math.Max(1 - (holeCollisionArea / bodyArea), 1) : 1;
 
             // the direction of the force applied to the body goes from the CoM of the body rectangle that is not colliding
             // to the CoM of the body rectangle that is colliding
@@ -477,7 +476,7 @@ namespace ProjectZ.InGame.GameObjects.Base.Systems
 
             body.IsAbsorbed = false;
 
-            var collisionAreaPercentage = holeCollisionArea / bodyArea;
+            var collisionAreaPercentage = bodyArea > 0 ? holeCollisionArea / bodyArea : 0f;
 
             // the body is getting absorbed
             if (holeCollisionArea >= bodyArea * body.AbsorbPercentage)
