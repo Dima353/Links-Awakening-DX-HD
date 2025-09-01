@@ -88,10 +88,10 @@ namespace ProjectZ.InGame.Screens
             // input helper
             {
                 var backStr = "";
-                if (ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Keys.Length > 0)
-                    backStr = ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Keys[0].ToString();
-                if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Buttons.Length > 0)
-                    backStr = ControlHandler.ButtonDictionary[ControlHandler.CancelButton].Buttons[0].ToString();
+                if (ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.B].Keys.Length > 0)
+                    backStr = ControlHandler.ButtonDictionary[CButtons.B].Keys[0].ToString();
+                if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.B].Buttons.Length > 0)
+                    backStr = ControlHandler.ButtonDictionary[CButtons.B].Buttons[0].ToString();
                 var strType = Game1.LanguageManager.GetString("main_menu_back", "error");
                 var backHelp = backStr + " " + strType;
 
@@ -102,10 +102,10 @@ namespace ProjectZ.InGame.Screens
 
             {
                 var selectStr = "";
-                if (ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Keys.Length > 0)
-                    selectStr = ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Keys[0].ToString();
-                if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Buttons.Length > 0)
-                    selectStr = ControlHandler.ButtonDictionary[ControlHandler.ConfirmButton].Buttons[0].ToString();
+                if (ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.A].Keys.Length > 0)
+                    selectStr = ControlHandler.ButtonDictionary[CButtons.A].Keys[0].ToString();
+                if (!ControlHandler.LastKeyboardDown && ControlHandler.ButtonDictionary[CButtons.A].Buttons.Length > 0)
+                    selectStr = ControlHandler.ButtonDictionary[CButtons.A].Buttons[0].ToString();
                 var strType = Game1.LanguageManager.GetString("main_menu_select", "error");
                 var inputHelper = selectStr + " " + strType;
 

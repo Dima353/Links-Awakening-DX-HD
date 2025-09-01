@@ -35,7 +35,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
             _mapOverlay.Update();
 
             // can close the overlay if the dialog isn't running anymore
-            if (ControlHandler.ButtonPressed(ControlHandler.CancelButton) &&
+            if (ControlHandler.ButtonPressed(CButtons.B) &&
                !Game1.GameManager.InGameOverlay.TextboxOverlay.IsOpen)
                 Game1.GameManager.InGameOverlay.CloseOverlay();
         }

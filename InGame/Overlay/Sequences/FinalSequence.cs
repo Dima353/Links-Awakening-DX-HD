@@ -657,7 +657,7 @@ namespace ProjectZ.InGame.Overlay.Sequences
 
                 // return to the intro screen
                 if (ControlHandler.ButtonPressed(CButtons.Start) ||
-                    ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
+                    ControlHandler.ButtonPressed(CButtons.A))
                 {
                     if (_marinEnding)
                     {

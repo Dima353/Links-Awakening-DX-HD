@@ -70,7 +70,7 @@ namespace ProjectZ.InGame.Interface
 
         public override InputEventReturn PressedButton(CButtons pressedButton)
         {
-            if (!ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
+            if (!ControlHandler.ButtonPressed(CButtons.A))
                 return InputEventReturn.Nothing;
 
             Toggle();

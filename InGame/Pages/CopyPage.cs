@@ -176,7 +176,7 @@ namespace ProjectZ.InGame.Pages
         {
             base.Update(pressedButtons, gameTime);
 
-            if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+            if (ControlHandler.ButtonPressed(CButtons.B))
                 Abort();
         }
 

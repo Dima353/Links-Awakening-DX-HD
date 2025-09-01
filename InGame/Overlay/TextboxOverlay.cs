@@ -260,7 +260,7 @@ namespace ProjectZ.InGame.Overlay
                 return;
             }
 
-            if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
+            if (ControlHandler.ButtonPressed(CButtons.A))
             {
                 // close the dialog box
                 if (_end)

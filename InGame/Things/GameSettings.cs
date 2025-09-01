@@ -15,7 +15,6 @@ namespace ProjectZ.InGame.Things
         public static bool SmoothCamera = true;
         public static bool IsFullscreen = true;
         public static bool ItemsOnRight = false;
-        public static bool SwapButtons = false;
         public static bool NoPickupDialogs = false;
 
         private static int _musicVolume = 100;

@@ -30,7 +30,7 @@ namespace ProjectZ.InGame.Tests
                 if (_counterA < 0)
                 {
                     _counterA += TextboxSpeed;
-                    ControlHandler.DebugButtons |= ControlHandler.ConfirmButton;
+                    ControlHandler.DebugButtons |= CButtons.A;
 
                     if (!Game1.GameManager.InGameOverlay.TextboxOverlay.IsOpen)
                         StartNextDialog();

@@ -65,7 +65,7 @@ namespace ProjectZ.InGame.Overlay
 
             if (!_isShowingImage)
             {
-                if (ControlHandler.ButtonPressed(ControlHandler.ConfirmButton))
+                if (ControlHandler.ButtonPressed(CButtons.A))
                 {
                     _cursorPressed = true;
 
@@ -98,12 +98,12 @@ namespace ProjectZ.InGame.Overlay
                 }
 
                 // close the page
-                if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+                if (ControlHandler.ButtonPressed(CButtons.B))
                     Game1.GameManager.InGameOverlay.CloseOverlay();
             }
             else
             {
-                if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+                if (ControlHandler.ButtonPressed(CButtons.B))
                 {
                     _isShowingImage = false;
                     _transitionCounter = TransitionTimeClose;

@@ -39,12 +39,12 @@ namespace ProjectZ.InGame.Tests
                 if (_counterA < 0 && _strCurrentSequence != "map")
                 {
                     _counterA += 75;
-                    ControlHandler.DebugButtons |= ControlHandler.ConfirmButton;
+                    ControlHandler.DebugButtons |= CButtons.A;
                 }
                 if (_counterB < 0)
                 {
                     _counterB += 150;
-                    ControlHandler.DebugButtons |= ControlHandler.CancelButton;
+                    ControlHandler.DebugButtons |= CButtons.B;
                 }
             }
         }

@@ -11,31 +11,21 @@ namespace ProjectZ.InGame.Pages
 {
     class ControlSettingsPage : InterfacePage
     {
-        private InterfaceListLayout[] _remapButtons;
-        private InterfaceListLayout _bottomBar;
+        private readonly InterfaceListLayout[] _remapButtons;
+        private readonly InterfaceListLayout _bottomBar;
 
         private CButtons _selectedButton;
         private bool _updateButton;
-        private readonly int _width;
-        private readonly int _height;
 
         public ControlSettingsPage(int width, int height)
         {
-            _width = width;
-            _height = height;
-
-            UpdateLayout();
-        }
-
-        public void UpdateLayout()
-        {
             // control settings layout
-            var controlLayout = new InterfaceListLayout { Size = new Point(_width, _height), Selectable = true };
+            var controlLayout = new InterfaceListLayout { Size = new Point(width, height), Selectable = true };
 
             controlLayout.AddElement(new InterfaceLabel(Resources.GameHeaderFont, "settings_controls_header",
-                new Point(_width - 50, (int)(_height * Values.MenuHeaderSize)), new Point(0, -10)));
+                new Point(width - 50, (int)(height * Values.MenuHeaderSize)), new Point(0, -10)));
 
-            var controllerHeight = (int)(_height * Values.MenuContentSize);
+            var controllerHeight = (int)(height * Values.MenuContentSize);
 
             var buttonWidth = 65;
             var lableWidth = 140;
@@ -59,23 +49,8 @@ namespace ProjectZ.InGame.Pages
                     continue;
 
                 _remapButtons[index] = new InterfaceListLayout { Size = new Point(buttonWidth + lableWidth * 2, lableHeight), HorizontalMode = true };
-                if (GameSettings.SwapButtons && (eButton == CButtons.A || eButton == CButtons.B || eButton == CButtons.X || eButton == CButtons.Y))
-                {
-                    string labelKey = eButton switch
-                    {
-                        CButtons.A => "settings_controls_B",
-                        CButtons.B => "settings_controls_A",
-                        CButtons.X => "settings_controls_Y",
-                        CButtons.Y => "settings_controls_X",
-                        _ => "",
-                    };
-
-                    _remapButtons[index].AddElement(new InterfaceLabel(labelKey, new Point(buttonWidth, lableHeight), Point.Zero) { CornerRadius = 0, Color = Values.MenuButtonColor });
-                }
-                else
-                {
-                    _remapButtons[index].AddElement(new InterfaceLabel("settings_controls_" + eButton, new Point(buttonWidth, lableHeight), Point.Zero) { CornerRadius = 0, Color = Values.MenuButtonColor });
-                }
+                _remapButtons[index].AddElement(new InterfaceLabel("settings_controls_" + eButton, new Point(buttonWidth, lableHeight), Point.Zero)
+                { CornerRadius = 0, Color = Values.MenuButtonColor });
                 _remapButtons[index].AddElement(new InterfaceLabel("error", new Point(lableWidth, lableHeight), new Point(0, 0)) { Translate = false });
                 _remapButtons[index].AddElement(new InterfaceLabel("error", new Point(lableWidth, lableHeight), new Point(0, 0)) { Translate = false });
 
@@ -95,7 +70,7 @@ namespace ProjectZ.InGame.Pages
 
             controlLayout.AddElement(remapButtons);
 
-            _bottomBar = new InterfaceListLayout { Size = new Point(_width - 50, (int)(_height * Values.MenuFooterSize)), HorizontalMode = true, Selectable = true };
+            _bottomBar = new InterfaceListLayout { Size = new Point(width - 50, (int)(height * Values.MenuFooterSize)), HorizontalMode = true, Selectable = true };
             // reset button
             _bottomBar.AddElement(new InterfaceButton(new Point(60, 20), new Point(2, 4), "settings_controls_reset", OnClickReset));
             // back button
@@ -150,7 +125,7 @@ namespace ProjectZ.InGame.Pages
                 base.Update(pressedButtons, gameTime);
 
                 // close the page
-                if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+                if (ControlHandler.ButtonPressed(CButtons.B))
                     Game1.UiPageManager.PopPage();
             }
         }

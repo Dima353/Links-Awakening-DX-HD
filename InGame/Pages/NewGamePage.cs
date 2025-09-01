@@ -159,7 +159,7 @@ namespace ProjectZ.InGame.Pages
             else
             {
                 // close the page
-                if (ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+                if (ControlHandler.ButtonPressed(CButtons.B))
                     Game1.UiPageManager.PopPage();
             }
 

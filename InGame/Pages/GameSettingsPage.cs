@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
-using ProjectZ.InGame.Overlay;
 using ProjectZ.InGame.Things;
 
 namespace ProjectZ.InGame.Pages
@@ -11,7 +9,6 @@ namespace ProjectZ.InGame.Pages
     class GameSettingsPage : InterfacePage
     {
         private readonly InterfaceListLayout _bottomBar;
-        private DateTime _nextControlCheck = DateTime.MinValue;
 
         public GameSettingsPage(int width, int height)
         {
@@ -33,22 +30,6 @@ namespace ProjectZ.InGame.Pages
             var toggleItemSlotSide = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_game_items_on_right", GameSettings.ItemsOnRight, newState => { GameSettings.ItemsOnRight = newState; });
             contentLayout.AddElement(toggleItemSlotSide);
-
-            var swapButtons = InterfaceToggle.GetToggleButton(
-                new Point(buttonWidth, 18),
-                new Point(5, 2),
-                "settings_game_swap_buttons",
-                GameSettings.SwapButtons,
-                newState =>
-                {
-                    _nextControlCheck = DateTime.Now.AddMilliseconds(500); // Small delay to prevent menu close on change
-                    GameSettings.SwapButtons = newState;
-                    ControlHandler.SetConfirmCancelButtons();
-                    InventoryOverlay.UpdateItemSlotStrings();
-                    Game1.UiPageManager.UpdateControlSettingsPage();
-                }
-            );
-            contentLayout.AddElement(swapButtons);
 
             var toggleNoPickupDialogs = InterfaceToggle.GetToggleButton(new Point(buttonWidth, 18), new Point(5, 2),
                 "settings_modifier_no_pickup_dialogs", GameSettings.NoPickupDialogs, value => { GameSettings.NoPickupDialogs = value; Game1.GameManager.ItemManager.Load(); });
@@ -77,7 +58,7 @@ namespace ProjectZ.InGame.Pages
             base.Update(pressedButtons, gameTime);
 
             // close the page
-            if (_nextControlCheck <= DateTime.Now && ControlHandler.ButtonPressed(ControlHandler.CancelButton))
+            if (ControlHandler.ButtonPressed(CButtons.B))
                 Game1.UiPageManager.PopPage();
         }
 
