@@ -186,10 +186,15 @@ namespace ProjectZ.InGame.GameObjects.Enemies
 
         private Values.HitCollision OnHit(GameObject gameObject, Vector2 direction, HitType damageType, int damage, bool pieceOfPower)
         {
+            // Sword spin ignores the jumping logic.
+            if ((damageType & HitType.SwordSpin) != 0)
+                return _aiDamageState.OnHit(gameObject, direction, damageType, damage, pieceOfPower);
+
+            // Sword can't deal damage while flying.
             if ((damageType & HitType.Sword) != 0 && !_body.IsGrounded)
                 return Values.HitCollision.None;
 
-            // start flying over the player if the octorok is facing him
+            // Fly over the player if the octorok is facing Link.
             var playerDirection = AnimationHelper.GetDirection(
                 MapManager.ObjLink.EntityPosition.Position - EntityPosition.Position);
 
@@ -205,7 +210,7 @@ namespace ProjectZ.InGame.GameObjects.Enemies
                 _aiComponent.ChangeState("flying");
                 return Values.HitCollision.None;
             }
-
+            // If we got here, it was probably a hit from the back or another weapon than sword.
             return _aiDamageState.OnHit(gameObject, direction, damageType, damage, pieceOfPower);
         }
 
