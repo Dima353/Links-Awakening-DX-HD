@@ -603,7 +603,9 @@ alligator_trade:result:0 -> [update_objects] -> alligator_0
 alligator_traded:choice:0 -> [update_objects] -> alligator_4 -> [wait:dialogOpen:0] -> [set:alligator_eat:eat]
 alligator_traded:choice:1 -> [update_objects] -> alligator_3
 
-alligator_after_eat:0 -> [update_objects] -> [save_history:true] -> alligator_5 -> [remove_item:trade2:1:result] -> [add_item:trade3:1] -> trade2 -> [set:trade2:1] -> [set:tarin:gone] -> [save_history:false]
+alligator_after_eat:0 -> [update_objects] -> [save_history:true] -> alligator_5 -> [remove_item:trade2:1:result] -> [add_item:trade3:1] -> trade2 -> [set:trade2:1] -> [path:tarin_gone]
+tarin_gone:d2_instrument:0 -> [save_history:false]
+tarin_gone:d2_instrument:1 -> [set:tarin_state:1] -> [save_history:false]
 
 npc11:0 -> [path:npc05]
 
@@ -1211,7 +1213,10 @@ d2_instrument_music:d2_instrument:0 -> [music:23:2]
 d2_instrument_music:0 ->
 
 // set bowwow to a state where it gets returned; make bomb buyable in the shop
-instrument1:0 -> [update_objects] -> instrument1 -> [set:bowWow:3] -> [set:ulrira:3_0] -> [set:tarin:4] -> [set:tarin_state:3] -> [set:maria:1_1] -> [set:npc_boy_1:2] -> [set:shopLevel:1]
+instrument1:0 -> [update_objects] -> instrument1 -> [set:bowWow:3] -> [set:ulrira:3_0] -> [set:maria:1_1] -> [set:npc_boy_1:2] -> [set:shopLevel:1] -> [set:tarin:4] -> [check_item:trade3:1:result] -> [path:tarin_bananas]
+
+tarin_bananas:result:0 -> [set:tarin_state:3]
+tarin_bananas:result:1 -> [set:tarin_state:1]
 
 // == dungeon three ==
 
