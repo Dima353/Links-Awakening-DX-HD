@@ -24,8 +24,6 @@ namespace ProjectZ.InGame.GameObjects.Base.Pools
 
         private int _noneTiledIndex;
 
-        private List<DrawComponent> _currentObjects = new List<DrawComponent>();
-
         public ComponentDrawPoolNew(int width, int height, int tileWidth, int tileHeight)
         {
             if (width <= 0)

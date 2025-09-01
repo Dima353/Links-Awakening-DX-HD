@@ -315,7 +315,6 @@ namespace ProjectZ.InGame.SaveLoad
             for (var i = 0; i < objectCount; i++)
             {
                 var objectSplit = reader.ReadLine().Split(';');
-
                 var objectIndex = Convert.ToInt32(objectSplit[0]);
                 var strIndex = objectList[objectIndex];
 
@@ -371,7 +370,14 @@ namespace ProjectZ.InGame.SaveLoad
 
                 // check if the object exists
                 if (GameObjectTemplates.ObjectTemplates.ContainsKey(strIndex))
-                    MapData.AddObject(map, new GameObjectItem(strIndex, MapData.StringToParameter(strIndex, objectSplit)));
+                {
+                    // "Alternative objects" are a 2nd list of game objects used to draw objects on top of "dig holes", or holes that
+                    // are created with the shovel. We can't draw the entire batch of game objects before or after drawing the hole
+                    // map because some objects should be over the holes (pushable rocks) while some under the holes (flower patches).
+
+                    bool isAltObject = strIndex.Contains("moveStone");
+                    MapData.AddObject(map, new GameObjectItem(strIndex, MapData.StringToParameter(strIndex, objectSplit)), isAltObject);
+                }
             }
         }
 

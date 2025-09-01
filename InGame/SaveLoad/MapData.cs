@@ -10,7 +10,7 @@ namespace ProjectZ.InGame.SaveLoad
 {
     public class MapData
     {
-        public static void AddObject(Map.Map map, GameObjectItem gameObject)
+        public static void AddObject(Map.Map map, GameObjectItem gameObject, bool altList = false)
         {
             // this can be used to update gameobjects
             //if (gameObject.Index == "door")
@@ -41,7 +41,10 @@ namespace ProjectZ.InGame.SaveLoad
             if (gameObject.Index == "link2dspawner")
                 map.Is2dMap = true;
 
-            map.Objects.ObjectList.Add(gameObject);
+            if (altList)
+                map.Objects.ObjectListB.Add(gameObject);
+            else
+                map.Objects.ObjectList.Add(gameObject);
         }
 
         public static object[] GetParameterArray(string objectId)

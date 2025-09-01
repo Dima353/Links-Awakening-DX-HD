@@ -22,6 +22,7 @@ namespace ProjectZ.InGame.Map
         public Map Owner;
 
         public List<GameObjectItem> ObjectList = new List<GameObjectItem>();
+        public List<GameObjectItem> ObjectListB = new List<GameObjectItem>();
         private List<GameObject> SpawnObjects = new List<GameObject>();
         public List<GameObject> DeleteObjects = new List<GameObject>();
 
@@ -32,6 +33,7 @@ namespace ProjectZ.InGame.Map
 
         private ComponentPool _gameObjectPool;
         private ComponentDrawPoolNew _drawPool;
+        private ComponentDrawPoolNew _drawPoolB;
 
         private SystemBody _systemBody = new SystemBody();
         private SystemAi _systemAi = new SystemAi();
@@ -86,12 +88,24 @@ namespace ProjectZ.InGame.Map
             return false;
         }
 
+        public List<GameObjectItem> GetMergedObjectLists()
+        {
+            // When game objects are needed, this combines both ObjectList and ObjectListB into a single list.
+            var objectList = new List<GameObjectItem>{ };
+            foreach (var obj in ObjectList)
+                objectList.Add(obj);
+            foreach (var obj in ObjectListB)
+                objectList.Add(obj);
+            return objectList;
+        }
+
         public void LoadObjects()
         {
             // TODO_End tweak the size for best performance for the finished game
             // the size of the pools can be tweaked for faster update times
             _gameObjectPool = new ComponentPool(Owner, Owner.MapWidth, Owner.MapHeight, 32, 32);
             _drawPool = new ComponentDrawPoolNew(Owner.MapWidth, Owner.MapHeight, 32, 32);
+            _drawPoolB = new ComponentDrawPoolNew(Owner.MapWidth, Owner.MapHeight, 32, 32);
 
             _systemAnimator.Pool = _gameObjectPool;
             _systemAi.Pool = _gameObjectPool;
@@ -99,12 +113,18 @@ namespace ProjectZ.InGame.Map
 
             ClearPools();
 
+            // You would think it would be okay to just merge the lists and run a single loop
+            // but NO it does NOT work and breaks the interaction between hole maps/rocks/flowers.
             foreach (var gameObj in ObjectList)
             {
                 var gameObject = GetGameObject(Owner, gameObj.Index, gameObj.Parameter);
-                AddObjectToMap(gameObject);
+                AddObjectToMap(gameObject, false);
             }
-
+            foreach (var gameObj in ObjectListB)
+            {
+                var gameObject = GetGameObject(Owner, gameObj.Index, gameObj.Parameter);
+                AddObjectToMap(gameObject, true);
+            }
             // done after calling the constructors before the init methode
             // stonespawner adds sprites that can be accessed in the init methode
             // we make sure to not call the init methodes to not call it twice
@@ -179,7 +199,6 @@ namespace ProjectZ.InGame.Map
             // types found that have been added to the type array will be updated. This is a method used to "freeze" the entire
             // game world when an event takes place. It also freezes Link so care must be taken when applying it.
 
-            Game1.StopWatchTracker.Start("update gameobjects");
             _systemAnimator.Update(false, AlwaysAnimate);
             UpdateGameObjects();
             _systemAi.Update(AlwaysAnimate);
@@ -206,7 +225,7 @@ namespace ProjectZ.InGame.Map
                 {
                     if (!suppressInit)
                         SpawnObjects[index].Init();
-                    AddObjectToMap(SpawnObjects[index]);
+                    AddObjectToMap(SpawnObjects[index], false);
                 }
 
                 SpawnObjects.Clear();
@@ -295,8 +314,6 @@ namespace ProjectZ.InGame.Map
 
         private void UpdateDeleteObjects()
         {
-            Game1.StopWatchTracker.Start("delete gameObjects");
-
             if (DeleteObjects.Count > 0)
             {
                 foreach (var deletable in DeleteObjects)
@@ -304,8 +321,6 @@ namespace ProjectZ.InGame.Map
 
                 DeleteObjects.Clear();
             }
-
-            Game1.StopWatchTracker.Stop();
         }
 
         public static void SpriteBatchBegin(SpriteBatch spriteBatch, SpriteShader spriteShader)
@@ -338,11 +353,18 @@ namespace ProjectZ.InGame.Map
             if (!_finishedLoading)
                 return;
 
-            Game1.StopWatchTracker.Start("2 draw sorted objects");
-
             SpriteBatchBegin(spriteBatch, null);
 
             _drawPool.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 0, 1);
+            spriteBatch.End();
+
+            SpriteBatchBegin(spriteBatch, null);
+
+            _drawPoolB.DrawPool(spriteBatch,
                 (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
                 (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
                 (int)(Game1.RenderWidth / MapManager.Camera.Scale),
@@ -356,10 +378,12 @@ namespace ProjectZ.InGame.Map
             if (!_finishedLoading)
                 return;
 
-            Game1.StopWatchTracker.Start("2 draw sorted objects shadow");
+            // This is a really silly way to do this, but I can't think of how else it could be done. The HoleMap and the game objects
+            // conflict in that, some game objects (pushable stones) should be ABOVE the holes, while objects like flower patches should
+            // be BELOW the holes. So to solve this, "ObjectList" and "_drawpool" were split into two groups, the alternate "B" group
+            // holds the pushable stone. This way we can draw game objects >> draw hole map >> draw stones to get the correct order.
 
             SpriteBatchBegin(spriteBatch, null);
-
             _drawPool.DrawPool(spriteBatch,
                 (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
                 (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
@@ -367,12 +391,16 @@ namespace ProjectZ.InGame.Map
                 (int)(Game1.RenderHeight / MapManager.Camera.Scale), 1, 2);
             spriteBatch.End();
 
-            // NOTICE: If the holemap is drawn here, objects pushed into the hole map will be overwritten. If the holemap is placed before the
-            // draws above, then terrain objects like flowers overwrite the holes. The above draw calls need to be split up somehow with holes
-            // placed in between the conflicting objects. How that is to be done...? I am not sure which is why this comment exists.
             Owner.HoleMap.Draw(spriteBatch);
 
-            Game1.StopWatchTracker.Start("3 draw the shadows");
+            SpriteBatchBegin(spriteBatch, null);
+            _drawPoolB.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 1, 2);
+            spriteBatch.End();
+
             if (GameSettings.EnableShadows && Owner.UseShadows && !Game1.GameManager.UseShockEffect && ShadowTexture != null)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicClamp);//, null, null, null, Game1.GameManager.GetMatrix);
@@ -386,7 +414,6 @@ namespace ProjectZ.InGame.Map
             if (!_finishedLoading)
                 return;
 
-            Game1.StopWatchTracker.Start("4 draw sorted objects");
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
                 MapManager.Camera.Scale >= 1 ? SamplerState.PointWrap : SamplerState.AnisotropicWrap,
                 null, null, null, MapManager.Camera.TransformMatrix);
@@ -397,11 +424,19 @@ namespace ProjectZ.InGame.Map
                 (int)(Game1.RenderHeight / MapManager.Camera.Scale), 2, 4);
             spriteBatch.End();
 
+            spriteBatch.Begin(SpriteSortMode.Deferred, null,
+                MapManager.Camera.Scale >= 1 ? SamplerState.PointWrap : SamplerState.AnisotropicWrap,
+                null, null, null, MapManager.Camera.TransformMatrix);
+            _drawPoolB.DrawPool(spriteBatch,
+                (int)((MapManager.Camera.X - Game1.RenderWidth / 2) / MapManager.Camera.Scale),
+                (int)((MapManager.Camera.Y - Game1.RenderHeight / 2) / MapManager.Camera.Scale),
+                (int)(Game1.RenderWidth / MapManager.Camera.Scale),
+                (int)(Game1.RenderHeight / MapManager.Camera.Scale), 2, 4);
+            spriteBatch.End();
+
             // draw the body colliders
             if (Game1.DebugMode)
             {
-                Game1.StopWatchTracker.Start("5 debug draw");
-
                 spriteBatch.Begin(SpriteSortMode.Deferred, null,
                     MapManager.Camera.Scale >= 1 ? SamplerState.PointWrap : SamplerState.AnisotropicWrap,
                     null, null, null, MapManager.Camera.TransformMatrix);
@@ -511,9 +546,6 @@ namespace ProjectZ.InGame.Map
 
                 spriteBatch.End();
             }
-
-            Game1.StopWatchTracker.Stop();
-
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, MapManager.Camera.TransformMatrix);
         }
 
@@ -613,6 +645,7 @@ namespace ProjectZ.InGame.Map
         public void Clear()
         {
             ObjectList.Clear();
+            ObjectListB.Clear();
         }
 
         private void ClearPools()
@@ -621,7 +654,7 @@ namespace ProjectZ.InGame.Map
             _poolSpawnedObjects.Clear();
         }
 
-        private void AddObjectToMap(GameObject gameObject)
+        private void AddObjectToMap(GameObject gameObject, bool isAltObject)
         {
             if (gameObject == null || gameObject.IsDead)
                 return;
@@ -631,8 +664,12 @@ namespace ProjectZ.InGame.Map
             // order is important because the draw pool does not update the last position value
             // add the object to the drawable pool
             if ((gameObject.ComponentsMask & DrawComponent.Mask) == DrawComponent.Mask)
-                _drawPool.AddEntity(gameObject);
-
+            {
+                if (isAltObject)
+                    _drawPoolB.AddEntity(gameObject);
+                else
+                    _drawPool.AddEntity(gameObject);
+            }
             // add the object to the pool
             _gameObjectPool.AddEntity(gameObject);
 
@@ -652,8 +689,10 @@ namespace ProjectZ.InGame.Map
 
             // remove the object from the drawable pool
             if ((gameObject.ComponentsMask & DrawComponent.Mask) == DrawComponent.Mask)
+            {
                 _drawPool.RemoveEntity(gameObject);
-
+                _drawPoolB.RemoveEntity(gameObject);
+            }
             // remove the object from the pool
             _gameObjectPool.RemoveEntity(gameObject);
 

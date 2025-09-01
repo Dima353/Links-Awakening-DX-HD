@@ -357,7 +357,8 @@ namespace ProjectZ.Editor
             // draw all the objects
             if (DrawObjectLayer)
             {
-                foreach (var gameObjItem in Game1.GameManager.MapManager.CurrentMap.Objects.ObjectList)
+                var objectList = Game1.GameManager.MapManager.CurrentMap.Objects.GetMergedObjectLists();
+                foreach (var gameObjItem in objectList)
                 {
                     // draw the object
                     if (EditorObjectTemplates.ContainsKey(gameObjItem.Index))
@@ -464,13 +465,13 @@ namespace ProjectZ.Editor
 
         public void RemoveObject(Rectangle deleteRectangle)
         {
-            var currentMap = Game1.GameManager.MapManager.CurrentMap;
+            var objectList = Game1.GameManager.MapManager.CurrentMap.Objects.GetMergedObjectLists();
 
             // remove one object that collides with the rectangle
-            for (var i = 0; i < currentMap.Objects.ObjectList.Count; i++)
+            for (var i = 0; i < objectList.Count; i++)
             {
-                var objectPosition = GetObjectPosition(currentMap.Objects.ObjectList[i], true);
-                var objTemplate = EditorObjectTemplates[currentMap.Objects.ObjectList[i].Index];
+                var objectPosition = GetObjectPosition(objectList[i], true);
+                var objTemplate = EditorObjectTemplates[objectList[i].Index];
                 var scaledSize = new Vector2(objTemplate.EditorIconSource.Width, objTemplate.EditorIconSource.Height) * objTemplate.EditorIconScale;
 
                 if (objectPosition.X < deleteRectangle.X + deleteRectangle.Width &&
@@ -478,7 +479,7 @@ namespace ProjectZ.Editor
                     objectPosition.Y < deleteRectangle.Y + deleteRectangle.Height &&
                     deleteRectangle.Y < objectPosition.Y + scaledSize.Y)
                 {
-                    currentMap.Objects.ObjectList.Remove(currentMap.Objects.ObjectList[i]);
+                    objectList.Remove(objectList[i]);
                     return;
                 }
             }
@@ -487,9 +488,10 @@ namespace ProjectZ.Editor
         public List<GameObjectItem> GetGameObjectsAt(Point position, bool selectMode)
         {
             var objectList = new List<GameObjectItem>();
+            var mergedList = Game1.GameManager.MapManager.CurrentMap.Objects.GetMergedObjectLists();
 
             // search for the objects at the given position and add the to the list
-            foreach (var gameObject in Game1.GameManager.MapManager.CurrentMap.Objects.ObjectList)
+            foreach (var gameObject in mergedList)
             {
                 // @HACK
                 // maybe the ObjectList wasn't that good of an idea
@@ -713,7 +715,7 @@ namespace ProjectZ.Editor
 
         public static void OffsetObjects(Map map, int offsetX, int offsetY)
         {
-            foreach (var gameObject in map.Objects.ObjectList)
+            foreach (var gameObject in map.Objects.GetMergedObjectLists())
             {
                 gameObject.Parameter[1] = (int)gameObject.Parameter[1] + offsetX;
                 gameObject.Parameter[2] = (int)gameObject.Parameter[2] + offsetY;
