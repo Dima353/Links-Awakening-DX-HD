@@ -92,7 +92,7 @@ settings_graphics_header Графика
 settings_graphics_game_scale Масштаб камеры:
 settings_graphics_ui_scale Масштаб UI:
 settings_graphics_shadow Непрозрачность теней:
-settings_graphics_fps_lock Ограничение FPS
+settings_graphics_fps_lock Вертикальная синхронизация
 
 settings_misc_header Прочие настройки
 settings_misc_menubricks Оригинальная текстура меню

@@ -6,12 +6,43 @@
  * Добавлена регулировка непрозрачности теней by FeraiAI
  * Добавлен подсчёт времени проведенного в игре by LouisSF
  * Добавлена возможность отключения диалоговых окон о поднятии камней, части-силы и жёлудя-хранителя. by FeraiAI
- * Добавлена возможность менять раскладку кнопок "А" и "B" by FeraiAI
  
 # Исправления взяты из репозитория: 
 https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated
 
 ### **The Legend of Zelda: Link's Awakening Changelog:**
+## **v1.1.7**
+### **Sword Fixes Update:**
+  * Modify attack sword hitboxes. Frame 1: hitbox added, 2: hitbox expanded, 3: hitbox reduced.
+  * Modify the hitbox of bushes to match their sprite/tile size. This fixes wonky "cutting" with sword.
+  * Allow collecting items with the sword when holding it out in charging state.
+  * Level 2 sword shot now matches height of Link and doesn't collide when standing on raised blocks.
+  * Fix the hookshot where it would never fire again when trying to use it with other weapons.
+  * Item collection box height can exceed its width or 8. Fixes collection range of items like rupees.
+  * Add a hack-fix when hitting the switch to raise blocks while jumping over them and getting stuck.
+  * Renamed FPS Lock to "Vertical Sync" as this is a far more accurate description of what it does.
+  * Make UI scale slider static 1-11, 11=Auto-Detect, and only apply scale if screen can handle it.
+  * New brick texture for main menu that better matches DX on GBC. Can swap to old texture.
+  * New Miscellaneous page. Currently only contains option to swap to old menu brick texture.
+
+## **v1.1.6**
+### **General Fixes Update:**
+  * Expand size of most UI elements on settings pages to better fix non-english languages.
+  * Translate "Controller" on controller selection button on Game Settings page.
+  * Restore fisherman's line "You have to have more passion. Live a little." when exiting pond early.
+  * Add option to "Audio Settings" to mute powerup music (Piece of Power/Guardian Acorn).
+  * Remember scaling settings on window resize when not set to Auto-Detect.
+  * Change "Controller" selection text to "GamePad" in all langauges.
+  * Fix potential crash when using items immediately after save is loaded.
+
+## **v1.1.5**
+### **The Features Update:**
+  * Add controller type selection to Game Settings menu: XBox, Nintendo, Playstation.
+  * Make UI Scale slider "Auto-Detect" the rightmost value.
+  * Freeze the game world while playing the ocarina.
+  * Hookshot can be retracted with a second button press.
+  * Translate "Back" and "Select" on the menus. Thanks to [xsm2](https://github.com/xsm2).
+  * Translate "Thief" across all language files. Thanks to [xsm2](https://github.com/xsm2).
 
 ## **v1.1.4**
 ### **Bugfix Update:**
@@ -23,6 +54,7 @@ https://github.com/BigheadSMZ/Zelda-LA-DX-HD-Updated
 
 ## **v1.1.3**
 ### **The Languages Update:**
+  * Fixed muting audio when window is out of focus if option is enabled.
   * Playtime is now tracked and visible on file selection. Thanks to [LouisSF](https://github.com/LouisSF).  
 
 ### **v1.1.2 Changelog:**
