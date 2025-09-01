@@ -1,2 +1,1 @@
 dotnet publish -f net8.0 -r linux-x64 -c Release --self-contained true -p:"PublishProfile=FolderProfile"
-PAUSE
