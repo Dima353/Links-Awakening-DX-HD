@@ -9300,9 +9300,9 @@ nightmare
 164;1224;1096;tarin_state;4;personNew;.tarin.tarin.stand_0.;
 164;1232;92;seq_tarin;1;personNew;.tarin.seqTarin..;
 164;1248;848;ow_ghini_11;1;e_giantGhini;true;
-164;1248;912;ow_grave_follower;1;gravestone;0.......;
 164;1248;912;ow_ghini_8;1;e21;false.true;
 164;1248;912;ow_grave_follower;0;gravestone;15.ow_grave_4......ow_grave_reset;
+164;1248;912;ow_grave_follower;1;gravestone;0.......;
 164;1248;916;ow_grave_follower;1;pushDialog;grave_locked.16.12;
 164;1360;29;maria_state;5;maria;;
 164;1520;928;ow_castle_door;0;pushDialog;photo_sequence_4.48.16;
