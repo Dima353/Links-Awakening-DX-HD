@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using ProjectZ.InGame.Controls;
 using ProjectZ.InGame.Interface;
@@ -33,9 +34,14 @@ namespace ProjectZ.InGame.Pages
             { SetString = number => GameScaleSliderAdjustmentString(number) };
             contentLayout.AddElement(_gameScaleSlider);
 
+            // Saved value may be larger than current size on menu creation. This only fires
+            // once before slider is created. Concurrent checks are in "UpdateUIScaleSlider".
+            if (GameSettings.UiScale > Game1.ScreenScale)
+                GameSettings.UiScale = Game1.ScreenScale;
+
             // Slider to adjust the user interface.
             _uiScaleSlider = new InterfaceSlider(Resources.GameFont, "settings_graphics_ui_scale",
-                buttonWidth, new Point(1, 2), 1, 11, 1, GameSettings.UiScale-1,
+                buttonWidth, new Point(1, 2), 1, Game1.ScreenScale, 1, GameSettings.UiScale - 1,
                 number =>
                 {
                     GameSettings.UiScale = number;
@@ -95,6 +101,7 @@ namespace ProjectZ.InGame.Pages
 
             UpdateFullscreenState();
             UpdateGameScaleSlider();
+            UpdateUIScaleSlider();
 
             // close the page
             if (ControlHandler.ButtonPressed(CButtons.B))
@@ -113,7 +120,7 @@ namespace ProjectZ.InGame.Pages
 
         private string UIScaleSliderAdjustmentString(int number)
         {   
-            string value = (number == 11)
+            string value = (number == Game1.ScreenScale)
                 ? " Авто" 
                 : " x" + number;
             return value;
@@ -132,7 +139,7 @@ namespace ProjectZ.InGame.Pages
 
         public override void OnResize(int newWidth, int newHeight)
         {
-
+            UpdateUIScaleSlider();
         }
         private void UpdateFullscreenState()
         {
@@ -149,7 +156,13 @@ namespace ProjectZ.InGame.Pages
 
         private void UpdateUIScaleSlider()
         {
+            // If resize causes UI scale setting to be larger than screen scale, force
+            // the UI scale to the screen scale which sets it back to "Auto-Detect".
+            if (GameSettings.UiScale > Game1.ScreenScale)
+                GameSettings.UiScale = Game1.ScreenScale;
 
+            _uiScaleSlider.UpdateStepSize(1, Game1.ScreenScale, 1);
+            _uiScaleSlider.CurrentStep = GameSettings.UiScale - 1;
         }
     }
 }
