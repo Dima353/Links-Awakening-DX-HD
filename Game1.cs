@@ -984,7 +984,7 @@ namespace ProjectZ
             UiScale = GameSettings.UiScale = CalculateUiScale(CurUiScale, CurScrScale);
 
             // NOTE: This was used as a workaround to issues with Exclusive Fullscreen mode. Null render targets caused editor to crash on start up.
-            if (SkipEditor) EditorUi.SizeChanged();
+            if (!SkipEditor) EditorUi.SizeChanged();
 
             // NOTE: I can't remember if UiPageManager actually needs a forced resize here. Might be more workarounds to null render targets in exclusive fullscreen.
             ScreenManager.OnResize(WindowWidth, WindowHeight);
