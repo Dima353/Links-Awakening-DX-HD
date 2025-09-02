@@ -5061,7 +5061,7 @@ namespace ProjectZ.InGame.GameObjects
                 _body.Velocity.Y = 0;
             }
 
-            // this is because the water is deeper than 0
+            // This is because the water is deeper than 0.
             if ((SystemBody.GetFieldState(_body) & MapStates.FieldStates.DeepWater) == 0 && CurrentState != State.Swimming && !_isClimbing)
                 _body.IgnoresZ = false;
 
@@ -5075,8 +5075,8 @@ namespace ProjectZ.InGame.GameObjects
                 Game1.GameManager.StartDialogPath("shopkeeper_steal");
             }
 
-            // restart the music
-            if (Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.GuardianAcornIsActive)
+            // Restart the music.
+            if (!GameSettings.MutePowerups && (Game1.GameManager.PieceOfPowerIsActive || Game1.GameManager.GuardianAcornIsActive))
                 Game1.GameManager.StartPieceOfPowerMusic(1);
         }
 
