@@ -106,8 +106,7 @@ namespace ProjectZ.InGame.GameObjects
         // hole stuff
         private Vector2 _holeResetPoint;
         private float _holeResetPointZ;
-        private Vector2 _alternativeHoleResetPosition; // map change on hole fall
-        private float _alternativeHoleResetPositionZ;
+        private Vector3 _alternativeHoleResetPosition; // map change on hole fall
         public string HoleResetRoom;
         public string HoleResetEntryId;
         public int HoleTeleporterId;
@@ -318,6 +317,7 @@ namespace ProjectZ.InGame.GameObjects
         private const float JumpAcceleration = 2.35f;
         private float _railJumpSpeed;
         public float _jumpStartZPos;
+
         // should probably have been a different state because we do not want to be able to use certain items while railjumping compared to normally jumping
         private bool _railJump;
         private bool _startedJumping;
@@ -2226,33 +2226,28 @@ namespace ProjectZ.InGame.GameObjects
             if (tileDiff != Point.Zero)
             {
                 var tileSize = 16;
-                _alternativeHoleResetPosition = Vector2.Zero;
-                _alternativeHoleResetPositionZ = EntityPosition.Z;
 
-                if (tileDiff.X == 0)
-                    newResetPosition.X = EntityPosition.X;
-                else
-                {
-                    if (tileDiff.X > 0)
-                        newResetPosition.X = (int)(bodyCenter.X / tileSize) * tileSize;
-                    else
-                        newResetPosition.X = (int)(bodyCenter.X / tileSize + 1) * tileSize;
-                }
+                // Zero out the alternative reset position.
+                _alternativeHoleResetPosition = Vector3.Zero;
 
-                if (tileDiff.Y == 0)
-                    newResetPosition.Y = EntityPosition.Y;
-                else
-                {
-                    if (tileDiff.Y > 0)
-                        newResetPosition.Y = (int)(bodyCenter.Y / tileSize) * tileSize;
-                    else
-                        newResetPosition.Y = (int)(bodyCenter.Y / tileSize + 1) * tileSize;
-                }
-                newResetPositionZ = EntityPosition.Z;
+                // For X and Y check if the room has changed since last check.
+                newResetPosition.X = (tileDiff.X == 0)
+                    ? EntityPosition.X
+                    : (int)(bodyCenter.X / tileSize + (tileDiff.X > 0 ? 0 : 1)) * tileSize;
 
-                // check if there is no hole at the new position
+                newResetPosition.Y = (tileDiff.Y == 0)
+                    ? EntityPosition.Y
+                    : (int)(bodyCenter.Y / tileSize + (tileDiff.Y > 0 ? 0 : 1)) * tileSize;
+
+                // For Z check if jumping. If on ground set Z to current Z but if in air set Z to what it was before jump.
+                newResetPositionZ = (_body.IsGrounded)
+                    ? EntityPosition.Z
+                    : (_jumpStartZPos);
+
+                // Check if there is no hole at the new position.
                 var bodyBox = new Box(newResetPosition.X + _body.BodyBox.OffsetX, newResetPosition.Y + _body.BodyBox.OffsetY, 0, _body.Width, _body.Height, 8);
                 var outBox = Box.Empty;
+
                 if (!Map.Objects.Collision(bodyBox, Box.Empty, Values.CollisionTypes.Hole, 0, 0, ref outBox))
                 {
                     _holeResetPoint  = newResetPosition;
@@ -2333,10 +2328,10 @@ namespace ProjectZ.InGame.GameObjects
 
             // alternative reset point
             var cBox = Box.Empty;
-            if (_alternativeHoleResetPosition != Vector2.Zero &&
+            if (_alternativeHoleResetPosition != Vector3.Zero &&
                 Map.Objects.Collision(_body.BodyBox.Box, Box.Empty, _body.CollisionTypes, 0, 0, ref cBox))
             {
-                newResetPosition = new Vector3(_alternativeHoleResetPosition.X, _alternativeHoleResetPosition.Y, _alternativeHoleResetPositionZ);
+                newResetPosition = new Vector3(_alternativeHoleResetPosition.X, _alternativeHoleResetPosition.Y, _alternativeHoleResetPosition.Z);
                 EntityPosition.Set(newResetPosition);
             }
         }
@@ -4427,17 +4422,17 @@ namespace ProjectZ.InGame.GameObjects
         public void SetHoleResetPosition(Vector2 position, int direction)
         {
             if (direction == 0)
-                _alternativeHoleResetPosition = new Vector2(position.X + MathF.Ceiling(_body.Width / 2f), position.Y + 8 + MathF.Ceiling(_body.Height / 2f));
+                _alternativeHoleResetPosition = new Vector3(position.X + MathF.Ceiling(_body.Width / 2f), position.Y + 8 + MathF.Ceiling(_body.Height / 2f), EntityPosition.Z);
             else if (direction == 1)
-                _alternativeHoleResetPosition = new Vector2(position.X + 8, position.Y + _body.Height);
+                _alternativeHoleResetPosition = new Vector3(position.X + 8, position.Y + _body.Height, EntityPosition.Z);
             else if (direction == 2)
-                _alternativeHoleResetPosition = new Vector2(position.X + 16 - MathF.Ceiling(_body.Width / 2f), position.Y + 8 + MathF.Ceiling(_body.Height / 2f));
+                _alternativeHoleResetPosition = new Vector3(position.X + 16 - MathF.Ceiling(_body.Width / 2f), position.Y + 8 + MathF.Ceiling(_body.Height / 2f), EntityPosition.Z);
             else if (direction == 3)
-                _alternativeHoleResetPosition = new Vector2(position.X + 8, position.Y + 16);
-            _alternativeHoleResetPositionZ = EntityPosition.Z;
+                _alternativeHoleResetPosition = new Vector3(position.X + 8, position.Y + 16, EntityPosition.Z);
 
-            // also used for the drown reseet point
-            _drownResetPosition = _alternativeHoleResetPosition;
+            // Also used for the drown reset point. Instead of opening up the can of worms of converting the drown 
+            // reset point to a Vector3 just use the X and Y coordinates from the _alternativeHoleResetPosition.
+            _drownResetPosition = new Vector2(_alternativeHoleResetPosition.X, _alternativeHoleResetPosition.Y);
         }
 
         public void Knockout(Vector2 direction, string resetDoor)
