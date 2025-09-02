@@ -103,7 +103,6 @@ namespace ProjectZ.InGame.Overlay
                 Game1.GameManager.ThiefState = false;
             else
                 Game1.GameManager.SaveManager.SetString(_key, _value);
-            }
             return true;
         }
     }
