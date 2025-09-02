@@ -14,6 +14,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
     {
         public BodyComponent Body;
         public string DialogName;
+        public int Type;
 
         private readonly Animator _animator = new Animator();
         private readonly AiComponent _aiComponent;
@@ -37,6 +38,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
         // type: 0: small fish; 1: big fish, 2: big fish with heart
         public ObjFish(Map.Map map, int posX, int posY, int type, int offset, int wait) : base(map)
         {
+            Type = type;
             SprEditorImage = Resources.SprNpCs;
             EditorIconSource = type == 0 ? new Rectangle(487, 142, 15, 11) : new Rectangle(528, 158, 16, 16);
 
@@ -233,7 +235,7 @@ namespace ProjectZ.InGame.GameObjects.NPCs
             var flipped = Body.Velocity.X < (_animationComponent.MirroredH ? 0.2f : -0.2f);
             _animationComponent.MirroredH = flipped;
             _animationComponent.UpdateSprite();
-
+            
             // update fish position
             var position = new Vector2(EntityPosition.X + (flipped ? 0 : 16), EntityPosition.Y - 2);
             ObjLinkFishing.HookPosition = position;

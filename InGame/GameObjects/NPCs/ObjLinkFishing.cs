@@ -195,8 +195,16 @@ namespace ProjectZ.InGame.GameObjects.NPCs
                 }
                 else
                 {
-                    HookedFish.Body.Velocity.X += _hookVelocity.X * 0.2f;
-                    HookedFish.Body.Velocity.Y += _hookVelocity.Y * 0.2f;
+                    // Fluctuate the strength of a button press to give the fish the appearance of having more "fight" to them.
+                    float pullStrength = (HookedFish.Type == 0) 
+                        ? GameMath.GetRandomFloat(0.10f, 0.20f)
+                        : GameMath.GetRandomFloat(0.06f, 0.20f);
+
+                    // I settled on 3 decimal places for a good amount of variation.
+                    pullStrength = (float)Math.Round(pullStrength, 3);
+
+                    HookedFish.Body.Velocity.X += _hookVelocity.X * pullStrength;
+                    HookedFish.Body.Velocity.Y += _hookVelocity.Y * pullStrength;
                     _hookVelocity = Vector2.Zero;
 
                     // lost the fish?
